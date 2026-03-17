@@ -103,11 +103,11 @@
     },
     {
       "tag": "brasil_tenis",
-      "patterns": ["tenis no brasil", "jogadores brasileiros", "quem é o Guga?", "Gustavo Kuerten", "Beatriz Haddad Maia", "Bia Haddad", "quem é o maior brasileiro?"],
+      "patterns": ["tenis no brasil", "jogadores brasileiros", "quem é o Guga?", "Gustavo Kuerten", "Beatriz Haddad Maia", "Bia Haddad", "quem é o maior brasileiro?", "João Fonseca", "quem é João Fonseca?", "novo Guga", "promessa brasileira"],
       "responses": [
-        "O Brasil tem grandes ícones! Gustavo Kuerten, o Guga, é tricampeão de Roland Garros e foi número 1 do mundo. Atualmente, a Bia Haddad Maia é nossa grande estrela no circuito feminino (WTA), alcançando o Top 10!"
+        "O Brasil vive um momento épico! 🇧🇷 Além do legado do Guga (tricampeão de Roland Garros), temos a Bia Haddad Maia consolidada no Top 20 da WTA e a ascensão meteórica de João Fonseca, que em 2024 e 2025 se tornou uma das maiores promessas do tênis mundial com seu estilo agressivo e títulos no circuito Challenger e boas campanhas na ATP!"
       ],
-      "follow_up": "Você chegou a ver o Guga jogar ou é da geração da Bia Haddad?"
+      "follow_up": "Você acha que o João Fonseca tem potencial para ser o próximo número 1 do mundo como o Guga?"
     },
     {
       "tag": "vencedores_torneio",
@@ -180,9 +180,9 @@
     },
     {
       "tag": "ranking",
-      "patterns": ["Como funciona o ranking da ATP?", "O que é a ATP?", "Como são calculados os pontos?", "Quem é o número 1?", "ranking atual"],
+      "patterns": ["Como funciona o ranking da ATP?", "O que é a ATP?", "Como são calculados os pontos?", "explicar ranking", "história da ATP", "quem fundou a ATP", "qual a origem da ATP"],
       "responses": [
-        "A Association of Tennis Professionals (ATP) gerencia o ranking mundial masculino. Os pontos são calculados com base no desempenho das últimas 52 semanas."
+        "A Association of Tennis Professionals (ATP) foi fundada em 1972 para proteger os interesses dos jogadores profissionais. O sistema de ranking por computador foi lançado em 1973, revolucionando o esporte! Os pontos são calculados com base no desempenho das últimas 52 semanas."
       ],
       "follow_up": "O que você acha do sistema de pontos? Justo ou deveria premiar mais quem joga menos torneios?"
     },
