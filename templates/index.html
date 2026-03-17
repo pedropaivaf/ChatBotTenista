@@ -50,8 +50,28 @@
         </main>
 
         <footer>
-            <p>&copy; 2026 Tennis AI - Powered by NLTK & Flask</p>
+            <div class="footer-content">
+                <p>&copy; 2026 Tennis AI - Python | NLTK & Flask</p> <!-- Texto do footer atualizado conforme pedido -->
+                <button id="group-btn" class="group-members-btn">Integrantes do Grupo</button> <!-- Botão para abrir o modal de créditos -->
+            </div>
         </footer>
+    </div>
+
+    <!-- Tela Premium de Integrantes (Modal) -->
+    <div id="group-modal" class="modal-overlay"> <!-- Fundo embaçado do modal -->
+        <div class="modal-content"> <!-- Caixa central do modal -->
+            <button id="close-modal" class="modal-close">&times;</button> <!-- Botão de fechar (X) -->
+            <div class="modal-header">
+                <h2>Integrantes do Grupo</h2> <!-- Título do modal -->
+                <div class="title-underline"></div> <!-- Linha decorativa abaixo do título -->
+            </div>
+            <ul class="member-list"> <!-- Lista de membros com animações individuais -->
+                <li style="--i:1;">Pedro Paiva Ferreira</li>
+                <li style="--i:2;">Bernardo Ladeira Leal de Medeiros</li>
+                <li style="--i:3;">João Hugo Martins Botelho</li>
+                <li style="--i:4;">Mateus Silva Xavier</li>
+            </ul>
+        </div>
     </div>
 
     <!-- Console do Backend (Terminal) -->
