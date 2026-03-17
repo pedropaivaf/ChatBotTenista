@@ -2,19 +2,132 @@
   "intents": [
     {
       "tag": "saudacao",
-      "patterns": ["Olá", "Oi", "Oi tudo bem?", "Tudo bem?", "Ei", "Opa", "Bom dia", "Boa tarde", "Boa noite", "Tem alguém aí?"],
+      "patterns": ["Olá", "Oi", "Oi tudo bem?", "Tudo bem?", "Ei", "Opa", "Bom dia", "Boa tarde", "Boa noite", "Tem alguém aí?", "Blz", "Fala ai"],
       "responses": ["Olá! Sou seu assistente de Tênis. Como posso ajudar você hoje?", "Oi! Vamos falar sobre Tênis? O que você quer saber?"],
       "follow_up": "Você tem algum jogador favorito ou prefere saber sobre os torneios?"
     },
     {
       "tag": "despedida",
-      "patterns": ["Tchau", "Até logo", "Adeus", "Obrigado", "Valeu"],
+      "patterns": ["Tchau", "Até logo", "Adeus", "Obrigado", "Valeu", "Fui", "Encerrar"],
       "responses": ["Até mais! Espero ter ajudado você a conhecer mais sobre Tênis.", "Tchau! Volte sempre que tiver dúvidas sobre o circuito."],
       "follow_up": ""
     },
     {
+      "tag": "feedback_positivo",
+      "patterns": ["que legal", "muito bom", "interessante", "incrivel", "show", "bacana", "gostei", "top", "verdade", "entendi"],
+      "responses": [
+        "Que bom que você gostou! Fico muito feliz em compartilhar isso com você! ✨",
+        "Fico empolgado quando encontro alguém que curte esses detalhes do esporte! 🎾",
+        "Demais, né? O tênis é cheio dessas surpresas maravilhosas!"
+      ],
+      "follow_up": "Quer saber mais alguma curiosidade ou prefere falar sobre algum jogador específico?"
+    },
+    {
+      "tag": "confirmacao_positiva",
+      "patterns": ["Sim", "Claro", "Com certeza", "Sim eu sabia", "Quero saber", "Pode ser", "Concordo"],
+      "responses": [
+        "Sensacional! É isso aí! 🎯",
+        "Perfeito! Você entende muito do assunto! 👏",
+        "Incrível! É exatamente esse tipo de curiosidade que faz o tênis ser apaixonante!"
+      ],
+      "follow_up": "E por falar nisso, você sabia que a maior partida de tênis da história durou 11 horas e 5 minutos? Haja fôlego, hein! Acha que teria paciência para assistir?"
+    },
+    {
+      "tag": "confirmacao_negativa",
+      "patterns": ["Não", "Nanani nanão", "Não sabia", "Nunca vi", "Não concordo", "Discordo", "Não quero"],
+      "responses": [
+        "Sem problemas! Relaxa, o mundo do tênis tem muitos segredos guardados. 😉",
+        "Entendo perfeitamente, é muita informação para decorar de uma vez!",
+        "Tudo bem! Vamos para a próxima então, garanto que essa você vai curtir."
+      ],
+      "follow_up": "Já que estamos aqui, você sabia que o Rafael Nadal é destro para tudo, exceto para jogar tênis? Ele joga com a esquerda por sugestão do tio dele! Bizarro, né?"
+    },
+    {
+      "tag": "cor_bolinha",
+      "patterns": ["Qual a cor da bolinha?", "cor da bola de tenis", "por que a bola é amarela?", "bola de tenis amarela"],
+      "responses": [
+        "A cor oficial das bolas de tênis em torneios é o 'amarelo óptico'. Essa cor foi adotada em 1972 porque pesquisas mostraram que ela era mais visível para os telespectadores na TV colorida."
+      ],
+      "follow_up": "Você sabia que antes delas serem amarelas, as bolas costumavam ser brancas ou pretas?"
+    },
+    {
+      "tag": "regras_basicas",
+      "patterns": ["Quais as regras do tenis?", "como funciona a pontuação?", "o que é um ace?", "o que é um let?", "regras basicas", "como ganha um set?"],
+      "responses": [
+        "No tênis, a pontuação segue a lógica: 15, 30, 40 e Game. Se empatar em 40-40, temos o 'Deuce' (Iguais). Um set é vencido por quem chegar a 6 games primeiro (com 2 de vantagem). Se empatar em 6-6, temos o Tie-break!"
+      ],
+      "follow_up": "Você acha a pontuação do tênis difícil de entender ou já está acostumado com o 15-30-40?"
+    },
+    {
+      "tag": "superficies",
+      "patterns": ["Quais os tipos de quadra?", "saibro vs grama", "piso duro", "tipos de piso no tenis", "quadra de terra", "grama de wimbledon"],
+      "responses": [
+        "Existem três superfícies principais: o Saibro (terra batida, mais lenta), a Grama (mais rápida e baixa) e o Piso Duro (asfáltico ou acrílico, mais equilibrado). Cada jogador costuma ter preferência por um estilo diferente."
+      ],
+      "follow_up": "Qual superfície você prefere assistir: o jogo estratégico do saibro ou a velocidade da grama?"
+    },
+    {
+      "tag": "reacao_saibro",
+      "patterns": ["saibro", "prefiro saibro", "gosto de saibro", "terra batida", "curto saibro", "saibro é melhor"],
+      "responses": [
+        "O saibro é fantástico! Exige muita resistência física e estratégia. É o reino de jogadores como Rafael Nadal e Gustavo Kuerten.",
+        "Escolha clássica! No saibro a bola quica mais alto e o jogo é mais demorado, o que permite ralis inacreditáveis."
+      ],
+      "follow_up": "Você sabia que Roland Garros é o único Grand Slam disputado nessa superfície? Acha que o Nadal ainda leva mais um título lá?"
+    },
+    {
+      "tag": "reacao_grama",
+      "patterns": ["grama", "prefiro grama", "gosto de grama", "velocidade da grama", "curto grama", "grama é melhor"],
+      "responses": [
+        "A grama é pura tradição e velocidade! O jogo fica muito mais dinâmico e o saque ganha uma importância absurda.",
+        "Sensacional! Wimbledon na grama sagrada é um dos espetáculos mais bonitos do esporte. O jogo é rápido e elegante."
+      ],
+      "follow_up": "Para você, quem foi o maior mestre da grama: Roger Federer com seus 8 títulos em Wimbledon ou o Djokovic?"
+    },
+    {
+      "tag": "reacao_piso_duro",
+      "patterns": ["piso duro", "prefiro piso duro", "quadra rapida", "asfaltico", "acrilico", "hard court"],
+      "responses": [
+        "O piso duro é o mais democrático! É a superfície oficial do Australian Open e do US Open, equilibrando bem velocidade e controle.",
+        "Boa escolha! Como é o piso mais comum, a maioria dos jogadores modernos treina e se sente à vontade nessas quadras."
+      ],
+      "follow_up": "Você prefere o calor do Australian Open ou a energia noturna de Nova York no US Open?"
+    },
+    {
+      "tag": "equipamento",
+      "patterns": ["Qual raquete usar?", "tamanho da raquete", "encordoamento", "peso da raquete de tenis", "melhores marcas de raquete", "qual a melhor raquete?"],
+      "responses": [
+        "A escolha da raquete depende do seu nível. Iniciantes geralmente usam raquetes mais leves e com cabeça maior para facilitar o acerto. Marcas famosas incluem Wilson, Babolat, Head e Yonex."
+      ],
+      "follow_up": "Você joga tênis ou está apenas começando a se interessar pelos equipamentos?"
+    },
+    {
+      "tag": "brasil_tenis",
+      "patterns": ["tenis no brasil", "jogadores brasileiros", "quem é o Guga?", "Gustavo Kuerten", "Beatriz Haddad Maia", "Bia Haddad", "quem é o maior brasileiro?"],
+      "responses": [
+        "O Brasil tem grandes ícones! Gustavo Kuerten, o Guga, é tricampeão de Roland Garros e foi número 1 do mundo. Atualmente, a Bia Haddad Maia é nossa grande estrela no circuito feminino (WTA), alcançando o Top 10!"
+      ],
+      "follow_up": "Você chegou a ver o Guga jogar ou é da geração da Bia Haddad?"
+    },
+    {
+      "tag": "vencedores_torneio",
+      "patterns": ["quem venceu o US Open?", "vencedor de Wimbledon", "quem ganhou Roland Garros?", "campeões do Australian Open", "quem é o campeão?", "quem foi o vencedor?", "quem ganhou o torneio?", "vencedores dos slams"],
+      "responses": [
+        "Para responder isso com precisão, eu acesso minha base técnica em tempo real! 🎾"
+      ],
+      "follow_up": "Vou consultar os dados agora mesmo para você."
+    },
+    {
+      "tag": "grand_slam",
+      "patterns": ["O que é um Grand Slam?", "Quais são os principais torneios?", "Quais torneios formam o Grand Slam?", "Australian Open", "Roland Garros", "Wimbledon", "US Open", "torneios mais importantes"],
+      "responses": [
+        "O Grand Slam é o ápice do tênis e consiste nos quatro maiores torneios: Australian Open (janeiro), Roland Garros (maio/junho), Wimbledon (julho) e US Open (agosto/setembro)."
+      ],
+      "follow_up": "Qual desses quatro torneios você acha mais charmoso: a grama de Wimbledon ou o saibro de Paris?"
+    },
+    {
       "tag": "federer",
-      "patterns": ["Quem é Roger Federer?", "Fale sobre o Federer", "Quantos Grand Slams o Federer tem?", "Roger Federer aposentou?"],
+      "patterns": ["Quem é Roger Federer?", "Fale sobre o Federer", "Quantos Grand Slams o Federer tem?", "Roger Federer aposentou?", "Maestro"],
       "responses": [
         "Roger Federer é uma lenda do tênis suíço, conhecido por sua elegância e estilo de jogo clássico. Ele conquistou 20 títulos de Grand Slam e se aposentou oficialmente em 2022 na Laver Cup."
       ],
@@ -22,7 +135,7 @@
     },
     {
       "tag": "nadal",
-      "patterns": ["Quem é Rafael Nadal?", "Fale sobre o Nadal", "Quantos Roland Garros o Nadal tem?", "Nadal é o rei do saibro?"],
+      "patterns": ["Quem é Rafael Nadal?", "Fale sobre o Nadal", "Quantos Roland Garros o Nadal tem?", "Nadal é o rei do saibro?", "Touro Miura"],
       "responses": [
         "Rafael Nadal, o 'Rei do Saibro', é um tenista espanhol famoso por sua garra e domínio em quadras de terra batida. Ele possui 22 títulos de Grand Slam, sendo 14 deles conquistados em Roland Garros."
       ],
@@ -30,7 +143,7 @@
     },
     {
       "tag": "djokovic",
-      "patterns": ["Quem é Novak Djokovic?", "Fale sobre o Djokovic", "Quantos Grand Slams o Djokovic tem?", "Quem é o maior vencedor de Grand Slams?"],
+      "patterns": ["Quem é Novak Djokovic?", "Fale sobre o Djokovic", "Quantos Grand Slams o Djokovic tem?", "Quem é o maior vencedor de Grand Slams?", "Nole"],
       "responses": [
         "Novak Djokovic é o maior vencedor de Grand Slams da história do tênis masculino (atualmente com 24 títulos). O tenista sérvio é conhecido por sua elasticidade, defesa impecável e força mental."
       ],
@@ -53,20 +166,48 @@
       "follow_up": "Sinner vs Alcaraz: quem você acha que dominará o circuito nos próximos anos?"
     },
     {
-      "tag": "grand_slam",
-      "patterns": ["O que é um Grand Slam?", "Quais são os principais torneios?", "Quais torneios formam o Grand Slam?", "Australian Open", "Roland Garros", "Wimbledon", "US Open"],
+      "tag": "curiosidades",
+      "patterns": ["me conta uma curiosidade", "voce sabe alguma curiosidade?", "fale algo interessante", "diga uma curiosidade", "curiosidade sobre tenis", "além disso?", "outra curiosidade", "mais fatos"],
       "responses": [
-        "O Grand Slam é composto pelos quatro torneios mais importantes do tênis: Australian Open (piso duro), Roland Garros (saibro), Wimbledon (grama) e US Open (piso duro)."
+        "Você sabia que a partida mais longa da história durou 11 horas e 5 minutos? Foi entre John Isner e Nicolas Mahut em Wimbledon 2010! 😱",
+        "A bolinha de tênis amarela só apareceu em 1972. Antes disso, elas eram brancas ou pretas! A mudança foi para melhorar a visão na TV. 📺",
+        "O Rafael Nadal é destro, mas joga tênis com a mão esquerda! O tio dele, Toni Nadal, achou que isso daria uma vantagem estratégica pra ele. 🎾",
+        "Wimbledon é o torneio mais antigo do mundo e até hoje exige que os jogadores usem roupas quase 100% brancas. Tradição pura! 🍓",
+        "O saque mais rápido já registrado foi de Samuel Groth, atingindo impressionantes 263,4 km/h! ✈️",
+        "A maior premiação da história foi paga no US Open, ultrapassando 65 milhões de dólares no total! 💰"
       ],
-      "follow_up": "Qual desses quatro torneios você acha mais charmoso: a grama de Wimbledon ou o saibro de Paris?"
+      "follow_up": "Incrível, né? Quer que eu te conte outra ou tem algum jogador que você quer saber mais?"
     },
     {
       "tag": "ranking",
-      "patterns": ["Como funciona o ranking da ATP?", "O que é a ATP?", "Como são calculados os pontos?", "Quem é o número 1?"],
+      "patterns": ["Como funciona o ranking da ATP?", "O que é a ATP?", "Como são calculados os pontos?", "Quem é o número 1?", "ranking atual"],
       "responses": [
-        "A ATP (Association of Tennis Professionals) gerencia o ranking mundial masculino. Os pontos são calculados com base no desempenho dos jogadores nos torneios ao longo das últimas 52 semanas."
+        "A Association of Tennis Professionals (ATP) gerencia o ranking mundial masculino. Os pontos são calculados com base no desempenho das últimas 52 semanas."
       ],
-      "follow_up": "Você sabia que a API do nosso bot pode buscar o ranking em tempo real? Quer tentar perguntar 'Qual o ranking atual'?"
+      "follow_up": "O que você acha do sistema de pontos? Justo ou deveria premiar mais quem joga menos torneios?"
+    },
+    {
+      "tag": "historia_tenis",
+      "patterns": ["como o tenis surgiu?", "origem do tenis", "quem inventou o tenis?", "historia do tenis"],
+      "responses": [
+        "O tênis moderno surgiu na Inglaterra no final do século 19, mas suas raízes vêm de um jogo francês antigo chamado 'Jeu de Paume', onde se usava a mão para bater na bola!"
+      ],
+      "follow_up": "Você sabia disso? Imagine a dor de bater na bola de tênis com a palma da mão sem raquete!"
+    },
+    {
+      "tag": "nacionalidade_jogador",
+      "patterns": ["De qual país é o jogador?", "Qual a nacionalidade dele?", "Onde ele nasceu?", "De qual país é o Sinner?", "Qual o país do Alcaraz?", "De onde é o Djokovic?"],
+      "responses": ["Vou verificar a nacionalidade dele na minha base técnica agora mesmo! 🌍"],
+      "follow_up": ""
+    },
+    {
+      "tag": "fora_de_contexto",
+      "patterns": ["futebol", "politica", "comida", "receita", "filme", "musica", "carro", "dinheiro", "quem é o presidente?", "clima hoje"],
+      "responses": [
+        "Hum, eu adoraria conversar sobre isso, mas minha especialidade é 100% tênis! 🎾",
+        "Olha, eu sou um bot focado apenas no mundo das raquetes e bolinhas amarelas. Vamos voltar ao tênis?"
+      ],
+      "follow_up": "Sabia que uma bolinha de tênis pode atingir mais de 250km/h em um saque profissional? Você acha que conseguiria pelo menos tocar na bola em um saque desses?"
     }
   ]
 }
