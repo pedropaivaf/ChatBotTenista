@@ -10,21 +10,28 @@
     
     <!-- Importa a fonte 'Inter' do Google Fonts para um visual moderno e profissional -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Fonte Mono para o Terminal -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container"> <!-- Contêiner principal que centraliza todo o conteúdo do chat -->
         <header>
-            <div class="logo">
-                <span class="icon">🎾</span> <!-- Ícone de bola de tênis -->
-                <h1>Tennis AI</h1> <!-- Nome do projeto em destaque -->
+            <div class="logo-area">
+                <div class="logo">
+                    <span class="icon">🎾</span> <!-- Ícone de bola de tênis -->
+                    <h1>Tennis AI</h1> <!-- Nome do projeto em destaque -->
+                </div>
+                <!-- Botão do Console -->
+                <button id="console-toggle-btn" class="terminal-btn" title="Ver Logs do Robô">
+                    <div class="dot"></div>
+                </button>
             </div>
             <p>Especialista em jogadores, torneios e estatísticas.</p> <!-- Subtítulo explicativo -->
         </header>
 
-        <!-- Área principal do chat onde as mensagens serão exibidas -->
+        <!-- Área principal do chat -->
         <main class="chat-container" id="chat-container">
             <div class="chat-messages" id="chat-messages">
-                <!-- Mensagem inicial do robô que já vem carregada na página -->
                 <div class="message bot">
                     <div class="bubble">
                         Olá! Bem-vindo ao Tennis AI. Pergunte-me qualquer coisa sobre o mundo do tênis!
@@ -32,12 +39,8 @@
                 </div>
             </div>
             
-            <!-- Área inferior onde o usuário digita e envia mensagens -->
             <div class="chat-input-area">
-                <!-- Campo de entrada de texto com sugestões no placeholder -->
                 <input type="text" id="user-input" placeholder="Pergunte sobre Federer, Nadal, Grand Slams..." autocomplete="off">
-                
-                <!-- Botão de enviar com um ícone de seta estilizado (SVG) -->
                 <button id="send-btn">
                     <svg viewBox="0 0 24 24" width="24" height="24">
                         <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
@@ -46,10 +49,23 @@
             </div>
         </main>
 
-        <!-- Rodapé simples com informações de copyright e tecnologias usadas -->
         <footer>
             <p>&copy; 2026 Tennis AI - Powered by NLTK & Flask</p>
         </footer>
+    </div>
+
+    <!-- Console do Backend (Terminal) -->
+    <div class="console-panel" id="console-panel">
+        <div class="console-header">
+            <span>BACKEND TERMINAL</span>
+            <div class="console-actions">
+                <button id="clear-console" title="Limpar Console">Clear</button>
+                <button id="close-console" title="Fechar Terminal">×</button>
+            </div>
+        </div>
+        <div class="console-body" id="console-body">
+            <div class="log-entry system">> Terminal inicializado. Aguardando comandos...</div>
+        </div>
     </div>
 
     <!-- Importa o arquivo JavaScript que controla a lógica do chat e a comunicação com o Python -->

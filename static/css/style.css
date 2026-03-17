@@ -1,181 +1,141 @@
-:root { /* Definição de variáveis globais de cores para fácil manutenção */
-    --bg-color: #0f172a; /* Cor de fundo principal (quase preto) */
-    --container-bg: rgba(30, 41, 59, 0.7); /* Azul acinzentado com transparência para efeito vidro */
-    --accent-color: #38bdf8; /* Azul claro para destaques e botões */
-    --text-primary: #f8fafc; /* Cor branca para o texto principal */
-    --text-secondary: #94a3b8; /* Cor cinza para textos menos importantes */
-    --glass-border: rgba(255, 255, 255, 0.1); /* Borda branca bem suave para o efeito de vidro */
-    --bot-bubble: rgba(51, 65, 85, 0.8); /* Cor do balão de fala do robô */
-    --user-bubble: #0284c7; /* Cor azul do balão de fala do usuário */
+:root { /* Definição de variáveis globais (Design Tokens) para facilitar ajustes de cores em todo o projeto */
+    --court-green: #2d5a27;       /* Verde vibrante para as áreas internas da quadra */
+    --court-green-dark: #1a3a17;  /* Verde floresta para o fundo e bordas da página */
+    --court-line: #ffffff;        /* Branco puro usado nas linhas de marcação da quadra */
+    --ball-yellow: #dfff4f;       /* Amarelo 'óptico' oficial das bolas de tênis de torneio */
+    
+    --bg-color: #0f172a;          /* Fundo escuro profundo para o chat (Slate 900) */
+    --container-bg: rgba(15, 23, 42, 0.75); /* Fundo com transparência para efeito Glassmorphism */
+    --accent-color: #38bdf8;      /* Azul celeste para links, botões e detalhes técnicos */
+    --text-primary: #f8fafc;      /* Branco gelo para máxima legibilidade do texto principal */
+    --text-secondary: #94a3b8;    /* Cinza azulado para legendas e textos menos importantes */
+    --glass-border: rgba(255, 255, 255, 0.15); /* Borda translúcida para reforçar o efeito de vidro */
+    
+    --bot-bubble: rgba(30, 41, 59, 0.9); /* Azul marinho suave para os balões de fala do robô */
+    --user-bubble: #0284c7;        /* Azul vibrante para destacar as falas do usuário */
 }
 
-* { /* Reset básico para remover margens e preenchimentos padrões do navegador */
+/* Reset Global: Remove comportamentos padrões dos navegadores que variam entre si */
+* {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif; /* Define a fonte padrão para todo o projeto */
+    box-sizing: border-box; /* Garante que 'padding' não aumente o tamanho final do elemento */
+    font-family: 'Inter', sans-serif; /* Fonte moderna e limpa, ideal para leitura em telas */
 }
 
+/* Estilização do Corpo do Site (A Quadra de Tênis) */
 body {
-    background: radial-gradient(circle at top right, #1e293b, #0f172a); /* Gradiente circular moderno no fundo */
+    background-color: var(--court-green-dark);
+    /* Desenha as linhas da quadra usando gradientes lineares (CSS puro, sem imagens!) */
+    background-image: 
+        linear-gradient(var(--court-line) 2px, transparent 2px), /* Linha horizontal */
+        linear-gradient(90deg, var(--court-line) 2px, transparent 2px), /* Linha vertical esquerda */
+        linear-gradient(90deg, transparent calc(100% - 2px), var(--court-line) calc(100% - 2px)), /* Direita */
+        linear-gradient(transparent calc(100% - 2px), var(--court-line) calc(100% - 2px)), /* Fundo */
+        linear-gradient(90deg, transparent calc(50% - 1px), var(--court-line) calc(50% - 1px), var(--court-line) calc(50% + 1px), transparent calc(50% + 1px)); /* Rede central */
+    background-size: 95% 95%; /* Define a área do desenho da quadra */
+    background-position: center;
+    background-repeat: no-repeat;
+    
     color: var(--text-primary);
-    height: 100vh; /* Ocupa 100% da altura da tela */
+    min-height: 100vh; /* Ocupa no mínimo a altura total da tela */
     display: flex;
-    justify-content: center; /* Centraliza horizontalmente */
-    align-items: center; /* Centraliza verticalmente */
-    overflow: hidden; /* Evita barras de rolagem estranhas no fundo */
+    justify-content: center; /* Centraliza o chat horizontalmente */
+    align-items: center;     /* Centraliza o chat verticalmente */
+    padding: 2rem 1rem;
+    overflow-x: hidden; /* Evita barras de rolagem horizontais indesejadas */
 }
 
+/* Container Principal do Chat (Efeito Glassmorphism) */
 .container {
-    width: 90%;
-    max-width: 900px; /* Largura máxima para não ficar muito largo em telas grandes */
-    height: 85vh; /* Altura de 85% da tela */
+    width: 95%;
+    max-width: 850px;
+    height: 80vh; /* Altura fixa para manter o chat organizado */
     display: flex;
     flex-direction: column;
     background: var(--container-bg);
-    backdrop-filter: blur(12px); /* Efeito de vidro fosco (Glassmorphism) */
+    backdrop-filter: blur(20px); /* O "segredo" do efeito vidro: embasa o que está atrás */
     border: 1px solid var(--glass-border);
-    border-radius: 24px; /* Cantos arredondados premium */
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Sombra suave para dar profundidade */
-    padding: 2rem;
-    animation: fadeIn 0.8s ease-out; /* Animação suave ao abrir a página */
+    border-radius: 32px; /* Cantos bem arredondados para um ar moderno/premium */
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6); /* Sombra pesada para dar profundidade */
+    animation: fadeIn 1s ease-out; /* Animação suave ao abrir o site */
+    overflow: hidden;
+    position: relative;
 }
 
-@keyframes fadeIn { /* Definição da animação de surgimento */
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
+/* Cabeçalho do App */
 header {
-    text-align: center;
-    margin-bottom: 1.5rem;
+    background: rgba(15, 23, 42, 0.4);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--glass-border);
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.logo h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    /* Efeito de degradê no texto do título */
-    background: linear-gradient(to right, #38bdf8, #818cf8);
+.logo-area h1 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-style: italic; /* Inclinação esportiva */
+    background: linear-gradient(135deg, #fff, var(--accent-color)); /* Degradê no texto */
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-header p {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.chat-container {
-    flex: 1; /* Faz o chat ocupar todo o espaço disponível entre o cabeçalho e o input */
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    overflow: hidden;
-}
-
-.chat-messages {
-    flex: 1;
-    overflow-y: auto; /* Permite rolar as mensagens verticalmente */
-    padding-right: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-/* Estilização da barra de rolagem para ficar discreta e bonita */
-.chat-messages::-webkit-scrollbar {
-    width: 6px;
-}
-.chat-messages::-webkit-scrollbar-thumb {
-    background: var(--glass-border);
-    border-radius: 10px;
-}
-
-.message {
-    display: flex;
-    width: 100%;
-}
-
-.message.bot { justify-content: flex-start; } /* Alinha mensagem do bot à esquerda */
-.message.user { justify-content: flex-end; } /* Alinha mensagem do usuário à direita */
-
+/* Balões de Mensagem */
 .bubble {
-    max-width: 80%;
-    padding: 0.8rem 1.2rem;
-    border-radius: 18px;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    position: relative;
-    animation: slideIn 0.3s ease-out; /* Animação de entrada lateral */
+    padding: 1rem 1.4rem;
+    border-radius: 20px;
+    margin: 10px 0;
+    max-width: 75%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-@keyframes slideIn { /* Animação de escala suave ao aparecer a mensagem */
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+/* Destaque "Tennis AI Premium" (span class .msg-highlight) */
+.msg-highlight {
+    font-weight: 800;
+    color: var(--ball-yellow); /* Cor da bolinha de tênis para nomes de jogadores e rankings */
+    text-shadow: 0 0 10px rgba(223, 255, 79, 0.4); /* Brilho de neon suave */
 }
 
-.bot .bubble {
-    background: var(--bot-bubble);
-    border-bottom-left-radius: 4px; /* Canto curvo especial para o bot */
-    border: 1px solid var(--glass-border);
-}
-
-.user .bubble {
-    background: var(--user-bubble);
-    color: white;
-    border-bottom-right-radius: 4px; /* Canto curvo especial para o usuário */
-}
-
-.chat-input-area {
-    display: flex;
-    gap: 0.8rem;
-    background: rgba(15, 23, 42, 0.5);
-    padding: 0.5rem;
-    border-radius: 16px;
-    border: 1px solid var(--glass-border);
-}
-
-input[type="text"] {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none; /* Remove a borda azul padrão do navegador ao clicar */
-    color: var(--text-primary);
-    padding: 0.8rem;
-    font-size: 1rem;
-}
-
+/* Estilo do Botão Enviar (A Bolinha de Tênis) */
 #send-btn {
-    background: var(--accent-color);
-    border: none;
-    border-radius: 12px;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bg-color);
+    background: var(--ball-yellow);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%; /* Torna um círculo perfeito */
+    border: 3px solid rgba(255,255,255,0.3);
+    box-shadow: inset -4px -4px 8px rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.3);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 #send-btn:hover {
-    transform: scale(1.05); /* Efeito de zoom suave ao passar o mouse */
-    filter: brightness(1.1);
+    transform: scale(1.1) rotate(10deg); /* Faz "pular" e rodar levemente ao passar o mouse */
 }
 
-footer {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
+/* O Painel Técnico (Console de Logs) */
+.console-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    background: #020617; /* Fundo sólido para garantir leitura dos logs técnicos */
+    border: 1px solid var(--accent-color);
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace; /* Fonte estilo programador */
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+/* Estilos de Cores para os Logs Técnicos */
+.log-entry.SUCCESS { color: #4ade80; } /* Verde para acertos de NLTK */
+.log-entry.WARNING { color: #fbbf24; } /* Amarelo para avisos de contexto */
+.log-entry.ERROR   { color: #f87171; } /* Vermelho para falhas de conexão */
+.log-entry.system  { color: var(--accent-color); font-weight: bold; } /* Azul para status interno */
+
+/* Ajustes para Celular */
+@media (max-width: 600px) {
+    .container { width: 100%; height: 100vh; border-radius: 0; }
+    .bubble { max-width: 90%; }
 }

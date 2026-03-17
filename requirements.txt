@@ -2,3 +2,4 @@ flask
 nltk
 requests
 python-dotenv
+numpy

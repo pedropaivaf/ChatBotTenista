@@ -1,38 +1,58 @@
-import nltk # Importa a biblioteca NLTK (Natural Language Toolkit) para Processamento de Linguagem Natural
-import numpy as np # Importa NumPy para manipulação de arrays numéricos (útil para modelos futuros)
-from nltk.stem.porter import PorterStemmer # Importa o algoritmo de Porter para reduzir palavras ao radical
+import nltk # Biblioteca principal de Processamento de Linguagem Natural
+import numpy as np # Biblioteca para cálculos matemáticos e vetores
+from nltk.stem.porter import PorterStemmer # Algoritmo para reduzir palavras ao seu "radical" (stem)
 
-# Faz o download do recurso 'punkt', que é o motor para dividir frases em palavras
-nltk.download('punkt')
-stemmer = PorterStemmer() # Cria uma instância do stemmer (o "redutor" de palavras)
+# Criamos uma instância do "Stemmer" que vai podar as palavras (ex: "jogando" -> "jog")
+stemmer = PorterStemmer()
 
-def tokenize(sentence): # Função que transforma uma frase em uma lista de palavras individuais
+def tokenize(sentence):
     """
-    Divide a frase em um array de palavras/tokens.
-    Exemplo: "O que é um Grand Slam?" -> ["O", "que", "é", "um", "Grand", "Slam", "?"]
+    Função que fatia uma frase em uma lista de palavras individuais (tokens).
+    Exemplo: "Olá, como vai?" -> ["Olá", "como", "vai", "?"]
     """
-    return nltk.word_tokenize(sentence) # Usa a função oficial do NLTK para realizar a separação correta
+    # Usamos a função padrão do NLTK para fazer essa separação inteligente
+    return nltk.word_tokenize(sentence)
 
-def stem(word): # Função que reduz uma palavra ao seu radical (exclui sufixos e prefixos)
+def stem(word):
     """
-    Stemming = encontrar a forma raiz da palavra.
-    Exemplo: ["organize", "organizes", "organizing"] -> "organ"
+    Função que reduz uma palavra ao seu radical (raiz).
+    Exemplo: "vencedores" -> "venc", "ganhando" -> "ganh"
+    Isso ajuda o robô a entender variações da mesma palavra.
     """
-    return stemmer.stem(word.lower()) # Converte para minúsculo e aplica o algoritmo de redução
+    # Converte para minúsculo e aplica a "poda" do radical
+    return stemmer.stem(word.lower())
 
-def bag_of_words(tokenized_sentence, words): # Função que cria uma representação numérica da frase (vetor)
+def bag_of_words(tokenized_sentence, words):
     """
-    Retorna o array bag of words:
-    Coloca o número 1 para cada palavra conhecida que existe na frase, e 0 caso contrário.
+    Função que transforma uma lista de palavras em um vetor numérico (0 ou 1).
+    Isso é o que as Redes Neurais e modelos de Machine Learning usam para 'ler'.
     """
-    # Aplica o radical (stem) em cada palavra encontrada na frase do usuário
+    # Primeiro, reduzimos todas as palavras da frase aos seus radicais
     sentence_words = [stem(word) for word in tokenized_sentence]
-    # Cria uma lista (bag) cheia de zeros com o mesmo tamanho da nossa lista de palavras conhecidas
+    # Criamos um array de zeros com o mesmo tamanho do nosso vocabulário conhecido
     bag = np.zeros(len(words), dtype=np.float32)
     
-    # Percorre nossa lista de palavras conhecidas
+    # Marcamos com 1 as posições onde a palavra do vocabulário está presente na frase
     for idx, w in enumerate(words):
-        if w in sentence_words: # Se a palavra conhecida estiver na frase do usuário
-            bag[idx] = 1 # Marca a posição correspondente no vetor como 1
+        if w in sentence_words: 
+            bag[idx] = 1 # O robô agora 'vê' a presença daquela ideia na frase
 
-    return bag # Retorna o vetor numérico (seria usado para treinar Redes Neurais futuramente)
+    return bag
+
+def extract_entities(sentence_tokens, candidates):
+    """
+    Função avançada para identificar 'Entidades Nomeadas' (Jogadores ou Torneios).
+    Ela verifica se os radicais dos candidatos estão presentes na frase do usuário.
+    """
+    # Percorre cada candidato que queremos encontrar (ex: "US Open" ou "Roger Federer")
+    for candidate in candidates:
+        # Tokeniza e gera o radical de cada parte do candidato
+        # Isso permite encontrar "US Open" mesmo que o usuário escreva "us open" ou "o us open"
+        candidate_tokens = [stem(w) for w in tokenize(candidate)]
+        
+        # Verifica se TODOS os pedaços do nome candidato estão presentes nos tokens da frase
+        # O 'all()' garante que para 'Australian Open', ambos 'australian' e 'open' devem ser achados
+        if all(token in sentence_tokens for token in candidate_tokens):
+            return candidate # Retorna o nome formatado bonitinho se encontrado
+            
+    return None # Retorna nada se não identificar uma entidade conhecida

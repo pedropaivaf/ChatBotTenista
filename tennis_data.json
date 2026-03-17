@@ -1,17 +1,23 @@
 {
   "ranking_atp": [
-    {"position": 1, "name": "Jannik Sinner", "points": 11920, "country": "Itália"},
-    {"position": 2, "name": "Alexander Zverev", "points": 7915, "country": "Alemanha"},
-    {"position": 3, "name": "Carlos Alcaraz", "points": 7010, "country": "Espanha"},
-    {"position": 4, "name": "Novak Djokovic", "points": 6210, "country": "Sérvia"},
-    {"position": 5, "name": "Daniil Medvedev", "points": 5230, "country": "Rússia"},
-    {"position": 6, "name": "Taylor Fritz", "points": 4300, "country": "EUA"},
-    {"position": 7, "name": "Casper Ruud", "points": 3855, "country": "Noruega"},
-    {"position": 8, "name": "Andrey Rublev", "points": 3760, "country": "Rússia"},
-    {"position": 9, "name": "Alex de Minaur", "points": 3745, "country": "Austrália"},
-    {"position": 10, "name": "Grigor Dimitrov", "points": 3350, "country": "Bulgária"}
+    {"position": 1, "name": "Carlos Alcaraz", "country": "Espanha", "points": "13.550"},
+    {"position": 2, "name": "Jannik Sinner", "country": "Itália", "points": "11.400"},
+    {"position": 3, "name": "Novak Djokovic", "country": "Sérvia", "points": "5.370"},
+    {"position": 4, "name": "Alexander Zverev", "country": "Alemanha", "points": "4.905"},
+    {"position": 5, "name": "Lorenzo Musetti", "country": "Itália", "points": "4.365"},
+    {"position": 6, "name": "Alex de Minaur", "country": "Austrália", "points": "4.185"},
+    {"position": 7, "name": "Taylor Fritz", "country": "Estados Unidos", "points": "4.170"},
+    {"position": 8, "name": "Felix Auger-Aliassime", "country": "Canadá", "points": "4.000"},
+    {"position": 9, "name": "Ben Shelton", "country": "Estados Unidos", "points": "3.860"},
+    {"position": 10, "name": "Daniil Medvedev", "country": "Rússia", "points": "3.610"}
   ],
   "grand_slams": {
+    "2025": {
+      "Australian Open": "Jannik Sinner",
+      "Roland Garros": "Carlos Alcaraz",
+      "Wimbledon": "Jannik Sinner",
+      "US Open": "Carlos Alcaraz"
+    },
     "2024": {
       "Australian Open": "Jannik Sinner",
       "Roland Garros": "Carlos Alcaraz",
@@ -27,16 +33,25 @@
   },
   "player_details": {
     "Jannik Sinner": {
-      "age": 23,
-      "style": "Agressivo de fundo de quadra",
-      "titles": "Grand Slams (2), Master 1000 (4)",
-      "fact": "Primeiro italiano na história a ser número 1 do mundo."
+      "age": 24,
+      "style": "Destro (backhand de duas mãos)",
+      "titles": "Australian Open 2024/2025, US Open 2024",
+      "fact": "Conhecido como 'The Fox', ele é o primeiro italiano número 1 do mundo na história.",
+      "country": "Itália"
     },
     "Carlos Alcaraz": {
-      "age": 21,
-      "style": "Completo, muita potência e drop shots",
-      "titles": "Grand Slams (4), Master 1000 (5)",
-      "fact": "Mais jovem número 1 da história aos 19 anos."
+      "age": 22,
+      "style": "Destro (agressivo)",
+      "titles": "Roland Garros 2025, US Open 2025, Wimbledon 2024",
+      "fact": "Foi o número 1 mais jovem da história aos 19 anos.",
+      "country": "Espanha"
+    },
+    "Novak Djokovic": {
+      "age": 38,
+      "style": "Completo (melhor devolução da história)",
+      "titles": "24 Grand Slams (Recorde Masculino)",
+      "fact": "Detém o recorde de mais semanas como número 1 do mundo.",
+      "country": "Sérvia"
     }
   }
 }
