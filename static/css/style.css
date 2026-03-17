@@ -1,52 +1,52 @@
-:root { /* Definição de variáveis globais (Design Tokens) para facilitar ajustes de cores em todo o projeto */
-    --court-green: #2d5a27;       /* Verde vibrante para as áreas internas da quadra */
-    --court-green-dark: #1a3a17;  /* Verde floresta para o fundo e bordas da página */
-    --court-line: #ffffff;        /* Branco puro usado nas linhas de marcação da quadra */
-    --ball-yellow: #dfff4f;       /* Amarelo 'óptico' oficial das bolas de tênis de torneio */
+:root { /* Definição de variáveis globais de cores para fácil manutenção */
+    --court-green: #2d5a27; /* Verde grama da quadra */
+    --court-green-dark: #1a3a17; /* Verde profundo profissional */
+    --court-line: #ffffff; /* Branco das linhas da quadra */
+    --ball-yellow: #dfff4f; /* Amarelo-limão clássico da bolinha de tênis */
     
-    --bg-color: #0f172a;          /* Fundo escuro profundo para o chat (Slate 900) */
-    --container-bg: rgba(15, 23, 42, 0.75); /* Fundo com transparência para efeito Glassmorphism */
-    --accent-color: #38bdf8;      /* Azul celeste para links, botões e detalhes técnicos */
-    --text-primary: #f8fafc;      /* Branco gelo para máxima legibilidade do texto principal */
-    --text-secondary: #94a3b8;    /* Cinza azulado para legendas e textos menos importantes */
-    --glass-border: rgba(255, 255, 255, 0.15); /* Borda translúcida para reforçar o efeito de vidro */
+    --bg-color: #0f172a; /* Cor de fundo principal (quase preto) para o chat */
+    --container-bg: rgba(15, 23, 42, 0.75); /* Azul marinho glassmorphism */
+    --accent-color: #38bdf8; /* Azul claro para destaques e botões */
+    --text-primary: #f8fafc; /* Cor branca para o texto principal */
+    --text-secondary: #94a3b8; /* Cor cinza para textos secundários */
+    --glass-border: rgba(255, 255, 255, 0.15); /* Borda branca suave */
     
-    --bot-bubble: rgba(30, 41, 59, 0.9); /* Azul marinho suave para os balões de fala do robô */
-    --user-bubble: #0284c7;        /* Azul vibrante para destacar as falas do usuário */
+    --bot-bubble: rgba(30, 41, 59, 0.9); /* Bolha do bot azul escuro */
+    --user-bubble: #0284c7; /* Bolha do usuário azul vibrante */
 }
 
-/* Reset Global: Remove comportamentos padrões dos navegadores que variam entre si */
-* {
+* { /* Reset básico para remover margens e preenchimentos padrões do navegador */
     margin: 0;
     padding: 0;
-    box-sizing: border-box; /* Garante que 'padding' não aumente o tamanho final do elemento */
-    font-family: 'Inter', sans-serif; /* Fonte moderna e limpa, ideal para leitura em telas */
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif; /* Define a fonte padrão para todo o projeto */
 }
 
-/* Estilização do Corpo do Site (A Quadra de Tênis) */
 body {
+    /* Fundo de Quadra de Tênis Premium */
     background-color: var(--court-green-dark);
     /* Desenha as linhas da quadra usando gradientes lineares (CSS puro, sem imagens!) */
     background-image: 
-        linear-gradient(var(--court-line) 2px, transparent 2px), /* Linha horizontal */
-        linear-gradient(90deg, var(--court-line) 2px, transparent 2px), /* Linha vertical esquerda */
-        linear-gradient(90deg, transparent calc(100% - 2px), var(--court-line) calc(100% - 2px)), /* Direita */
-        linear-gradient(transparent calc(100% - 2px), var(--court-line) calc(100% - 2px)), /* Fundo */
-        linear-gradient(90deg, transparent calc(50% - 1px), var(--court-line) calc(50% - 1px), var(--court-line) calc(50% + 1px), transparent calc(50% + 1px)); /* Rede central */
-    background-size: 95% 95%; /* Define a área do desenho da quadra */
+        linear-gradient(var(--court-line) 2px, transparent 2px),
+        linear-gradient(90deg, var(--court-line) 2px, transparent 2px),
+        linear-gradient(90deg, transparent calc(100% - 2px), var(--court-line) calc(100% - 2px)),
+        linear-gradient(transparent calc(100% - 2px), var(--court-line) calc(100% - 2px)),
+        linear-gradient(90deg, transparent calc(50% - 1px), var(--court-line) calc(50% - 1px), var(--court-line) calc(50% + 1px), transparent calc(50% + 1px));
+    background-size: 95% 95%;
     background-position: center;
     background-repeat: no-repeat;
     
     color: var(--text-primary);
-    min-height: 100vh; /* Ocupa no mínimo a altura total da tela */
+    min-height: 100vh;
     display: flex;
-    justify-content: center; /* Centraliza o chat horizontalmente */
-    align-items: center;     /* Centraliza o chat verticalmente */
+    justify-content: center;
+    align-items: center;
     padding: 2rem 1rem;
-    overflow-x: hidden; /* Evita barras de rolagem horizontais indesejadas */
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-/* Container Principal do Chat (Efeito Glassmorphism) */
+/* Container Principal do Chat (Glassmorphism) */
 .container {
     width: 95%;
     max-width: 850px;
@@ -54,13 +54,20 @@ body {
     display: flex;
     flex-direction: column;
     background: var(--container-bg);
-    backdrop-filter: blur(20px); /* O "segredo" do efeito vidro: embasa o que está atrás */
+    backdrop-filter: blur(20px); /* O "segredo" do efeito vidro: embaça o que está atrás */
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-    border-radius: 32px; /* Cantos bem arredondados para um ar moderno/premium */
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6); /* Sombra pesada para dar profundidade */
-    animation: fadeIn 1s ease-out; /* Animação suave ao abrir o site */
+    border-radius: 32px; /* Cantos arredondados premium */
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), inset 0 0 2px rgba(255, 255, 255, 0.1);
+    animation: fadeIn 1s cubic-bezier(0.23, 1, 0.32, 1); /* Animação suave ao abrir */
     overflow: hidden;
     position: relative;
+}
+
+/* Animação de entrada do container */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* Cabeçalho do App */
@@ -70,72 +77,325 @@ header {
     border-bottom: 1px solid var(--glass-border);
 }
 
-.logo-area h1 {
+.logo-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 5px 0; /* Evita corte vertical */
+}
+
+.logo .icon {
+    font-size: 2.2rem;
+    filter: drop-shadow(0 0 12px rgba(223, 255, 79, 0.5)); /* Brilho na bolinha */
+    flex-shrink: 0;
+}
+
+.logo h1 {
     font-size: 2.2rem;
     font-weight: 900;
-    text-transform: uppercase;
-    font-style: italic; /* Inclinação esportiva */
-    background: linear-gradient(135deg, #fff, var(--accent-color)); /* Degradê no texto */
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff 20%, var(--accent-color) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    font-style: italic; /* Inclinação esportiva */
+    line-height: 1.2;
+    padding-right: 10px; /* Garante que o itálico não corte no final */
+    white-space: nowrap;
 }
 
-/* Balões de Mensagem */
-.bubble {
-    padding: 1rem 1.4rem;
-    border-radius: 20px;
-    margin: 10px 0;
-    max-width: 75%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    text-align: left;
+    margin-top: -5px;
+    padding-left: 50px; /* Alinha com o texto do logo */
 }
 
-/* Destaque "Tennis AI Premium" (span class .msg-highlight) */
-.msg-highlight {
-    font-weight: 800;
-    color: var(--ball-yellow); /* Cor da bolinha de tênis para nomes de jogadores e rankings */
-    text-shadow: 0 0 10px rgba(223, 255, 79, 0.4); /* Brilho de neon suave */
-}
-
-/* Estilo do Botão Enviar (A Bolinha de Tênis) */
-#send-btn {
-    background: var(--ball-yellow);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%; /* Torna um círculo perfeito */
-    border: 3px solid rgba(255,255,255,0.3);
-    box-shadow: inset -4px -4px 8px rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.3);
-    cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#send-btn:hover {
-    transform: scale(1.1) rotate(10deg); /* Faz "pular" e rodar levemente ao passar o mouse */
-}
-
-/* O Painel Técnico (Console de Logs) */
-.console-panel {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 400px;
-    background: #020617; /* Fundo sólido para garantir leitura dos logs técnicos */
-    border: 1px solid var(--accent-color);
-    border-radius: 12px;
-    font-family: 'JetBrains Mono', monospace; /* Fonte estilo programador */
+/* Área de Mensagens */
+.chat-container {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    z-index: 9999;
+    padding: 1.5rem;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.05);
 }
 
-/* Estilos de Cores para os Logs Técnicos */
-.log-entry.SUCCESS { color: #4ade80; } /* Verde para acertos de NLTK */
-.log-entry.WARNING { color: #fbbf24; } /* Amarelo para avisos de contexto */
-.log-entry.ERROR   { color: #f87171; } /* Vermelho para falhas de conexão */
-.log-entry.system  { color: var(--accent-color); font-weight: bold; } /* Azul para status interno */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
 
-/* Ajustes para Celular */
+/* Scrollbar Customizada */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
+}
+
+.message {
+    display: flex;
+    width: 100%;
+}
+
+.message.bot { justify-content: flex-start; }
+.message.user { justify-content: flex-end; }
+
+.bubble {
+    max-width: 80%;
+    padding: 1rem 1.4rem;
+    border-radius: 20px;
+    font-size: 1rem;
+    line-height: 1.6;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: messageIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Animação pop-in das mensagens */
+@keyframes messageIn {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.bot .bubble {
+    background: var(--bot-bubble);
+    border: 1px solid var(--glass-border);
+    border-bottom-left-radius: 4px;
+}
+
+.user .bubble {
+    background: var(--user-bubble);
+    color: white;
+    border-bottom-right-radius: 4px;
+    background: linear-gradient(135deg, var(--user-bubble), #0369a1);
+}
+
+/* --- Destaques de Mensagem (Identificação) --- */
+.msg-highlight {
+    font-weight: 800;
+    color: var(--ball-yellow); /* Amarelo bolinha para destacar no azul */
+    text-shadow: 0 0 8px rgba(223, 255, 79, 0.3);
+}
+
+.user .bubble .msg-highlight {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-color);
+}
+
+/* Área de Entrada de Texto */
+.chat-input-area {
+    display: flex;
+    gap: 1rem;
+    background: rgba(2, 6, 23, 0.6);
+    padding: 0.6rem;
+    border-radius: 25px;
+    border: 1px solid var(--glass-border);
+    margin-top: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    align-items: center;
+}
+
+input[type="text"] {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+}
+
+input[type="text"]::placeholder {
+    color: rgba(148, 163, 184, 0.4);
+}
+
+/* --- Botão Enviar Bolinha de Tênis --- */
+#send-btn {
+    background: var(--ball-yellow);
+    border: 2px solid #c9e644;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e3a8a;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 
+        inset -4px -4px 8px rgba(0,0,0,0.2),
+        inset 4px 4px 8px rgba(255,255,255,0.4),
+        0 8px 20px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/* Costuras da bolinha de tênis via pseudo-elementos */
+#send-btn::before,
+#send-btn::after {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    border: 2.5px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+}
+
+#send-btn::before { top: -85%; left: -20%; }
+#send-btn::after { bottom: -85%; right: -20%; }
+
+#send-btn:hover {
+    transform: scale(1.15) rotate(15deg);
+    box-shadow: 0 12px 25px rgba(223, 255, 79, 0.3);
+    filter: brightness(1.1);
+}
+
+#send-btn:active { transform: scale(0.9) rotate(-5deg); }
+
+/* Rodapé do Chat */
+footer {
+    padding: 1rem;
+    text-align: center; /* Centraliza o texto do copyright */
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--glass-border);
+}
+
+/* Botão de abrir o Terminal */
+.terminal-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+.terminal-btn:hover {
+    background: rgba(56, 189, 248, 0.1);
+    border-color: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.terminal-btn .dot {
+    width: 10px;
+    height: 10px;
+    background: #4ade80;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
+}
+
+/* --- Painel do Terminal Lateral --- */
+.console-panel {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 450px;
+    background: #020617;
+    border: 2px solid #1e293b;
+    border-radius: 20px;
+    height: 0;
+    max-height: 450px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    z-index: 2000;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.console-panel.active {
+    height: 450px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.console-header {
+    background: #0f172a;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #1e293b;
+}
+
+.console-header span {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #4ade80;
+    letter-spacing: 3px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.console-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    background: #020617;
+    color: #cbd5e1;
+}
+
+.log-entry {
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid transparent;
+}
+
+/* Estilos específicos para tipos de logs técnicos */
+.log-entry.system { color: #38bdf8; font-weight: 700; border-left-color: #38bdf8; }
+.log-entry.WARNING { color: #fbbf24; border-left-color: #fbbf24; }
+.log-entry.ERROR { color: #f87171; border-left-color: #f87171; }
+.log-entry.SUCCESS { color: #4ade80; border-left-color: #4ade80; }
+
+/* Cores das porcentagens de match no terminal */
+.match-low { color: #f87171 !important; font-weight: bold; }
+.match-mid { color: #fbbf24 !important; font-weight: bold; }
+.match-high { color: #4ade80 !important; font-weight: bold; }
+
+.match-tag {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* Responsividade para telas menores */
 @media (max-width: 600px) {
     .container { width: 100%; height: 100vh; border-radius: 0; }
-    .bubble { max-width: 90%; }
+    .console-panel { width: 100%; bottom: 0; right: 0; border-radius: 20px 20px 0 0; }
+    header p { padding-left: 0; text-align: center; }
 }
