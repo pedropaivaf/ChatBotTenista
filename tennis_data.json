@@ -11,6 +11,18 @@
     {"position": 9, "name": "Ben Shelton", "country": "Estados Unidos", "points": "3.860"},
     {"position": 10, "name": "Daniil Medvedev", "country": "Rússia", "points": "3.610"}
   ],
+  "ranking_wta": [
+    {"position": 1, "name": "Iga Swiatek", "country": "Polônia", "points": "11.695"},
+    {"position": 2, "name": "Aryna Sabalenka", "country": "Bielorrússia", "points": "9.450"},
+    {"position": 3, "name": "Coco Gauff", "country": "Estados Unidos", "points": "8.120"},
+    {"position": 4, "name": "Elena Rybakina", "country": "Cazaquistão", "points": "6.080"},
+    {"position": 5, "name": "Jessica Pegula", "country": "Estados Unidos", "points": "5.850"},
+    {"position": 6, "name": "Qinwen Zheng", "country": "China", "points": "4.980"},
+    {"position": 7, "name": "Jasmine Paolini", "country": "Itália", "points": "4.860"},
+    {"position": 8, "name": "Emma Navarro", "country": "Estados Unidos", "points": "4.500"},
+    {"position": 9, "name": "Beatriz Haddad Maia", "country": "Brasil", "points": "4.200"},
+    {"position": 10, "name": "Barbora Krejcikova", "country": "Rep. Tcheca", "points": "3.980"}
+  ],
   "grand_slams": {
     "2025": {
       "Australian Open": "Jannik Sinner",
@@ -23,35 +35,23 @@
       "Roland Garros": "Carlos Alcaraz",
       "Wimbledon": "Carlos Alcaraz",
       "US Open": "Jannik Sinner"
-    },
-    "2023": {
-      "Australian Open": "Novak Djokovic",
-      "Roland Garros": "Novak Djokovic",
-      "Wimbledon": "Carlos Alcaraz",
-      "US Open": "Novak Djokovic"
     }
   },
   "player_details": {
-    "Jannik Sinner": {
-      "age": 24,
-      "style": "Destro (backhand de duas mãos)",
-      "titles": "Australian Open 2024/2025, US Open 2024",
-      "fact": "Conhecido como 'The Fox', ele é o primeiro italiano número 1 do mundo na história.",
-      "country": "Itália"
-    },
-    "Carlos Alcaraz": {
-      "age": 22,
-      "style": "Destro (agressivo)",
-      "titles": "Roland Garros 2025, US Open 2025, Wimbledon 2024",
-      "fact": "Foi o número 1 mais jovem da história aos 19 anos.",
-      "country": "Espanha"
-    },
-    "Novak Djokovic": {
-      "age": 38,
-      "style": "Completo (melhor devolução da história)",
-      "titles": "24 Grand Slams (Recorde Masculino)",
-      "fact": "Detém o recorde de mais semanas como número 1 do mundo.",
-      "country": "Sérvia"
-    }
+    "Jannik Sinner": { "age": 24, "style": "Destro", "titles": "AO 2024/2025, US Open 2024", "country": "Itália", "fact": "Primeiro italiano #1." },
+    "Carlos Alcaraz": { "age": 22, "style": "Agressivo", "titles": "RG 2025, US Open 2025, Wim 2024", "country": "Espanha", "fact": "#1 mais jovem." },
+    "Novak Djokovic": { "age": 38, "style": "Completo", "titles": "24 Grand Slams", "country": "Sérvia", "fact": "GOAT (estatístico)." },
+    "João Fonseca": { "age": 19, "style": "Agressivo", "titles": "US Open Juvenil 2023", "country": "Brasil", "fact": "Futuro top 10." },
+    "Beatriz Haddad Maia": { "age": 29, "style": "Canhota (potente)", "titles": "Elite Trophy 2023, SF Roland Garros", "country": "Brasil", "fact": "Maior brasileira pós-Maria Esther Bueno." },
+    "Iga Swiatek": { "age": 24, "style": "Agitadora (saibro)", "titles": "4x Roland Garros, 1x US Open", "country": "Polônia", "fact": "Dominante no saibro moderno." },
+    "Aryna Sabalenka": { "age": 27, "style": "Potência pura", "titles": "2x Australian Open", "country": "Bielorrússia", "fact": "Conhecida como a Tigresa da Bielorrússia." },
+    "Roger Federer": { "age": 44, "style": "Maestro (Elegante)", "titles": "20 Grand Slams", "country": "Suíça", "fact": "O maior ícone de elegância do tênis." },
+    "Rafael Nadal": { "age": 39, "style": "Touro (Saibro)", "titles": "22 Grand Slams", "country": "Espanha", "fact": "Rei de Roland Garros (14 títulos)." },
+    "Serena Williams": { "age": 44, "style": "Dominante", "titles": "23 Grand Slams", "country": "EUA", "fact": "Maior tenista da Era Aberta." },
+    "Pete Sampras": { "age": 54, "style": "Saque e Voleio", "titles": "14 Grand Slams", "country": "EUA", "fact": "Pistol Pete, dominou os anos 90." },
+    "Andre Agassi": { "age": 55, "style": "Devolvedor", "titles": "8 Grand Slams", "country": "EUA", "fact": "Primeiro a ganhar o Golden Slam na carreira." },
+    "Maria Sharapova": { "age": 38, "style": "Agressiva", "titles": "5 Grand Slams", "country": "Rússia", "fact": "Única russa a completar o Career Slam." },
+    "Gustavo Kuerten": { "age": 49, "style": "Saibrista (Backhand)", "titles": "3x Roland Garros", "country": "Brasil", "fact": "O nosso Guga, o Labrador Humano." },
+    "Maria Esther Bueno": { "age": "Imortal", "style": "Elegante", "titles": "19 Grand Slams (7 simples)", "country": "Brasil", "fact": "A Bailarina do Tênis, maior lenda brasileira." }
   }
 }
