@@ -1,0 +1,72 @@
+{
+  "intents": [
+    {
+      "tag": "saudacao",
+      "patterns": ["Olá", "Oi", "Oi tudo bem?", "Tudo bem?", "Ei", "Opa", "Bom dia", "Boa tarde", "Boa noite", "Tem alguém aí?"],
+      "responses": ["Olá! Sou seu assistente de Tênis. Como posso ajudar você hoje?", "Oi! Vamos falar sobre Tênis? O que você quer saber?"],
+      "follow_up": "Você tem algum jogador favorito ou prefere saber sobre os torneios?"
+    },
+    {
+      "tag": "despedida",
+      "patterns": ["Tchau", "Até logo", "Adeus", "Obrigado", "Valeu"],
+      "responses": ["Até mais! Espero ter ajudado você a conhecer mais sobre Tênis.", "Tchau! Volte sempre que tiver dúvidas sobre o circuito."],
+      "follow_up": ""
+    },
+    {
+      "tag": "federer",
+      "patterns": ["Quem é Roger Federer?", "Fale sobre o Federer", "Quantos Grand Slams o Federer tem?", "Roger Federer aposentou?"],
+      "responses": [
+        "Roger Federer é uma lenda do tênis suíço, conhecido por sua elegância e estilo de jogo clássico. Ele conquistou 20 títulos de Grand Slam e se aposentou oficialmente em 2022 na Laver Cup."
+      ],
+      "follow_up": "Para você, o Federer é o maior de todos os tempos ou você prefere o estilo do Nadal?"
+    },
+    {
+      "tag": "nadal",
+      "patterns": ["Quem é Rafael Nadal?", "Fale sobre o Nadal", "Quantos Roland Garros o Nadal tem?", "Nadal é o rei do saibro?"],
+      "responses": [
+        "Rafael Nadal, o 'Rei do Saibro', é um tenista espanhol famoso por sua garra e domínio em quadras de terra batida. Ele possui 22 títulos de Grand Slam, sendo 14 deles conquistados em Roland Garros."
+      ],
+      "follow_up": "Você acha que alguém algum dia conseguirá superar o recorde de 14 títulos dele em um único Grand Slam?"
+    },
+    {
+      "tag": "djokovic",
+      "patterns": ["Quem é Novak Djokovic?", "Fale sobre o Djokovic", "Quantos Grand Slams o Djokovic tem?", "Quem é o maior vencedor de Grand Slams?"],
+      "responses": [
+        "Novak Djokovic é o maior vencedor de Grand Slams da história do tênis masculino (atualmente com 24 títulos). O tenista sérvio é conhecido por sua elasticidade, defesa impecável e força mental."
+      ],
+      "follow_up": "Acha que ele ainda consegue chegar aos 25 títulos antes de se aposentar?"
+    },
+    {
+      "tag": "alcaraz",
+      "patterns": ["Quem é Carlos Alcaraz?", "Fale sobre o Alcaraz", "Quantos Grand Slams o Alcaraz tem?", "Carlitos Alcaraz"],
+      "responses": [
+        "Carlos Alcaraz é a nova superestrela do tênis espanhol. Ele já conquistou múltiplos Grand Slams (US Open, Wimbledon e Roland Garros) e foi o número 1 do mundo mais jovem da história."
+      ],
+      "follow_up": "Você acredita que ele será o sucessor natural do Nadal ou ele tem um estilo mais parecido com o do Federer?"
+    },
+    {
+      "tag": "sinner",
+      "patterns": ["Quem é Jannik Sinner?", "Fale sobre o Sinner", "Sinner ganhou o Australian Open?", "Jannik Sinner número 1"],
+      "responses": [
+        "Jannik Sinner é o atual grande nome do tênis italiano. Em 2024, ele conquistou o Australian Open e o US Open, tornando-se o primeiro italiano a alcançar o posto de número 1 do ranking ATP."
+      ],
+      "follow_up": "Sinner vs Alcaraz: quem você acha que dominará o circuito nos próximos anos?"
+    },
+    {
+      "tag": "grand_slam",
+      "patterns": ["O que é um Grand Slam?", "Quais são os principais torneios?", "Quais torneios formam o Grand Slam?", "Australian Open", "Roland Garros", "Wimbledon", "US Open"],
+      "responses": [
+        "O Grand Slam é composto pelos quatro torneios mais importantes do tênis: Australian Open (piso duro), Roland Garros (saibro), Wimbledon (grama) e US Open (piso duro)."
+      ],
+      "follow_up": "Qual desses quatro torneios você acha mais charmoso: a grama de Wimbledon ou o saibro de Paris?"
+    },
+    {
+      "tag": "ranking",
+      "patterns": ["Como funciona o ranking da ATP?", "O que é a ATP?", "Como são calculados os pontos?", "Quem é o número 1?"],
+      "responses": [
+        "A ATP (Association of Tennis Professionals) gerencia o ranking mundial masculino. Os pontos são calculados com base no desempenho dos jogadores nos torneios ao longo das últimas 52 semanas."
+      ],
+      "follow_up": "Você sabia que a API do nosso bot pode buscar o ranking em tempo real? Quer tentar perguntar 'Qual o ranking atual'?"
+    }
+  ]
+}

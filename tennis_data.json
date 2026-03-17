@@ -1,0 +1,42 @@
+{
+  "ranking_atp": [
+    {"position": 1, "name": "Jannik Sinner", "points": 11920, "country": "Itália"},
+    {"position": 2, "name": "Alexander Zverev", "points": 7915, "country": "Alemanha"},
+    {"position": 3, "name": "Carlos Alcaraz", "points": 7010, "country": "Espanha"},
+    {"position": 4, "name": "Novak Djokovic", "points": 6210, "country": "Sérvia"},
+    {"position": 5, "name": "Daniil Medvedev", "points": 5230, "country": "Rússia"},
+    {"position": 6, "name": "Taylor Fritz", "points": 4300, "country": "EUA"},
+    {"position": 7, "name": "Casper Ruud", "points": 3855, "country": "Noruega"},
+    {"position": 8, "name": "Andrey Rublev", "points": 3760, "country": "Rússia"},
+    {"position": 9, "name": "Alex de Minaur", "points": 3745, "country": "Austrália"},
+    {"position": 10, "name": "Grigor Dimitrov", "points": 3350, "country": "Bulgária"}
+  ],
+  "grand_slams": {
+    "2024": {
+      "Australian Open": "Jannik Sinner",
+      "Roland Garros": "Carlos Alcaraz",
+      "Wimbledon": "Carlos Alcaraz",
+      "US Open": "Jannik Sinner"
+    },
+    "2023": {
+      "Australian Open": "Novak Djokovic",
+      "Roland Garros": "Novak Djokovic",
+      "Wimbledon": "Carlos Alcaraz",
+      "US Open": "Novak Djokovic"
+    }
+  },
+  "player_details": {
+    "Jannik Sinner": {
+      "age": 23,
+      "style": "Agressivo de fundo de quadra",
+      "titles": "Grand Slams (2), Master 1000 (4)",
+      "fact": "Primeiro italiano na história a ser número 1 do mundo."
+    },
+    "Carlos Alcaraz": {
+      "age": 21,
+      "style": "Completo, muita potência e drop shots",
+      "titles": "Grand Slams (4), Master 1000 (5)",
+      "fact": "Mais jovem número 1 da história aos 19 anos."
+    }
+  }
+}
