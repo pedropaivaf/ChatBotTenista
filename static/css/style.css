@@ -5,14 +5,14 @@
     --ball-yellow: #dfff4f; /* Amarelo-limão clássico da bolinha de tênis */
     
     --bg-color: #0f172a; /* Cor de fundo principal (quase preto) para o chat */
-    --container-bg: rgba(15, 23, 42, 0.75); /* Azul marinho glassmorphism */
-    --accent-color: #38bdf8; /* Azul claro para destaques e botões */
-    --text-primary: #f8fafc; /* Cor branca para o texto principal */
-    --text-secondary: #94a3b8; /* Cor cinza para textos secundários */
-    --glass-border: rgba(255, 255, 255, 0.15); /* Borda branca suave */
+    --container-bg: rgba(15, 23, 42, 0.75); /* Azul marinho glassmorphism (transparência com desfoque) */
+    --accent-color: #38bdf8; /* Azul claro para destaques e botões interativos */
+    --text-primary: #f8fafc; /* Cor branca para o texto principal de leitura */
+    --text-secondary: #94a3b8; /* Cor cinza para textos secundários e legendas */
+    --glass-border: rgba(255, 255, 255, 0.15); /* Borda branca suave para o efeito de vidro */
     
-    --bot-bubble: rgba(30, 41, 59, 0.9); /* Bolha do bot azul escuro */
-    --user-bubble: #0284c7; /* Bolha do usuário azul vibrante */
+    --bot-bubble: rgba(30, 41, 59, 0.9); /* Bolha do bot em azul escuro sóbrio */
+    --user-bubble: #0284c7; /* Bolha do usuário em azul vibrante para contraste */
 }
 
 * { /* Reset básico para remover margens e preenchimentos padrões do navegador */
@@ -261,8 +261,8 @@ input[type="text"]::placeholder {
     border-radius: 50%;
 }
 
-#send-btn::before { top: -85%; left: -20%; }
-#send-btn::after { bottom: -85%; right: -20%; }
+#send-btn::before { top: -85%; left: -20%; } /* Posiciona a costura superior */
+#send-btn::after { bottom: -85%; right: -20%; } /* Posiciona a costura inferior */
 
 #send-btn:hover {
     transform: scale(1.15) rotate(15deg);
@@ -272,16 +272,144 @@ input[type="text"]::placeholder {
 
 #send-btn:active { transform: scale(0.9) rotate(-5deg); }
 
-/* Rodapé do Chat */
+/* Rodapé do Chat - Layout flexbox horizontal (Side-by-Side) */
 footer {
-    padding: 1rem;
-    text-align: center; /* Centraliza o texto do copyright */
-    font-size: 0.75rem;
-    color: var(--text-secondary);
     border-top: 1px solid var(--glass-border);
+    background: rgba(15, 23, 42, 0.4);
+    padding: 0.8rem 1.5rem;
 }
 
-/* Botão de abrir o Terminal */
+.footer-content {
+    display: flex;
+    justify-content: space-between; /* Distribui texto à esquerda e botão à direita */
+    align-items: center;
+    width: 100%;
+}
+
+footer p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+}
+
+/* Botão de Créditos */
+.group-members-btn {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.group-members-btn:hover {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+}
+
+/* --- Tela de Integrantes (Modal) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(2, 6, 23, 0.85); /* Fundo escuro semi-transparente */
+    backdrop-filter: blur(15px); /* Efeito de desfoque profissional */
+    -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    justify-content: center; /* Centralização horizontal robusta */
+    align-items: center;     /* Centralização vertical robusta */
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+    width: 90%;
+    max-width: 500px;
+    padding: 3rem;
+    border-radius: 30px;
+    border: 1px solid var(--accent-color);
+    position: relative;
+    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.9);
+    transform: translateY(40px) scale(0.9);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0) scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.modal-close:hover { color: #f87171; }
+
+.modal-header h2 {
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    font-style: italic;
+    color: var(--ball-yellow);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.title-underline {
+    width: 60px;
+    height: 4px;
+    background: var(--accent-color);
+    margin: 0 auto 2rem;
+    border-radius: 2px;
+}
+
+/* Lista de Integrantes com Animação em Cascata */
+.member-list {
+    list-style: none;
+}
+
+.member-list li {
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border-left: 4px solid var(--accent-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s ease;
+    transition-delay: calc(var(--i) * 0.15s);
+}
+
+.modal-overlay.active .member-list li {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* --- Painel do Terminal Lateral (RESTAURADO) --- */
 .terminal-btn {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--glass-border);
@@ -311,13 +439,12 @@ footer {
     box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
 }
 
-/* --- Painel do Terminal Lateral --- */
 .console-panel {
     position: fixed;
     bottom: 30px;
     right: 30px;
     width: 450px;
-    background: #020617;
+    background: #020617; /* Fundo sólido restaurado */
     border: 2px solid #1e293b;
     border-radius: 20px;
     height: 0;
@@ -373,13 +500,11 @@ footer {
     border-left: 3px solid transparent;
 }
 
-/* Estilos específicos para tipos de logs técnicos */
 .log-entry.system { color: #38bdf8; font-weight: 700; border-left-color: #38bdf8; }
 .log-entry.WARNING { color: #fbbf24; border-left-color: #fbbf24; }
 .log-entry.ERROR { color: #f87171; border-left-color: #f87171; }
 .log-entry.SUCCESS { color: #4ade80; border-left-color: #4ade80; }
 
-/* Cores das porcentagens de match no terminal */
 .match-low { color: #f87171 !important; font-weight: bold; }
 .match-mid { color: #fbbf24 !important; font-weight: bold; }
 .match-high { color: #4ade80 !important; font-weight: bold; }
@@ -398,4 +523,5 @@ footer {
     .container { width: 100%; height: 100vh; border-radius: 0; }
     .console-panel { width: 100%; bottom: 0; right: 0; border-radius: 20px 20px 0 0; }
     header p { padding-left: 0; text-align: center; }
+    .footer-content { flex-direction: column; gap: 10px; text-align: center; }
 }

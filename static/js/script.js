@@ -113,6 +113,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- Controle do Modal de Integrantes (Group Members) ---
+    
+    // Referências aos elementos do modal
+    const groupBtn = document.getElementById('group-btn'); // Botão "Integrantes do Grupo" no footer
+    const groupModal = document.getElementById('group-modal'); // Overlay do modal (fundo escuro)
+    const closeModal = document.getElementById('close-modal'); // Botão X dentro do modal
+
+    /**
+     * Função: toggleModal
+     * Objetivo: Abre ou fecha a tela de integrantes adicionando a classe 'active'.
+     */
+    const toggleModal = () => {
+        groupModal.classList.toggle('active'); // Alterna a visibilidade suave via CSS
+        
+        // Se abriu o modal, registra no terminal técnico para depuração
+        if (groupModal.classList.contains('active')) {
+            addLog("[DEBUG] Visualizando tela de integrantes do grupo.");
+        }
+    };
+
+    // Listeners para abrir e fechar o modal
+    groupBtn.addEventListener('click', toggleModal); // Abre ao clicar no botão do footer
+    closeModal.addEventListener('click', toggleModal); // Fecha ao clicar no X
+
+    // Fecha o modal se o usuário clicar fora da caixa central (no fundo escuro)
+    window.addEventListener('click', (e) => {
+        if (e.target === groupModal) toggleModal();
+    });
+
     // --- Controle do Console (Abre/Fecha/Limpa) ---
     
     // Função para alternar a visibilidade do painel lateral
