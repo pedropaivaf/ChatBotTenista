@@ -24,7 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const bubble = document.createElement('div'); // Cria o balão (bubble) interno
         bubble.classList.add('bubble'); // Adiciona a classe de estilo do balão
-        bubble.innerHTML = text; // Define o conteúdo (innerHTML permite renderizar os spans de destaque)
+        
+        // Converte as quebras de linha '\n' vindas do Python em tags HTML '<br>'
+        // Isso é necessário porque estamos usando innerHTML para suportar os destaques CSS
+        const formattedText = text.replace(/\n/g, '<br>');
+        bubble.innerHTML = formattedText; // Define o conteúdo formatado
         
         messageDiv.appendChild(bubble); // Coloca o balão dentro do container da mensagem
         chatMessages.appendChild(messageDiv); // Insere a mensagem completa na lista do chat

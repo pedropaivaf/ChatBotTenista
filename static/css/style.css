@@ -474,6 +474,53 @@ footer p {
     border-bottom: 2px solid #1e293b;
 }
 
+.console-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#clear-console, #close-console {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#clear-console:hover {
+    background: rgba(74, 222, 128, 0.1);
+    border-color: #4ade80;
+    color: #4ade80;
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.2);
+    transform: translateY(-2px);
+}
+
+#close-console {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+#close-console:hover {
+    background: rgba(248, 113, 113, 0.1);
+    border-color: #f87171;
+    color: #f87171;
+    box-shadow: 0 0 15px rgba(248, 113, 113, 0.2);
+    transform: translateY(-2px);
+}
+
 .console-header span {
     font-size: 0.8rem;
     font-weight: 800;
@@ -516,6 +563,63 @@ footer p {
     border-radius: 4px;
     font-weight: 800;
     text-transform: uppercase;
+}
+
+/* --- Estilização Dinâmica de Atributos do Jogador --- */
+.attr-label {
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-right: 4px;
+    display: inline-block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.attr-rank {
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffd700;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.attr-country {
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.attr-age {
+    background: rgba(251, 146, 60, 0.1);
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.2);
+}
+
+.attr-style {
+    background: rgba(192, 132, 252, 0.1);
+    color: #c084fc;
+    border: 1px solid rgba(192, 132, 252, 0.2);
+}
+
+.attr-titles {
+    background: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.attr-fact {
+    background: rgba(244, 114, 182, 0.1);
+    color: #f472b6;
+    border: 1px solid rgba(244, 114, 182, 0.2);
+}
+
+.player-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    display: block;
+    margin-bottom: 8px;
 }
 
 /* Responsividade para telas menores */

@@ -103,11 +103,19 @@
     },
     {
       "tag": "brasil_tenis",
-      "patterns": ["tenis no brasil", "jogadores brasileiros", "quem é o Guga?", "Gustavo Kuerten", "Beatriz Haddad Maia", "Bia Haddad", "quem é o maior brasileiro?", "João Fonseca", "quem é João Fonseca?", "novo Guga", "promessa brasileira"],
+      "patterns": ["tênis no brasil", "tenistas brasileiros", "legado do Guga", "Gustavo Kuerten no saibro", "Beatriz Haddad Maia biografia", "Bia Haddad resultados", "João Fonseca promessa", "novo Guga brasileiro"],
       "responses": [
-        "O Brasil vive um momento épico! 🇧🇷 Além do legado do Guga (tricampeão de Roland Garros), temos a Bia Haddad Maia consolidada no Top 20 da WTA e a ascensão meteórica de João Fonseca, que em 2024 e 2025 se tornou uma das maiores promessas do tênis mundial com seu estilo agressivo e títulos no circuito Challenger e boas campanhas na ATP!"
+        "O Brasil vive um momento épico! 🇧🇷 Além do legado do Guga (tricampeão de Roland Garros), temos a Bia Haddad Maia consolidada no Top 20 da WTA e a ascensão meteórica de João Fonseca, que em 2024 e 2025 se tornou uma das maiores promessas do tênis mundial!"
       ],
       "follow_up": "Você acha que o João Fonseca tem potencial para ser o próximo número 1 do mundo como o Guga?"
+    },
+    {
+      "tag": "players_tenis",
+      "patterns": ["quem é o jogador?", "fale sobre o tenista", "quem são os top 100?", "me fale sobre esse atleta", "quem é esse jogador?", "quais os melhores jogadores?", "quem é ele?", "quem é ela?", "perfil do jogador", "biografia de tenista"],
+      "responses": [
+        "Estou pronto para falar sobre as maiores estrelas do tênis! 🎾 Posso te contar sobre estilo de jogo, títulos e curiosidades de quase qualquer jogador do Top 100."
+      ],
+      "follow_up": "Qual jogador você tem em mente agora? Posso verificar os detalhes para você."
     },
     {
       "tag": "vencedores_torneio",

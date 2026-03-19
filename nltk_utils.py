@@ -42,17 +42,37 @@ def bag_of_words(tokenized_sentence, words): # Função avançada para converter
 def extract_entities(sentence_tokens, candidates): # Função para detecção inteligente de jogadores/torneios
     """
     Função que busca Identificar 'Entidades' (nomes próprios) no meio de uma frase.
-    Ela permite encontrar nomes compostos como 'Roger Federer' mesmo no meio de outras palavras.
+    Refinada para evitar colisões (ex: 'Taylor Fritz' vs 'Taylor Townsend') usando pontuação.
     """
-    # Percorre cada nome de candidato (ex: nomes de todos os jogadores do banco de dados)
+    best_candidate = None # Armazena o melhor resultado encontrado
+    max_matches = 0 # Armazena o maior número de palavras coincidentes
+    
+    # Percorre cada nome de candidato (ex: todos os jogadores do banco de dados)
     for candidate in candidates:
         # Tokeniza e gera os radicais de cada parte do nome do candidato
-        # Isso garante que "Novak Djokovic" seja encontrado mesmo se o usuário escrever "novak"
         candidate_tokens = [stem(w) for w in tokenize(candidate)]
         
-        # LÓGICA DE DETECÇÃO: Verifica se TODOS os pedaços do nome candidato estão na frase
-        # Usamos 'all()' para garantir que para 'Joao Fonseca', ambos 'joao' e 'fonsec' sejam achados
-        if all(token in sentence_tokens for token in candidate_tokens):
-            return candidate # Se achou tudo, retorna o nome oficial (formatado) do cadastro
+        # Filtra tokens muito curtos do candidato (ex: "de", "da") para evitar falsos positivos
+        important_candidate_tokens = [t for t in candidate_tokens if len(t) > 2]
+        
+        # Conta quantas palavras importantes do candidato estão na frase do usuário
+        matches = sum(1 for token in important_candidate_tokens if token in sentence_tokens)
+        
+        # LÓGICA DE PONTUAÇÃO:
+        # 1. Se o número de matches atual for maior que o recorde anterior...
+        if matches > max_matches:
+            max_matches = matches
+            best_candidate = candidate
+        # 2. Se houver empate no número de matches...
+        elif matches > 0 and matches == max_matches:
+            # Pegamos o candidato que tem o maior percentual de cobertura da frase
+            # Isso ajuda a diferenciar "Taylor Fritz" de "Taylor Townsend" se o usuário digitou "fritz"
+            current_best_tokens = [stem(w) for w in tokenize(best_candidate)]
+            important_best = [t for t in current_best_tokens if len(t) > 2]
             
-    return None # Se percorreu todos os candidatos e não achou nenhum match completo, retorna nada
+            # Se o novo candidato for um "match perfeito" (todas as palavras batem), ele assume a liderança
+            if len(important_candidate_tokens) == matches:
+                best_candidate = candidate
+
+    # Retorna o melhor candidato apenas se houver pelo menos um match significativo
+    return best_candidate if max_matches > 0 else None

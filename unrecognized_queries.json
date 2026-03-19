@@ -26,5 +26,25 @@
     {
         "query": "estatisticas",
         "timestamp": "2026-03-17 12:41:00"
+    },
+    {
+        "query": "quem ganhou a copa do mundo?",
+        "timestamp": "2026-03-18 19:05:44"
+    },
+    {
+        "query": "quem ganhou a copa do mundo de 96",
+        "timestamp": "2026-03-18 19:16:47"
+    },
+    {
+        "query": "tisisipas",
+        "timestamp": "2026-03-18 20:09:37"
+    },
+    {
+        "query": "taylor fritz",
+        "timestamp": "2026-03-18 21:13:40"
+    },
+    {
+        "query": "Denis Shapovalov",
+        "timestamp": "2026-03-18 21:18:26"
     }
 ]
