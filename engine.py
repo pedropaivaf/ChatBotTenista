@@ -1,4 +1,4 @@
-import json # Biblioteca para ler e escrever arquivos de texto no formato JSON (nossa base de dados)
+import json # trigger reload
 import os # Biblioteca para interagir com o sistema de arquivos (verificar se arquivos existem)
 import requests # Para buscar dados em sites externos
 import re # Para extrair informações do HTML via expressões regulares
