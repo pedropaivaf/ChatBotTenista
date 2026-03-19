@@ -174,7 +174,8 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
                   f"🎾 <span class='attr-label attr-style'>Estilo:</span> {style}\n"
                   f"🏆 <span class='attr-label attr-titles'>Títulos:</span> {titles}\n"
                   f"💡 <span class='attr-label attr-fact'>Curiosidade:</span> {fact}\n"
-                  f"💰 <span class='attr-label'>Pontos:</span> {player_points}\n\n")
+                  f"🎯 <span class='attr-label'>Pontos:</span> {player_points}\n\n")
+
 
         # Definindo pronome baseado no circuito (WTA/Feminino ou ATP/Masculino)
         pronome = "ele"
