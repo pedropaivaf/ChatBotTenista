@@ -65,9 +65,12 @@ def predict(): # Função principal de "predição" ou resposta
         current_logs.append(f"[{level}] {msg}") # Formata e adiciona a mensagem ao log
 
     # Processamento inicial da mensagem (Pré-processamento)
+    add_log(f">> Comando recebido: {text}", "INFO")
     msg_lower = text.lower().strip() # Converte tudo para minúsculo e limpa espaços extras
     msg_tokens = tokenize(msg_lower) # Fatias a frase em palavras (tokens) via NLTK
     msg_stems = [stem(w) for w in msg_tokens] # Reduz cada palavra ao seu radical (raiz)
+    add_log(f"[NLTK] Tokens: {msg_tokens}", "DEBUG")
+    add_log(f"[NLTK] Radicais estruturados: {msg_stems}", "DEBUG")
 
     # --- Passo 0: Filtro de Contexto (Anti-Futebol e Anti-Offtopic) ---
     if any(off in msg_lower for off in OFF_TOPIC_KEYWORDS): # Se detectar palavras禁止
@@ -164,6 +167,10 @@ def predict(): # Função principal de "predição" ou resposta
             if score > max_match_score: # Se este match for o melhor até agora...
                 max_match_score = score # Atualiza a nota máxima
                 best_match_tag = intent["tag"] # Atualiza a tag vencedora
+        
+        # Log detalhado da tentativa de match
+        if score > 0:
+            add_log(f"Testando tag '{intent['tag']}': {score:.1f}% de compatibilidade.", "DEBUG")
 
     # Se a similaridade for convincente (>= 50%)
     if max_match_score >= 50:
