@@ -123,36 +123,45 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
 
         # --- CONSTRUÇÃO DA RESPOSTA COM DESIGN PREMIUM ---
         
-        # Rank Info
+        # Rank Info e Pontos
         rank_label = "N/A"
+        player_points = "N/A"
+        
+        # Busca no ranking ATP
         for r in ranking_atp:
             if found_player_name.lower() in r['name'].lower() or r['name'].lower() in found_player_name.lower():
                 rank_label = f"{r['position']}º (ATP)"
+                player_points = r.get('points', 'N/A')
                 break
+        
+        # Se não achou na ATP, busca na WTA
         if rank_label == "N/A":
             for r in ranking_wta:
                 if found_player_name.lower() in r['name'].lower() or r['name'].lower() in found_player_name.lower():
                     rank_label = f"{r['position']}º (WTA)"
+                    player_points = r.get('points', 'N/A')
                     break
 
         country_name = player_data.get('country', 'N/A')
+        # Busca a bandeira emoji no dicionário
         flag = COUNTRY_FLAGS.get(country_name, "🌍")
 
-        # Cabeçalho da Ficha
+        # Cabeçalho da Ficha - Estrutura refinada com ícones e labels premium
         result = (f"🎾 <span class='player-name'>{found_player_name}</span>\n"
                   f"📊 <span class='attr-label attr-rank'>Rank Atual:</span> {rank_label}\n"
-                  f"<span>{flag}</span> <span class='attr-label attr-country'>País:</span> {country_name}\n")
+                  f"{flag} <span class='attr-label attr-country'>País:</span> {country_name}\n")
 
         if is_full_bio:
-            # Mostra dados completos
+            # Ficha técnica completa para jogadores com biografia dedicada
             result += (f"🎂 <span class='attr-label attr-age'>Idade:</span> {player_data.get('age', 'N/A')} anos\n"
                        f"🎾 <span class='attr-label attr-style'>Estilo:</span> {player_data.get('style', 'N/A')}\n"
                        f"🏆 <span class='attr-label attr-titles'>Títulos:</span> {player_data.get('titles', 'N/A')}\n"
-                       f"💡 <span class='attr-label attr-fact'>Curiosidade:</span> {player_data.get('fact', 'N/A')}\n\n"
+                       f"💡 <span class='attr-label attr-fact'>Curiosidade:</span> {player_data.get('fact', 'N/A')}\n"
+                       f"💰 <span class='attr-label'>Pontos:</span> {player_points}\n\n"
                        f"O que mais você gostaria de saber sobre el@?")
         else:
             # Mostra dados básicos do Top 100
-            result += (f"💰 <span class='attr-label'>Pontos:</span> {player_data.get('points', 'N/A')}\n\n"
+            result += (f"💰 <span class='attr-label'>Pontos:</span> {player_points}\n\n"
                        f"Eu detectei que <span class='msg-highlight'>{found_player_name}</span> faz parte do Top 100, mas ainda não tenho sua biografia detalhada.\n"
                        f"Você pode perguntar sobre o <span class='msg-highlight'>Ranking Geral</span> ou os <span class='msg-highlight'>Campeões de Grand Slam</span>!")
 
