@@ -624,14 +624,15 @@ footer p {
 
 /* --- Estilo para Emojis de Bandeira (Garante renderização correta) --- */
 .flag-emoji {
-    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Noto Color Emoji Compact", sans-serif !important;
-    font-size: 1.4rem !important; /* Aumenta um pouco para destaque */
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Android Emoji", sans-serif !important;
+    font-size: 1.4rem !important;
     vertical-align: middle;
     margin-right: 8px;
     display: inline-block;
     letter-spacing: 0 !important;
-    line-height: 1;
+    line-height: normal;
     text-rendering: optimizeLegibility;
+    font-variant-east-asian: normal;
 }
 
 /* Responsividade para telas menores */
