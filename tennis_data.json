@@ -1205,7 +1205,7 @@
   ],
   "grand_slams": {
     "2026": {
-      "Wimbledon": {
+      "Australian Open": {
         "Masculino": {
           "campeao": "Jannik Sinner",
           "vice": "Carlos Alcaraz"
@@ -1221,28 +1221,40 @@
         "Masculino": {
           "campeao": "Jannik Sinner",
           "vice": "Daniil Medvedev"
+        },
+        "Feminino": {
+          "campeao": "Aryna Sabalenka",
+          "vice": "Zheng Qinwen"
         }
       },
       "Roland Garros": {
         "Masculino": {
           "campeao": "Carlos Alcaraz",
           "vice": "Novak Djokovic"
+        },
+        "Feminino": {
+          "campeao": "Iga Swiatek",
+          "vice": "Jasmine Paolini"
         }
       },
       "Wimbledon": {
         "Masculino": {
-          "campeao": "Jannik Sinner",
-          "vice": "Carlos Alcaraz"
+          "campeao": "Carlos Alcaraz",
+          "vice": "Novak Djokovic"
         },
         "Feminino": {
-          "campeao": "Iga Swiatek",
-          "vice": "Amanda Anisimova"
+          "campeao": "Marketa Vondrousova",
+          "vice": "Ons Jabeur"
         }
       },
       "US Open": {
         "Masculino": {
-          "campeao": "Carlos Alcaraz",
-          "vice": "Jannik Sinner"
+          "campeao": "Novak Djokovic",
+          "vice": "Daniil Medvedev"
+        },
+        "Feminino": {
+          "campeao": "Coco Gauff",
+          "vice": "Aryna Sabalenka"
         }
       }
     },
@@ -1251,12 +1263,20 @@
         "Masculino": {
           "campeao": "Jannik Sinner",
           "vice": "Daniil Medvedev"
+        },
+        "Feminino": {
+          "campeao": "Aryna Sabalenka",
+          "vice": "Zheng Qinwen"
         }
       },
       "Roland Garros": {
         "Masculino": {
           "campeao": "Carlos Alcaraz",
           "vice": "Alexander Zverev"
+        },
+        "Feminino": {
+          "campeao": "Iga Swiatek",
+          "vice": "Jasmine Paolini"
         }
       },
       "Wimbledon": {
@@ -1273,6 +1293,10 @@
         "Masculino": {
           "campeao": "Jannik Sinner",
           "vice": "Taylor Fritz"
+        },
+        "Feminino": {
+          "campeao": "Aryna Sabalenka",
+          "vice": "Jessica Pegula"
         }
       }
     }

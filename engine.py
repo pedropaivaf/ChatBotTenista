@@ -51,7 +51,10 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
             flag = self._get_flag(p.get('country', ''))
             result += f"<span class='msg-highlight'>{p['position']}º</span>. {p['name']} ({flag} {p['country']}) - <span class='msg-highlight'>{p['points']} pts</span>\n"
         
-        result += f"\nQuer saber mais sobre algum(a) desses(as) jogadores de {circuit}?"
+        if circuit.lower() == "wta":
+            result += f"\nQuer saber mais sobre alguma dessas jogadoras da {circuit}?"
+        else:
+            result += f"\nQuer saber mais sobre algum desses jogadores da {circuit}?"
         return result 
 
     # --- Lógica de Torneios e Campeões ---
@@ -173,12 +176,18 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
                   f"💡 <span class='attr-label attr-fact'>Curiosidade:</span> {fact}\n"
                   f"💰 <span class='attr-label'>Pontos:</span> {player_points}\n\n")
 
+        # Definindo pronome baseado no circuito (WTA/Feminino ou ATP/Masculino)
+        pronome = "ele"
+        wta_legends = ["Haddad Maia", "Swiatek", "Sabalenka", "Williams", "Sharapova", "Bueno", "Jabeur", "Krejcikova", "Gauff", "Rybakina", "Paolini", "Zheng", "Pegula"]
+        if "(WTA)" in rank_label or any(w in found_player_name for w in wta_legends):
+            pronome = "ela"
+
         if is_full_bio:
-            result += f"O que mais você gostaria de saber sobre ele(a)?"
+            result += f"O que mais você gostaria de saber sobre {pronome}?"
         else:
             # Mensagem auxiliar para jogadores que só tem dados básicos no ranking
             result += (f"Eu detectei que <span class='msg-highlight'>{found_player_name}</span> faz parte do Top 100, mas ainda não tenho sua biografia detalhada.\n"
-                       f"Você pode perguntar sobre o <span class='msg-highlight'>Ranking Geral</span> ou os <span class='msg-highlight'>Campeões de Grand Slam</span>!")
+                       f"O que mais você gostaria de saber sobre {pronome}?")
 
         return result
 
