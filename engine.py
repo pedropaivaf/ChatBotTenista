@@ -2,6 +2,7 @@ import json # Biblioteca para ler e escrever arquivos de texto no formato JSON (
 import os # Biblioteca para interagir com o sistema de arquivos (verificar se arquivos existem)
 import requests # Para buscar dados em sites externos
 import re # Para extrair informações do HTML via expressões regulares
+import unicodedata # Para normalizar textos com acentos (ex: Canadá)
 
 # Mapeamento expandido de países para emojis de bandeira para o Top 100 completo
 COUNTRY_FLAGS = {
@@ -28,18 +29,24 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
                 return json.load(f) # Decodifica o texto JSON e transforma em um dicionário Python
         return {} # Se o arquivo não for encontrado, retorna um dicionário vazio para evitar travamentos
 
+    def _get_flag(self, country_name): 
+        # Normaliza o nome do país para evitar erros com acentos (ex: NFC vs NFD)
+        if not country_name or country_name == 'N/A': return "🌍"
+        normalized_name = unicodedata.normalize('NFC', country_name.strip())
+        return COUNTRY_FLAGS.get(normalized_name, "🌍")
+
     # --- Lógica de Rankings (Dinâmica para ATP e WTA) ---
-    def get_ranking_summary(self, circuit='ATP'): # Função que cria o texto resumo do Ranking (Masculino ou Feminino)
-        circuit = circuit.upper() # Garante que a sigla esteja em maiúsculas (ex: "atp" -> "ATP")
+    def get_ranking_summary(self, circuit='ATP'): 
+        circuit = circuit.upper()
         ranking_key = "ranking_atp" if circuit == 'ATP' else "ranking_wta"
-        rankings = self.data.get(ranking_key, []) # Tenta extrair a lista de rankings da categoria selecionada
+        rankings = self.data.get(ranking_key, [])
         
         if not rankings:
             return f"Desculpe, os dados do ranking {circuit} não estão disponíveis no momento."
         
         result = f"🏆 <span class='msg-highlight'>Ranking {circuit} Oficial (Atualizado: Março de 2026):</span>\n\n"
         for p in rankings[:10]: 
-            flag = COUNTRY_FLAGS.get(p.get('country', ''), "🌍")
+            flag = self._get_flag(p.get('country', ''))
             result += f"<span class='msg-highlight'>{p['position']}º</span>. {p['name']} ({flag} {p['country']}) - <span class='msg-highlight'>{p['points']} pts</span>\n"
         
         result += f"\nQuer saber mais sobre algum@ dess@s jogadores de {circuit}?"
@@ -143,16 +150,16 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
                     break
 
         country_name = player_data.get('country', 'N/A')
-        # Busca a bandeira emoji no dicionário
-        flag = COUNTRY_FLAGS.get(country_name, "🌍")
+        # Busca a bandeira emoji normalizada
+        flag = self._get_flag(country_name)
 
-        # Cabeçalho da Ficha - Estrutura refinada com ícones e labels premium
+        # Cabeçalho da Ficha - Estrutura unificada com ícones e labels premium
         result = (f"🎾 <span class='player-name'>{found_player_name}</span>\n"
                   f"📊 <span class='attr-label attr-rank'>Rank Atual:</span> {rank_label}\n"
-                  f"{flag} <span class='attr-label attr-country'>País:</span> {country_name}\n")
+                  f"<span class='flag-emoji'>{flag}</span> <span class='attr-label attr-country'>País:</span> {country_name}\n")
 
         if is_full_bio:
-            # Ficha técnica completa para jogadores com biografia dedicada
+            # Ficha técnica completa
             result += (f"🎂 <span class='attr-label attr-age'>Idade:</span> {player_data.get('age', 'N/A')} anos\n"
                        f"🎾 <span class='attr-label attr-style'>Estilo:</span> {player_data.get('style', 'N/A')}\n"
                        f"🏆 <span class='attr-label attr-titles'>Títulos:</span> {player_data.get('titles', 'N/A')}\n"
@@ -160,7 +167,7 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
                        f"💰 <span class='attr-label'>Pontos:</span> {player_points}\n\n"
                        f"O que mais você gostaria de saber sobre el@?")
         else:
-            # Mostra dados básicos do Top 100
+            # Ficha simplificada do Top 100
             result += (f"💰 <span class='attr-label'>Pontos:</span> {player_points}\n\n"
                        f"Eu detectei que <span class='msg-highlight'>{found_player_name}</span> faz parte do Top 100, mas ainda não tenho sua biografia detalhada.\n"
                        f"Você pode perguntar sobre o <span class='msg-highlight'>Ranking Geral</span> ou os <span class='msg-highlight'>Campeões de Grand Slam</span>!")
@@ -172,14 +179,14 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
         for p_name, details in players.items():
             if name.lower() in p_name.lower():
                 country_name = details.get('country', 'Nacionalidade não cadastrada')
-                flag = COUNTRY_FLAGS.get(country_name, "🌍")
-                return f"🎾 O jogador <span class='msg-highlight'>{p_name}</span> é da {flag} <span class='msg-highlight'>{country_name}</span>."
+                flag = self._get_flag(country_name)
+                return f"🎾 O jogador <span class='msg-highlight'>{p_name}</span> é da <span class='flag-emoji'>{flag}</span> <span class='msg-highlight'>{country_name}</span>."
         
         for circuit in ['atp', 'wta']:
             for p in self.data.get(f"ranking_{circuit}", []):
                 if name.lower() in p['name'].lower():
-                    flag = COUNTRY_FLAGS.get(p['country'], "🌍")
-                    return f"🎾 O jogador <span class='msg-highlight'>{p['name']}</span> representa {flag} <span class='msg-highlight'>{p['country']}</span>."
+                    flag = self._get_flag(p['country'])
+                    return f"🎾 O jogador <span class='msg-highlight'>{p['name']}</span> representa <span class='flag-emoji'>{flag}</span> <span class='msg-highlight'>{p['country']}</span>."
         return f"Ainda não tenho a nacionalidade de '{name}' no meu banco de dados técnico."
 
     def get_all_player_names(self): 

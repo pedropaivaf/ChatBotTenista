@@ -622,6 +622,18 @@ footer p {
     margin-bottom: 8px;
 }
 
+/* --- Estilo para Emojis de Bandeira (Garante renderização correta) --- */
+.flag-emoji {
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Noto Color Emoji Compact", sans-serif !important;
+    font-size: 1.4rem !important; /* Aumenta um pouco para destaque */
+    vertical-align: middle;
+    margin-right: 8px;
+    display: inline-block;
+    letter-spacing: 0 !important;
+    line-height: 1;
+    text-rendering: optimizeLegibility;
+}
+
 /* Responsividade para telas menores */
 @media (max-width: 600px) {
     .container { width: 100%; height: 100vh; border-radius: 0; }
