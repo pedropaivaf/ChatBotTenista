@@ -51,7 +51,7 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
             flag = self._get_flag(p.get('country', ''))
             result += f"<span class='msg-highlight'>{p['position']}º</span>. {p['name']} ({flag} {p['country']}) - <span class='msg-highlight'>{p['points']} pts</span>\n"
         
-        result += f"\nQuer saber mais sobre algum@ dess@s jogadores de {circuit}?"
+        result += f"\nQuer saber mais sobre algum(a) desses(as) jogadores de {circuit}?"
         return result 
 
     # --- Lógica de Torneios e Campeões ---
@@ -174,7 +174,7 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
                   f"💰 <span class='attr-label'>Pontos:</span> {player_points}\n\n")
 
         if is_full_bio:
-            result += f"O que mais você gostaria de saber sobre el@?"
+            result += f"O que mais você gostaria de saber sobre ele(a)?"
         else:
             # Mensagem auxiliar para jogadores que só tem dados básicos no ranking
             result += (f"Eu detectei que <span class='msg-highlight'>{found_player_name}</span> faz parte do Top 100, mas ainda não tenho sua biografia detalhada.\n"
