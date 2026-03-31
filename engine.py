@@ -34,7 +34,10 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
         if not country_name or country_name == 'N/A': return "🌍"
         normalized_name = unicodedata.normalize('NFC', country_name.strip())
         flag = COUNTRY_FLAGS.get(normalized_name, "🌍")
-        print(f"[DEBUG_FLAG] Pais: '{country_name}' -> Normalizado: '{normalized_name}' -> Flag: '{flag}'")
+        try:
+            print(f"[DEBUG_FLAG] Pais: '{country_name}' -> Normalizado: '{normalized_name}' -> Flag: '{flag}'")
+        except UnicodeEncodeError:
+            print(f"[DEBUG_FLAG] Pais: '{country_name}' -> Normalizado: '{normalized_name}' -> Flag: (emoji)")
         return flag
 
     # --- Lógica de Rankings (Dinâmica para ATP e WTA) ---
@@ -207,9 +210,57 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
                     return f"🎾 O jogador <span class='msg-highlight'>{p['name']}</span> representa <span class='flag-emoji'>{flag}</span> <span class='msg-highlight'>{p['country']}</span>."
         return f"Ainda não tenho a nacionalidade de '{name}' no meu banco de dados técnico."
 
-    def get_all_player_names(self): 
+    def get_all_player_names(self):
         details_names = list(self.data.get("player_details", {}).keys())
         atp_names = [p['name'] for p in self.data.get("ranking_atp", [])]
         wta_names = [p['name'] for p in self.data.get("ranking_wta", [])]
         all_names = list(set(details_names + atp_names + wta_names))
         return all_names
+
+    # --- Métodos de Filtragem por País ---
+
+    def _normalize(self, text):
+        """Normaliza texto removendo acentos para comparação case/accent-insensitive."""
+        if not text:
+            return ""
+        nfkd = unicodedata.normalize('NFKD', text.lower().strip())
+        return ''.join(c for c in nfkd if not unicodedata.combining(c))
+
+    def get_filtered_ranking(self, circuit='ATP', country=None, limit=10):
+        """Retorna o ranking filtrado por país e/ou limitado a N resultados."""
+        ranking_key = f"ranking_{circuit.lower()}"
+        rankings = self.data.get(ranking_key, [])
+
+        if country:
+            country_norm = self._normalize(country)
+            rankings = [p for p in rankings if self._normalize(p.get('country', '')) == country_norm]
+
+        return rankings[:limit]
+
+    def get_best_from_country(self, country):
+        """Retorna os melhores jogadores de um país (ATP e WTA)."""
+        atp_best = self.get_filtered_ranking('ATP', country=country, limit=3)
+        wta_best = self.get_filtered_ranking('WTA', country=country, limit=3)
+
+        if not atp_best and not wta_best:
+            return f"Não encontrei jogadores representando <span class='msg-highlight'>{country}</span> no ranking atual."
+
+        flag = self._get_flag(country)
+        result = f"🎾 <span class='msg-highlight'>Melhores jogadores {flag} {country}:</span>\n\n"
+
+        if atp_best:
+            result += "<span class='msg-highlight'>ATP (Masculino):</span>\n"
+            for p in atp_best:
+                result += f"  {p['position']}º. {p['name']} — {p['points']} pts\n"
+            result += "\n"
+
+        if wta_best:
+            result += "<span class='msg-highlight'>WTA (Feminino):</span>\n"
+            for p in wta_best:
+                result += f"  {p['position']}º. {p['name']} — {p['points']} pts\n"
+
+        return result.strip()
+
+    def reload_data(self):
+        """Recarrega os dados do JSON sem reiniciar o servidor."""
+        self.data = self._load_data()

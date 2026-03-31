@@ -1,45 +1,78 @@
-# 📖 Guia do Projeto: Tennis AI ChatBot
+# Guia do Projeto: Tennis AI ChatBot
 
-Este documento foi criado para que você domine cada detalhe do projeto para sua apresentação. Aqui explicamos o "porquê" e o "como" de cada arquivo.
+Este documento explica o "porque" e o "como" de cada arquivo do projeto.
 
 ---
 
-## 🏗️ Estrutura do Projeto
+## Estrutura do Projeto
 
-### 1. `app.py` (O Cérebro)
-Este é o servidor principal. Ele utiliza o framework **Flask** para criar as rotas da web.
+### 1. `app.py` (O Cerebro)
+Servidor principal Flask com logica hibrida de roteamento.
 - **Rota `/`**: Carrega a interface visual (HTML).
-- **Rota `/predict`**: O "endpoint" que recebe a mensagem do usuário via JavaScript e devolve a resposta do bot.
-- **Lógica Híbrida**: Ele decide se a pergunta deve ser respondida pelo **Motor de Dados** (fatos técnicos) ou pelo **NLP** (conversa casual).
+- **Rota `/predict`**: Recebe a mensagem do usuario e devolve a resposta.
+- **Pipeline**: Off-topic -> Contexto -> Query Parser -> Dados Tecnicos -> Intents -> Fallback.
+- Integra sessoes, arvore de decisao e parser inteligente.
 
-### 2. `nltk_utils.py` (O Intérprete)
-Este arquivo contém as funções de Processamento de Linguagem Natural (PLN).
-- **Tokenização**: Quebra a frase em palavras individuais.
-- **Stemming**: Reduz as palavras ao seu radical (ex: "vencendo" e "venceu" viram a mesma raiz), permitindo que o bot entenda variações da mesma palavra.
+### 2. `nltk_utils.py` (O Interprete)
+Funcoes de Processamento de Linguagem Natural (PLN).
+- **Tokenizacao**: Quebra a frase em palavras individuais.
+- **Stemming**: Reduz palavras ao radical (ex: "vencendo" e "venceu" viram a mesma raiz).
+- **Extracao de Entidades**: Identifica nomes de jogadores e torneios.
 
 ### 3. `engine.py` (O Especialista)
-É o motor de consulta que criamos para substituir APIs externas instáveis.
-- Ele lê o arquivo `tennis_data.json` e sabe como filtrar os rankings, buscar campeões e detalhes de jogadores de forma ultra-rápida.
+Motor de consulta que le `tennis_data.json` e filtra rankings, busca campeoes e detalhes de jogadores.
+- `get_ranking_summary()`: Top 10 ATP ou WTA formatado.
+- `get_player_info()`: Ficha completa com rank, pais, idade, estilo, titulos e curiosidade.
+- `get_filtered_ranking()`: Filtra ranking por pais (ex: "ranking do Brasil").
+- `get_best_from_country()`: Retorna os melhores jogadores de um pais.
 
-### 4. `knowledge_base.json` e `tennis_data.json` (A Memória)
-- **`knowledge_base.json`**: Contém as "intenções" (intents). Define padrões de fala e respostas casuais, incluindo as perguntas de acompanhamento que tornam o bot conversacional.
-- **`tennis_data.json`**: É a nossa "Bíblia do Tênis" com dados oficiais reais de 2024/2025 (Rankings, Slams, etc.).
+### 4. `session_manager.py` (A Memoria)
+Gerencia sessoes de conversa para manter contexto.
+- Cada aba do navegador recebe um UUID unico.
+- Rastreia ate 20 turnos de conversa, topico atual, jogador em foco.
+- Sessoes expiram apos 30 minutos de inatividade.
 
-### 5. Pasta `/templates` e `/static` (A Face)
-- **`index.html`**: Estrutura semântica do chat.
-- **`style.css`**: Design Premium com efeito *Glassmorphism* (vidro fosco) e modo escuro, garantindo um visual moderno.
-- **`script.js`**: Faz a ponte entre o usuário e o servidor sem precisar recarregar a página (AJAX/Fetch).
+### 5. `query_parser.py` (O Detetive)
+Analisa a mensagem do usuario para extrair modificadores estruturados.
+- Detecta paises ("do brasil", "brasileiro") e traduz para nome canonico.
+- Detecta marcadores temporais ("atualmente", "hoje").
+- Detecta superlativos ("melhor", "top", "lider").
+- Exemplo: "melhor jogador do brasil atualmente" -> `{country: "Brasil", wants_best: True, is_current: True}`.
+
+### 6. `decision_tree.py` (O Contexto)
+Arvore de decisao que gera follow-ups abertos e resolve entidades por contexto.
+- Apos "ranking atp", usuario diz "Alcaraz" -> bot resolve como Carlos Alcaraz.
+- Apos info do Sinner, usuario diz "qual o pais dele" -> bot responde Italia.
+- Follow-ups sempre abertos: "Qual desses jogadores voce mais admira?" (nunca sim/nao).
+
+### 7. `api_client.py` (O Atualizador)
+Busca rankings atualizados de fontes externas reais.
+- **ATP**: Scraping de tennisexplorer.com (HTML, sem bloqueio).
+- **WTA**: API JSON oficial da WTA (api.wtatennis.com).
+- Atualiza automaticamente no startup se dados tem mais de 24h.
+- Traduz paises do ingles para portugues, corrige nomes com acentos.
+
+### 8. `knowledge_base.json` e `tennis_data.json` (Os Dados)
+- **`knowledge_base.json`**: Intents conversacionais com padroes e respostas.
+- **`tennis_data.json`**: Rankings Top 100 (ATP+WTA), Grand Slams, biografias de ~50 jogadores.
+
+### 9. Pasta `/templates` e `/static` (A Face)
+- **`index.html`**: Estrutura semantica do chat.
+- **`style.css`**: Design Premium com efeito Glassmorphism e modo escuro.
+- **`script.js`**: Comunicacao AJAX/Fetch com envio de `session_id` para contexto.
 
 ---
 
-## 🚀 Pontos Fortes para sua Apresentação
+## Pontos Fortes para Apresentacao
 
-1.  **Autonomia Total**: O projeto não depende de APIs externas. Ele é rápido, 100% offline e nunca "cai".
-2.  **Engajamento**: Diferente de bots simples, este faz perguntas de volta para o usuário, simulando uma conversa real sobre o esporte.
-3.  **Arquitetura Híbrida**: Combina regras de dados técnicos (`engine.py`) com inteligência linguística (`NLTK`).
-4.  **Design "Wow"**: A interface foi pensada para parecer uma aplicação profissional de IA de 2026.
+1.  **Contexto Conversacional**: O bot mantem ate 20 turnos de contexto, faz perguntas abertas e entende respostas como "Alcaraz" ou "qual o pais dele" no contexto certo.
+2.  **Parser Inteligente**: "Qual o melhor jogador do brasil atualmente" retorna Joao Fonseca (nao o top 10 generico) porque reconhece "brasil" + "melhor" + "atualmente".
+3.  **Dados em Tempo Real**: Rankings ATP e WTA sao atualizados automaticamente via scraping/API a cada 24h.
+4.  **Arquitetura Hibrida**: Combina regras tecnicas (`engine.py`), NLP (`NLTK`) e contexto (`decision_tree.py`).
+5.  **Design Profissional**: Interface Glassmorphism com console tecnico lateral mostrando logs em tempo real.
 
 ---
 
-## 🛠️ Como Explicar o Funcionamento
-"Quando o usuário digita 'Quem é o número 1?', o `app.py` recebe isso, o `nltk_utils` limpa a frase, o `engine.py` busca no `tennis_data.json` o nome do Sinner e o bot responde com o ranking atualizado, perguntando em seguida se você quer saber sobre outro jogador."
+## Como Explicar o Funcionamento
+
+"Quando o usuario digita 'Qual o melhor jogador do brasil atualmente?', o `app.py` recebe a mensagem, o `query_parser.py` detecta 'brasil' como pais e 'melhor' como superlativo, o `engine.py` filtra o ranking ATP por Brasil e retorna Joao Fonseca como #40 do mundo. O bot pergunta 'Qual deles voce acompanha mais de perto?'. Se o usuario responde 'Fonseca', a `decision_tree.py` resolve isso no contexto e mostra a ficha completa dele."

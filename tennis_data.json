@@ -4,601 +4,601 @@
       "position": 1,
       "name": "Carlos Alcaraz",
       "country": "Espanha",
-      "points": "13.550"
+      "points": "13590"
     },
     {
       "position": 2,
       "name": "Jannik Sinner",
       "country": "Itália",
-      "points": "11.400"
+      "points": "12400"
     },
     {
       "position": 3,
-      "name": "Novak Djokovic",
-      "country": "Sérvia",
-      "points": "7.905"
+      "name": "Alexander Zverev",
+      "country": "Alemanha",
+      "points": "5205"
     },
     {
       "position": 4,
-      "name": "Alexander Zverev",
-      "country": "Alemanha",
-      "points": "7.370"
+      "name": "Novak Djokovic",
+      "country": "Sérvia",
+      "points": "4720"
     },
     {
       "position": 5,
-      "name": "Daniil Medvedev",
-      "country": "Rússia",
-      "points": "6.365"
+      "name": "Lorenzo Musetti",
+      "country": "Itália",
+      "points": "4265"
     },
     {
       "position": 6,
-      "name": "Andrey Rublev",
-      "country": "Rússia",
-      "points": "5.185"
+      "name": "Alex De Minaur",
+      "country": "Austrália",
+      "points": "4095"
     },
     {
       "position": 7,
-      "name": "Taylor Fritz",
-      "country": "EUA",
-      "points": "4.170"
+      "name": "Félix Auger-Aliassime",
+      "country": "Canadá",
+      "points": "4000"
     },
     {
       "position": 8,
-      "name": "Casper Ruud",
-      "country": "Noruega",
-      "points": "4.970"
+      "name": "Taylor Fritz",
+      "country": "EUA",
+      "points": "3870"
     },
     {
       "position": 9,
-      "name": "Hubert Hurkacz",
-      "country": "Polônia",
-      "points": "4.100"
+      "name": "Ben Shelton",
+      "country": "EUA",
+      "points": "3860"
     },
     {
       "position": 10,
-      "name": "Alex de Minaur",
-      "country": "Austrália",
-      "points": "4.050"
+      "name": "Daniil Medvedev",
+      "country": "Rússia",
+      "points": "3610"
     },
     {
       "position": 11,
-      "name": "Stefanos Tsitsipas",
-      "country": "Grécia",
-      "points": "3.800"
+      "name": "Alexander Bublik",
+      "country": "Cazaquistão",
+      "points": "3345"
     },
     {
       "position": 12,
-      "name": "Grigor Dimitrov",
-      "country": "Bulgária",
-      "points": "3.600"
+      "name": "Casper Ruud",
+      "country": "Noruega",
+      "points": "2625"
     },
     {
       "position": 13,
-      "name": "Tommy Paul",
-      "country": "EUA",
-      "points": "3.200"
+      "name": "Flavio Cobolli",
+      "country": "Itália",
+      "points": "2520"
     },
     {
       "position": 14,
-      "name": "Ben Shelton",
-      "country": "EUA",
-      "points": "3.100"
+      "name": "Jiří Lehečka",
+      "country": "Rep. Tcheca",
+      "points": "2490"
     },
     {
       "position": 15,
-      "name": "Holger Rune",
-      "country": "Dinamarca",
-      "points": "2.900"
+      "name": "Karen Khachanov",
+      "country": "Rússia",
+      "points": "2410"
     },
     {
       "position": 16,
-      "name": "Sebastian Korda",
-      "country": "EUA",
-      "points": "2.800"
+      "name": "Andrey Rublev",
+      "country": "Rússia",
+      "points": "2400"
     },
     {
       "position": 17,
-      "name": "Lorenzo Musetti",
-      "country": "Itália",
-      "points": "2.700"
+      "name": "Alejandro Davidovich Fokina",
+      "country": "Espanha",
+      "points": "2220"
     },
     {
       "position": 18,
-      "name": "Felix Auger-Aliassime",
-      "country": "Canadá",
-      "points": "2.600"
+      "name": "Frances Tiafoe",
+      "country": "EUA",
+      "points": "2070"
     },
     {
       "position": 19,
-      "name": "Nicolas Jarry",
-      "country": "Chile",
-      "points": "2.500"
+      "name": "Luciano Darderi",
+      "country": "Itália",
+      "points": "2050"
     },
     {
       "position": 20,
-      "name": "Ugo Humbert",
-      "country": "França",
-      "points": "2.400"
+      "name": "Francisco Cerundolo",
+      "country": "Argentina",
+      "points": "2020"
     },
     {
       "position": 21,
-      "name": "Arthur Fils",
-      "country": "França",
-      "points": "2.300"
+      "name": "Tommy Paul",
+      "country": "EUA",
+      "points": "1915"
     },
     {
       "position": 22,
-      "name": "Jack Draper",
-      "country": "Reino Unido",
-      "points": "2.250"
+      "name": "Learner Tien",
+      "country": "EUA",
+      "points": "1845"
     },
     {
       "position": 23,
-      "name": "Frances Tiafoe",
-      "country": "EUA",
-      "points": "2.200"
+      "name": "Valentin Vacherot",
+      "country": "Mônaco",
+      "points": "1831"
     },
     {
       "position": 24,
-      "name": "Alejandro Tabilo",
-      "country": "Chile",
-      "points": "2.100"
+      "name": "Cameron Norrie",
+      "country": "Reino Unido",
+      "points": "1753"
     },
     {
       "position": 25,
-      "name": "Karen Khachanov",
-      "country": "Rússia",
-      "points": "2.050"
+      "name": "Jack Draper",
+      "country": "Reino Unido",
+      "points": "1710"
     },
     {
       "position": 26,
-      "name": "Alexander Bublik",
-      "country": "Cazaquistão",
-      "points": "2.000"
+      "name": "Jakub Mensik",
+      "country": "Rep. Tcheca",
+      "points": "1700"
     },
     {
       "position": 27,
-      "name": "Brandon Nakashima",
-      "country": "EUA",
-      "points": "1.950"
+      "name": "Arthur Rinderknech",
+      "country": "França",
+      "points": "1651"
     },
     {
       "position": 28,
-      "name": "Tomas Martin Etcheverry",
-      "country": "Argentina",
-      "points": "1.900"
+      "name": "Arthur Fils",
+      "country": "França",
+      "points": "1640"
     },
     {
       "position": 29,
-      "name": "Francisco Cerundolo",
-      "country": "Argentina",
-      "points": "1.850"
+      "name": "Holger Rune",
+      "country": "Dinamarca",
+      "points": "1630"
     },
     {
       "position": 30,
-      "name": "Jordan Thompson",
-      "country": "Austrália",
-      "points": "1.800"
+      "name": "Tallon Griekspoor",
+      "country": "Holanda",
+      "points": "1585"
     },
     {
       "position": 31,
-      "name": "Tallon Griekspoor",
-      "country": "Holanda",
-      "points": "1.750"
+      "name": "Tomás Martin Etcheverry",
+      "country": "Argentina",
+      "points": "1500"
     },
     {
       "position": 32,
-      "name": "Flavio Cobolli",
-      "country": "Itália",
-      "points": "1.700"
+      "name": "Corentin Moutet",
+      "country": "França",
+      "points": "1403"
     },
     {
       "position": 33,
-      "name": "Jiri Lehecka",
-      "country": "Rep. Tcheca",
-      "points": "1.650"
+      "name": "Brandon Nakashima",
+      "country": "EUA",
+      "points": "1395"
     },
     {
       "position": 34,
-      "name": "Tomas Machac",
-      "country": "Rep. Tcheca",
-      "points": "1.600"
+      "name": "Ugo Humbert",
+      "country": "França",
+      "points": "1320"
     },
     {
       "position": 35,
-      "name": "Nuno Borges",
-      "country": "Portugal",
-      "points": "1.550"
+      "name": "Alex Michelsen",
+      "country": "EUA",
+      "points": "1225"
     },
     {
       "position": 36,
-      "name": "Jan-Lennard Struff",
-      "country": "Alemanha",
-      "points": "1.500"
+      "name": "Gabriel Diallo",
+      "country": "Canadá",
+      "points": "1175"
     },
     {
       "position": 37,
-      "name": "Matteo Arnaldi",
-      "country": "Itália",
-      "points": "1.450"
+      "name": "Jaume Munar",
+      "country": "Espanha",
+      "points": "1175"
     },
     {
       "position": 38,
-      "name": "Luciano Darderi",
-      "country": "Itália",
-      "points": "1.420"
+      "name": "Denis Shapovalov",
+      "country": "Canadá",
+      "points": "1120"
     },
     {
       "position": 39,
-      "name": "Fabian Marozsan",
-      "country": "Hungria",
-      "points": "1.400"
+      "name": "Alejandro Tabilo",
+      "country": "Chile",
+      "points": "1118"
     },
     {
       "position": 40,
-      "name": "Alexei Popyrin",
-      "country": "Austrália",
-      "points": "1.380"
+      "name": "João Fonseca",
+      "country": "Brasil",
+      "points": "1115"
     },
     {
       "position": 41,
-      "name": "Giovanni Mpetshi Perricard",
-      "country": "França",
-      "points": "1.350"
+      "name": "Jenson Brooksby",
+      "country": "EUA",
+      "points": "1115"
     },
     {
       "position": 42,
-      "name": "Jakub Mensik",
-      "country": "Rep. Tcheca",
-      "points": "1.320"
+      "name": "Sebastian Korda",
+      "country": "EUA",
+      "points": "1100"
     },
     {
       "position": 43,
-      "name": "Mariano Navone",
-      "country": "Argentina",
-      "points": "1.300"
+      "name": "Adrian Mannarino",
+      "country": "França",
+      "points": "1082"
     },
     {
       "position": 44,
-      "name": "Matteo Berrettini",
-      "country": "Itália",
-      "points": "1.280"
+      "name": "Terence Atmane",
+      "country": "França",
+      "points": "1058"
     },
     {
       "position": 45,
-      "name": "Cameron Norrie",
-      "country": "Reino Unido",
-      "points": "1.250"
+      "name": "Alexei Popyrin",
+      "country": "Austrália",
+      "points": "1010"
     },
     {
       "position": 46,
-      "name": "Miomir Kecmanovic",
-      "country": "Sérvia",
-      "points": "1.230"
+      "name": "Zizou Bergs",
+      "country": "Bélgica",
+      "points": "1010"
     },
     {
       "position": 47,
-      "name": "Dusan Lajovic",
-      "country": "Sérvia",
-      "points": "1.210"
+      "name": "Fabian Marozsan",
+      "country": "Hungria",
+      "points": "1005"
     },
     {
       "position": 48,
-      "name": "Gael Monfils",
-      "country": "França",
-      "points": "1.200"
+      "name": "Nuno Borges",
+      "country": "Portugal",
+      "points": "995"
     },
     {
       "position": 49,
-      "name": "Marcos Giron",
-      "country": "EUA",
-      "points": "1.180"
+      "name": "Stefanos Tsitsipas",
+      "country": "Grécia",
+      "points": "995"
     },
     {
       "position": 50,
-      "name": "Adrian Mannarino",
-      "country": "França",
-      "points": "1.160"
-    },
-    {
-      "position": 51,
-      "name": "Lorenzo Sonego",
-      "country": "Itália",
-      "points": "1.140"
-    },
-    {
-      "position": 52,
-      "name": "Roberto Carballes Baena",
-      "country": "Espanha",
-      "points": "1.120"
-    },
-    {
-      "position": 53,
-      "name": "Pavel Kotov",
-      "country": "Rússia",
-      "points": "1.100"
-    },
-    {
-      "position": 54,
-      "name": "Juncheng Shang",
-      "country": "China",
-      "points": "1.080"
-    },
-    {
-      "position": 55,
-      "name": "Borna Coric",
-      "country": "Croácia",
-      "points": "1.060"
-    },
-    {
-      "position": 56,
-      "name": "Alexander Shevchenko",
-      "country": "Cazaquistão",
-      "points": "1.040"
-    },
-    {
-      "position": 57,
-      "name": "Hugo Gaston",
-      "country": "França",
-      "points": "1.020"
-    },
-    {
-      "position": 58,
-      "name": "Daniel Altmaier",
-      "country": "Alemanha",
-      "points": "1.000"
-    },
-    {
-      "position": 59,
-      "name": "Feliciano Lopez (Simulado)",
-      "country": "Espanha",
+      "name": "Sebastian Baez",
+      "country": "Argentina",
       "points": "980"
     },
     {
-      "position": 60,
-      "name": "Fabio Fognini",
-      "country": "Itália",
+      "position": 51,
+      "name": "Marton Fucsovics",
+      "country": "Hungria",
+      "points": "977"
+    },
+    {
+      "position": 52,
+      "name": "Daniel Altmaier",
+      "country": "Alemanha",
       "points": "960"
     },
     {
-      "position": 61,
-      "name": "Corentin Moutet",
+      "position": 53,
+      "name": "Kamil Majchrzak",
+      "country": "Polônia",
+      "points": "955"
+    },
+    {
+      "position": 54,
+      "name": "Marin Cilic",
+      "country": "Croácia",
+      "points": "950"
+    },
+    {
+      "position": 55,
+      "name": "Tomas Machac",
+      "country": "Rep. Tcheca",
+      "points": "930"
+    },
+    {
+      "position": 56,
+      "name": "Ethan Quinn",
+      "country": "EUA",
+      "points": "926"
+    },
+    {
+      "position": 57,
+      "name": "Giovanni Mpetshi Perricard",
       "country": "França",
-      "points": "940"
+      "points": "890"
     },
     {
-      "position": 62,
-      "name": "Sumit Nagal",
-      "country": "Índia",
-      "points": "920"
+      "position": 58,
+      "name": "Miomir Kecmanovic",
+      "country": "Sérvia",
+      "points": "875"
     },
     {
-      "position": 63,
-      "name": "Zizou Bergs",
-      "country": "Bélgica",
-      "points": "900"
+      "position": 59,
+      "name": "Ignacio Buse",
+      "country": "Peru",
+      "points": "864"
     },
     {
-      "position": 64,
-      "name": "Aleksandar Vukic",
-      "country": "Austrália",
-      "points": "880"
-    },
-    {
-      "position": 65,
-      "name": "Thiago Seyboth Wild",
-      "country": "Brasil",
-      "points": "870"
-    },
-    {
-      "position": 66,
-      "name": "Thiago Monteiro",
-      "country": "Brasil",
+      "position": 60,
+      "name": "Mariano Navone",
+      "country": "Argentina",
       "points": "860"
     },
     {
-      "position": 67,
-      "name": "Yoshihito Nishioka",
-      "country": "Japão",
-      "points": "850"
+      "position": 61,
+      "name": "Yannick Hanfmann",
+      "country": "Alemanha",
+      "points": "857"
     },
     {
-      "position": 68,
-      "name": "Christopher O Connell",
-      "country": "Austrália",
-      "points": "840"
+      "position": 62,
+      "name": "Botic Van De Zandschulp",
+      "country": "Holanda",
+      "points": "841"
     },
     {
-      "position": 69,
-      "name": "Max Purcell",
-      "country": "Austrália",
-      "points": "830"
-    },
-    {
-      "position": 70,
-      "name": "Thanasi Kokkinakis",
-      "country": "Austrália",
-      "points": "820"
-    },
-    {
-      "position": 71,
-      "name": "James Duckworth",
-      "country": "Austrália",
+      "position": 63,
+      "name": "Lorenzo Sonego",
+      "country": "Itália",
       "points": "810"
     },
     {
-      "position": 72,
-      "name": "Marton Fucsovics",
-      "country": "Hungria",
-      "points": "800"
+      "position": 64,
+      "name": "Reilly Opelka",
+      "country": "EUA",
+      "points": "803"
     },
     {
-      "position": 73,
-      "name": "Botic van de Zandschulp",
-      "country": "Holanda",
+      "position": 65,
+      "name": "Raphael Collignon",
+      "country": "Bélgica",
+      "points": "802"
+    },
+    {
+      "position": 66,
+      "name": "Marcos Giron",
+      "country": "EUA",
       "points": "790"
     },
     {
-      "position": 74,
-      "name": "Dominik Koepfer",
-      "country": "Alemanha",
+      "position": 67,
+      "name": "Camilo Ugo Carabelli",
+      "country": "Argentina",
       "points": "780"
     },
     {
-      "position": 75,
-      "name": "Taro Daniel",
-      "country": "Japão",
-      "points": "770"
+      "position": 68,
+      "name": "Arthur Cazaux",
+      "country": "França",
+      "points": "777"
     },
     {
-      "position": 76,
-      "name": "Rinky Hijikata",
-      "country": "Austrália",
-      "points": "760"
+      "position": 69,
+      "name": "Juan Manuel Cerundolo",
+      "country": "Argentina",
+      "points": "776"
     },
     {
-      "position": 77,
-      "name": "João Fonseca",
-      "country": "Brasil",
-      "points": "750"
+      "position": 70,
+      "name": "Vit Kopriva",
+      "country": "Rep. Tcheca",
+      "points": "763"
     },
     {
-      "position": 78,
-      "name": "Stan Wawrinka",
-      "country": "Suíça",
+      "position": 71,
+      "name": "Valentin Royer",
+      "country": "França",
+      "points": "761"
+    },
+    {
+      "position": 72,
+      "name": "Hubert Hurkacz",
+      "country": "Polônia",
+      "points": "745"
+    },
+    {
+      "position": 73,
+      "name": "Mattia Bellucci",
+      "country": "Itália",
       "points": "740"
     },
     {
+      "position": 74,
+      "name": "Damir Dzumhur",
+      "country": "Bósnia",
+      "points": "731"
+    },
+    {
+      "position": 75,
+      "name": "Jan-Lennard Struff",
+      "country": "Alemanha",
+      "points": "719"
+    },
+    {
+      "position": 76,
+      "name": "Alexander Shevchenko",
+      "country": "Cazaquistão",
+      "points": "716"
+    },
+    {
+      "position": 77,
+      "name": "Roman Andrés Burruchaga",
+      "country": "Argentina",
+      "points": "703"
+    },
+    {
+      "position": 78,
+      "name": "Sebastian Ofner",
+      "country": "Áustria",
+      "points": "694"
+    },
+    {
       "position": 79,
-      "name": "David Goffin",
-      "country": "Bélgica",
-      "points": "730"
+      "name": "Eliot Spizzirri",
+      "country": "EUA",
+      "points": "688"
     },
     {
       "position": 80,
-      "name": "Arthur Rinderknech",
-      "country": "França",
-      "points": "720"
+      "name": "Roberto Bautista-Agut",
+      "country": "Espanha",
+      "points": "685"
     },
     {
       "position": 81,
-      "name": "Borna Gojo",
-      "country": "Croácia",
-      "points": "710"
-    },
-    {
-      "position": 82,
-      "name": "Cristian Garin",
-      "country": "Chile",
-      "points": "700"
-    },
-    {
-      "position": 83,
-      "name": "Denis Shapovalov",
-      "country": "Canadá",
-      "points": "690"
-    },
-    {
-      "position": 84,
-      "name": "Kei Nishikori",
-      "country": "Japão",
+      "name": "Hamad Medjedovic",
+      "country": "Sérvia",
       "points": "680"
     },
     {
+      "position": 82,
+      "name": "Zachary Svajda",
+      "country": "EUA",
+      "points": "674"
+    },
+    {
+      "position": 83,
+      "name": "Thiago Agustín Tirante",
+      "country": "Argentina",
+      "points": "673"
+    },
+    {
+      "position": 84,
+      "name": "Aleksandar Vukic",
+      "country": "Austrália",
+      "points": "663"
+    },
+    {
       "position": 85,
-      "name": "Alexandre Muller",
-      "country": "França",
-      "points": "670"
+      "name": "Aleksandar Kovacevic",
+      "country": "EUA",
+      "points": "661"
     },
     {
       "position": 86,
-      "name": "Constant Lestienne",
-      "country": "França",
+      "name": "Filip Misolic",
+      "country": "Áustria",
       "points": "660"
     },
     {
       "position": 87,
-      "name": "Luca Van Assche",
+      "name": "Francisco Comesana",
+      "country": "Argentina",
+      "points": "659"
+    },
+    {
+      "position": 88,
+      "name": "Pablo Carreno-Busta",
+      "country": "Espanha",
+      "points": "659"
+    },
+    {
+      "position": 89,
+      "name": "Rafael Jodar",
+      "country": "Espanha",
+      "points": "652"
+    },
+    {
+      "position": 90,
+      "name": "Quentin Halys",
       "country": "França",
       "points": "650"
     },
     {
-      "position": 88,
-      "name": "Federico Coria",
-      "country": "Argentina",
-      "points": "640"
-    },
-    {
-      "position": 89,
-      "name": "Facundo Diaz Acosta",
-      "country": "Argentina",
-      "points": "630"
-    },
-    {
-      "position": 90,
-      "name": "Camilo Ugo Carabelli",
-      "country": "Argentina",
-      "points": "620"
-    },
-    {
       "position": 91,
-      "name": "Albert Ramos-Vinolas",
-      "country": "Espanha",
-      "points": "610"
+      "name": "Matteo Berrettini",
+      "country": "Itália",
+      "points": "650"
     },
     {
       "position": 92,
-      "name": "Bernabe Zapata Miralles",
-      "country": "Espanha",
-      "points": "600"
+      "name": "Alexander Blockx",
+      "country": "Bélgica",
+      "points": "649"
     },
     {
       "position": 93,
-      "name": "Jaume Munar",
-      "country": "Espanha",
-      "points": "590"
+      "name": "Grigor Dimitrov",
+      "country": "Bulgária",
+      "points": "645"
     },
     {
       "position": 94,
-      "name": "Pedro Martinez",
-      "country": "Espanha",
-      "points": "580"
+      "name": "Alexandre Muller",
+      "country": "França",
+      "points": "645"
     },
     {
       "position": 95,
-      "name": "Carballes Baena",
-      "country": "Espanha",
-      "points": "570"
+      "name": "James Duckworth",
+      "country": "Austrália",
+      "points": "640"
     },
     {
       "position": 96,
-      "name": "Emil Ruusuvuori",
-      "country": "Finlândia",
-      "points": "560"
+      "name": "Patrick Kypson",
+      "country": "EUA",
+      "points": "640"
     },
     {
       "position": 97,
-      "name": "Arthur Cazaux",
-      "country": "França",
-      "points": "550"
+      "name": "Jacob Fearnley",
+      "country": "Reino Unido",
+      "points": "639"
     },
     {
       "position": 98,
-      "name": "Hamad Medjedovic",
-      "country": "Sérvia",
-      "points": "540"
+      "name": "Stan Wawrinka",
+      "country": "Suíça",
+      "points": "633"
     },
     {
       "position": 99,
-      "name": "Richard Gasquet",
-      "country": "França",
-      "points": "530"
+      "name": "Jesper De Jong",
+      "country": "Holanda",
+      "points": "625"
     },
     {
       "position": 100,
-      "name": "Dominic Thiem",
-      "country": "Áustria",
-      "points": "520"
+      "name": "Cristian Garin",
+      "country": "Chile",
+      "points": "624"
     }
   ],
   "ranking_wta": [
@@ -606,601 +606,601 @@
       "position": 1,
       "name": "Aryna Sabalenka",
       "country": "Bielorrússia",
-      "points": "11.695"
+      "points": "11025"
     },
     {
       "position": 2,
-      "name": "Iga Swiatek",
-      "country": "Polônia",
-      "points": "10.450"
+      "name": "Elena Rybakina",
+      "country": "Cazaquistão",
+      "points": "8108"
     },
     {
       "position": 3,
       "name": "Coco Gauff",
       "country": "EUA",
-      "points": "8.120"
+      "points": "7278"
     },
     {
       "position": 4,
-      "name": "Elena Rybakina",
-      "country": "Cazaquistão",
-      "points": "6.080"
+      "name": "Iga Swiatek",
+      "country": "Polônia",
+      "points": "7263"
     },
     {
       "position": 5,
-      "name": "Jasmine Paolini",
-      "country": "Itália",
-      "points": "5.850"
+      "name": "Jessica Pegula",
+      "country": "EUA",
+      "points": "6243"
     },
     {
       "position": 6,
-      "name": "Zheng Qinwen",
-      "country": "China",
-      "points": "5.480"
+      "name": "Amanda Anisimova",
+      "country": "EUA",
+      "points": "6180"
     },
     {
       "position": 7,
-      "name": "Jessica Pegula",
-      "country": "EUA",
-      "points": "4.860"
+      "name": "Elina Svitolina",
+      "country": "Ucrânia",
+      "points": "3965"
     },
     {
       "position": 8,
-      "name": "Emma Navarro",
-      "country": "EUA",
-      "points": "4.500"
+      "name": "Jasmine Paolini",
+      "country": "Itália",
+      "points": "3907"
     },
     {
       "position": 9,
-      "name": "Danielle Collins",
-      "country": "EUA",
-      "points": "4.200"
+      "name": "Victoria Mboko",
+      "country": "Canadá",
+      "points": "3531"
     },
     {
       "position": 10,
-      "name": "Daria Kasatkina",
+      "name": "Mirra Andreeva",
       "country": "Rússia",
-      "points": "3.980"
+      "points": "3121"
     },
     {
       "position": 11,
-      "name": "Barbora Krejcikova",
+      "name": "Karolina Muchova",
       "country": "Rep. Tcheca",
-      "points": "3.700"
+      "points": "2993"
     },
     {
       "position": 12,
-      "name": "Beatriz Haddad Maia",
-      "country": "Brasil",
-      "points": "3.600"
+      "name": "Belinda Bencic",
+      "country": "Suíça",
+      "points": "2983"
     },
     {
       "position": 13,
-      "name": "Anna Kalinskaya",
+      "name": "Ekaterina Alexandrova",
       "country": "Rússia",
-      "points": "3.400"
+      "points": "2973"
     },
     {
       "position": 14,
-      "name": "Mirra Andreeva",
-      "country": "Rússia",
-      "points": "3.300"
+      "name": "Linda Noskova",
+      "country": "Rep. Tcheca",
+      "points": "2801"
     },
     {
       "position": 15,
-      "name": "Madison Keys",
-      "country": "EUA",
-      "points": "3.200"
+      "name": "Naomi Osaka",
+      "country": "Japão",
+      "points": "2324"
     },
     {
       "position": 16,
-      "name": "Marta Kostyuk",
-      "country": "Ucrânia",
-      "points": "3.100"
+      "name": "Iva Jovic",
+      "country": "EUA",
+      "points": "2105"
     },
     {
       "position": 17,
-      "name": "Ons Jabeur",
-      "country": "Tunísia",
-      "points": "3.000"
+      "name": "Clara Tauson",
+      "country": "Dinamarca",
+      "points": "2040"
     },
     {
       "position": 18,
-      "name": "Donna Vekic",
-      "country": "Croácia",
-      "points": "2.900"
+      "name": "Madison Keys",
+      "country": "EUA",
+      "points": "2026"
     },
     {
       "position": 19,
-      "name": "Paula Badosa",
-      "country": "Espanha",
-      "points": "2.800"
+      "name": "Diana Shnaider",
+      "country": "Rússia",
+      "points": "1953"
     },
     {
       "position": 20,
-      "name": "Amanda Anisimova",
-      "country": "EUA",
-      "points": "2.750"
+      "name": "Elise Mertens",
+      "country": "Bélgica",
+      "points": "1936"
     },
     {
       "position": 21,
-      "name": "Victoria Azarenka",
-      "country": "Bielorrússia",
-      "points": "2.600"
+      "name": "Liudmila Samsonova",
+      "country": "Rússia",
+      "points": "1845"
     },
     {
       "position": 22,
-      "name": "Ludmilla Samsonova",
+      "name": "Anna Kalinskaya",
       "country": "Rússia",
-      "points": "2.550"
+      "points": "1813"
     },
     {
       "position": 23,
-      "name": "Diana Shnaider",
-      "country": "Rússia",
-      "points": "2.500"
+      "name": "Jelena Ostapenko",
+      "country": "Letônia",
+      "points": "1765"
     },
     {
       "position": 24,
-      "name": "Beatriz Haddad Maia",
-      "country": "Brasil",
-      "points": "2.400"
+      "name": "Leylah Fernandez",
+      "country": "Canadá",
+      "points": "1598"
     },
     {
       "position": 25,
-      "name": "Katie Boulter",
-      "country": "Reino Unido",
-      "points": "2.350"
+      "name": "Emma Navarro",
+      "country": "EUA",
+      "points": "1540"
     },
     {
       "position": 26,
-      "name": "Karolina Muchova",
+      "name": "Marie Bouzkova",
       "country": "Rep. Tcheca",
-      "points": "2.300"
+      "points": "1480"
     },
     {
       "position": 27,
-      "name": "Linda Noskova",
-      "country": "Rep. Tcheca",
-      "points": "2.250"
+      "name": "Marta Kostyuk",
+      "country": "Ucrânia",
+      "points": "1473"
     },
     {
       "position": 28,
-      "name": "Maria Sakkari",
-      "country": "Grécia",
-      "points": "2.200"
+      "name": "Emma Raducanu",
+      "country": "Reino Unido",
+      "points": "1465"
     },
     {
       "position": 29,
-      "name": "Caroline Garcia",
-      "country": "França",
-      "points": "2.150"
+      "name": "Sorana Cirstea",
+      "country": "Romênia",
+      "points": "1459"
     },
     {
       "position": 30,
-      "name": "Yulia Putintseva",
-      "country": "Cazaquistão",
-      "points": "2.100"
+      "name": "Qinwen Zheng",
+      "country": "China",
+      "points": "1458"
     },
     {
       "position": 31,
-      "name": "Elina Svitolina",
-      "country": "Ucrânia",
-      "points": "2.050"
+      "name": "Maya Joint",
+      "country": "Austrália",
+      "points": "1435"
     },
     {
       "position": 32,
-      "name": "Anastasia Pavlyuchenkova",
-      "country": "Rússia",
-      "points": "2.000"
+      "name": "Cristina Bucsa",
+      "country": "Espanha",
+      "points": "1431"
     },
     {
       "position": 33,
-      "name": "Katerina Siniakova",
-      "country": "Rep. Tcheca",
-      "points": "1.950"
+      "name": "Hailey Baptiste",
+      "country": "EUA",
+      "points": "1394"
     },
     {
       "position": 34,
-      "name": "Leylah Fernandez",
-      "country": "Canadá",
-      "points": "1.900"
+      "name": "Xinyu Wang",
+      "country": "China",
+      "points": "1383"
     },
     {
       "position": 35,
-      "name": "Elise Mertens",
-      "country": "Bélgica",
-      "points": "1.850"
+      "name": "Jaqueline Cristian",
+      "country": "Romênia",
+      "points": "1382"
     },
     {
       "position": 36,
-      "name": "Clara Tauson",
-      "country": "Dinamarca",
-      "points": "1.800"
+      "name": "Maria Sakkari",
+      "country": "Grécia",
+      "points": "1370"
     },
     {
       "position": 37,
-      "name": "Magda Linette",
-      "country": "Polônia",
-      "points": "1.750"
+      "name": "Ann Li",
+      "country": "EUA",
+      "points": "1358"
     },
     {
       "position": 38,
-      "name": "Yue Yuan",
-      "country": "China",
-      "points": "1.700"
+      "name": "Magdalena Frech",
+      "country": "Polônia",
+      "points": "1348"
     },
     {
       "position": 39,
-      "name": "Xinyu Wang",
-      "country": "China",
-      "points": "1.650"
+      "name": "Lois Boisson",
+      "country": "França",
+      "points": "1339"
     },
     {
       "position": 40,
-      "name": "Marie Bouzkova",
+      "name": "Sara Bejlek",
       "country": "Rep. Tcheca",
-      "points": "1.600"
+      "points": "1321"
     },
     {
       "position": 41,
-      "name": "Diane Parry",
-      "country": "França",
-      "points": "1.550"
+      "name": "Janice Tjen",
+      "country": "Indonésia",
+      "points": "1317"
     },
     {
       "position": 42,
-      "name": "Clara Burel",
-      "country": "França",
-      "points": "1.500"
+      "name": "Katerina Siniakova",
+      "country": "Rep. Tcheca",
+      "points": "1299"
     },
     {
       "position": 43,
-      "name": "Nao Hibino",
-      "country": "Japão",
-      "points": "1.450"
+      "name": "Elisabetta Cocciaretto",
+      "country": "Itália",
+      "points": "1280"
     },
     {
       "position": 44,
-      "name": "Sofia Kenin",
-      "country": "EUA",
-      "points": "1.400"
+      "name": "Marketa Vondrousova",
+      "country": "Rep. Tcheca",
+      "points": "1263"
     },
     {
       "position": 45,
-      "name": "Sloane Stephens",
-      "country": "EUA",
-      "points": "1.350"
+      "name": "Alexandra Eala",
+      "country": "Filipinas",
+      "points": "1255"
     },
     {
       "position": 46,
-      "name": "Ana Bogdan",
-      "country": "Romênia",
-      "points": "1.300"
+      "name": "Peyton Stearns",
+      "country": "EUA",
+      "points": "1237"
     },
     {
       "position": 47,
-      "name": "Sorana Cirstea",
-      "country": "Romênia",
-      "points": "1.250"
+      "name": "Sofia Kenin",
+      "country": "EUA",
+      "points": "1217"
     },
     {
       "position": 48,
-      "name": "Anhelina Kalinina",
-      "country": "Ucrânia",
-      "points": "1.200"
+      "name": "Jessica Bouzas Maneiro",
+      "country": "Espanha",
+      "points": "1210"
     },
     {
       "position": 49,
-      "name": "Karolina Pliskova",
-      "country": "Rep. Tcheca",
-      "points": "1.150"
+      "name": "Dayana Yastremska",
+      "country": "Ucrânia",
+      "points": "1165"
     },
     {
       "position": 50,
-      "name": "Petra Martic",
-      "country": "Croácia",
-      "points": "1.100"
+      "name": "Tereza Valentova",
+      "country": "Rep. Tcheca",
+      "points": "1161"
     },
     {
       "position": 51,
-      "name": "Ajla Tomljanovic",
-      "country": "Austrália",
-      "points": "1.050"
+      "name": "Laura Siegemund",
+      "country": "Alemanha",
+      "points": "1158"
     },
     {
       "position": 52,
-      "name": "Tatjana Maria",
-      "country": "Alemanha",
-      "points": "1.020"
+      "name": "Barbora Krejcikova",
+      "country": "Rep. Tcheca",
+      "points": "1155"
     },
     {
       "position": 53,
-      "name": "Mayar Sherif",
-      "country": "Egito",
-      "points": "1.000"
+      "name": "Mccartney Kessler",
+      "country": "EUA",
+      "points": "1138"
     },
     {
       "position": 54,
       "name": "Camila Osorio",
       "country": "Colômbia",
-      "points": "980"
+      "points": "1096"
     },
     {
       "position": 55,
-      "name": "Elisabetta Cocciaretto",
-      "country": "Itália",
-      "points": "960"
+      "name": "Sonay Kartal",
+      "country": "Reino Unido",
+      "points": "1092"
     },
     {
       "position": 56,
-      "name": "Lucia Bronzetti",
-      "country": "Itália",
-      "points": "940"
+      "name": "Talia Gibson",
+      "country": "Austrália",
+      "points": "1080"
     },
     {
       "position": 57,
-      "name": "Martina Trevisan",
-      "country": "Itália",
-      "points": "920"
+      "name": "Magda Linette",
+      "country": "Polônia",
+      "points": "1059"
     },
     {
       "position": 58,
-      "name": "Sara Errani",
-      "country": "Itália",
-      "points": "900"
+      "name": "Veronika Kudermetova",
+      "country": "Rússia",
+      "points": "1055"
     },
     {
       "position": 59,
       "name": "Varvara Gracheva",
       "country": "França",
-      "points": "880"
+      "points": "1047"
     },
     {
       "position": 60,
-      "name": "Peyton Stearns",
-      "country": "EUA",
-      "points": "860"
+      "name": "Tatjana Maria",
+      "country": "Alemanha",
+      "points": "1047"
     },
     {
       "position": 61,
-      "name": "Taylor Townsend",
-      "country": "EUA",
-      "points": "840"
+      "name": "Antonia Ruzic",
+      "country": "Croácia",
+      "points": "1046"
     },
     {
       "position": 62,
-      "name": "Caroline Wozniacki",
-      "country": "Dinamarca",
-      "points": "820"
+      "name": "Shuai Zhang",
+      "country": "China",
+      "points": "1031"
     },
     {
       "position": 63,
-      "name": "Bernarda Pera",
-      "country": "EUA",
-      "points": "800"
+      "name": "Elsa Jacquemot",
+      "country": "França",
+      "points": "1029"
     },
     {
       "position": 64,
-      "name": "Ashlyn Krueger",
-      "country": "EUA",
-      "points": "780"
+      "name": "Katie Boulter",
+      "country": "Reino Unido",
+      "points": "1012"
     },
     {
       "position": 65,
-      "name": "Laura Siegemund",
-      "country": "Alemanha",
-      "points": "760"
+      "name": "Solana Sierra",
+      "country": "Argentina",
+      "points": "989"
     },
     {
       "position": 66,
-      "name": "Anna-Lena Friedsam",
-      "country": "Alemanha",
-      "points": "740"
+      "name": "Anastasia Zakharova",
+      "country": "Rússia",
+      "points": "978"
     },
     {
       "position": 67,
-      "name": "Tamara Korpatsch",
-      "country": "Alemanha",
-      "points": "720"
+      "name": "Daria Kasatkina",
+      "country": "Austrália",
+      "points": "977"
     },
     {
       "position": 68,
-      "name": "Jule Niemeier",
-      "country": "Alemanha",
-      "points": "700"
+      "name": "Anna Bondar",
+      "country": "Hungria",
+      "points": "966"
     },
     {
       "position": 69,
-      "name": "Emina Bektas",
+      "name": "Caty Mcnally",
       "country": "EUA",
-      "points": "680"
+      "points": "958"
     },
     {
       "position": 70,
-      "name": "Rebeka Masarova",
-      "country": "Espanha",
-      "points": "660"
+      "name": "Beatriz Haddad Maia",
+      "country": "Brasil",
+      "points": "942"
     },
     {
       "position": 71,
-      "name": "Cristina Bucsa",
-      "country": "Espanha",
-      "points": "640"
+      "name": "Oleksandra Oliynykova",
+      "country": "Ucrânia",
+      "points": "931"
     },
     {
       "position": 72,
-      "name": "Jessica Bouzas Maneiro",
-      "country": "Espanha",
-      "points": "620"
+      "name": "Yulia Putintseva",
+      "country": "Cazaquistão",
+      "points": "921"
     },
     {
       "position": 73,
       "name": "Kamilla Rakhimova",
-      "country": "Rússia",
-      "points": "600"
+      "country": "Uzbequistão",
+      "points": "914"
     },
     {
       "position": 74,
-      "name": "Erika Andreeva",
+      "name": "Oksana Selekhmeteva",
       "country": "Rússia",
-      "points": "580"
+      "points": "898"
     },
     {
       "position": 75,
-      "name": "Aliaksandra Sasnovich",
-      "country": "Bielorrússia",
-      "points": "570"
+      "name": "Ajla Tomljanovic",
+      "country": "Austrália",
+      "points": "897"
     },
     {
       "position": 76,
-      "name": "Arantxa Rus",
-      "country": "Holanda",
-      "points": "560"
+      "name": "Eva Lys",
+      "country": "Alemanha",
+      "points": "893"
     },
     {
       "position": 77,
-      "name": "Viktorija Golubic",
-      "country": "Suíça",
-      "points": "550"
+      "name": "Zeynep Sonmez",
+      "country": "Turquia",
+      "points": "891"
     },
     {
       "position": 78,
-      "name": "Lulu Sun",
-      "country": "Nova Zelândia",
-      "points": "540"
+      "name": "Petra Marcinko",
+      "country": "Croácia",
+      "points": "890"
     },
     {
       "position": 79,
-      "name": "Moyuka Uchijima",
-      "country": "Japão",
-      "points": "530"
+      "name": "Viktorija Golubic",
+      "country": "Suíça",
+      "points": "881"
     },
     {
       "position": 80,
-      "name": "Mai Hontama",
-      "country": "Japão",
-      "points": "520"
+      "name": "Kimberly Birrell",
+      "country": "Austrália",
+      "points": "880"
     },
     {
       "position": 81,
-      "name": "Harriet Dart",
-      "country": "Reino Unido",
-      "points": "510"
+      "name": "Moyuka Uchijima",
+      "country": "Japão",
+      "points": "863"
     },
     {
       "position": 82,
-      "name": "Sonay Kartal",
-      "country": "Reino Unido",
-      "points": "500"
+      "name": "Ella Seidel",
+      "country": "Alemanha",
+      "points": "850"
     },
     {
       "position": 83,
-      "name": "Olivia Gadecki",
-      "country": "Austrália",
-      "points": "490"
+      "name": "Elena-Gabriela Ruse",
+      "country": "Romênia",
+      "points": "840"
     },
     {
       "position": 84,
-      "name": "Rebecca Sramkova",
-      "country": "Eslováquia",
-      "points": "485"
+      "name": "Dalma Galfi",
+      "country": "Hungria",
+      "points": "837"
     },
     {
       "position": 85,
-      "name": "Aliaksandra Sasnovich",
-      "country": "Bielorrússia",
-      "points": "480"
+      "name": "Renata Zarazua",
+      "country": "México",
+      "points": "835"
     },
     {
       "position": 86,
-      "name": "Erika Andreeva",
-      "country": "Rússia",
-      "points": "475"
+      "name": "Katie Volynets",
+      "country": "EUA",
+      "points": "831"
     },
     {
       "position": 87,
-      "name": "Sara Sorribes Tormo",
-      "country": "Espanha",
-      "points": "470"
+      "name": "Julia Grabher",
+      "country": "Áustria",
+      "points": "829"
     },
     {
       "position": 88,
-      "name": "Maria Lourdes Carle",
-      "country": "Argentina",
-      "points": "465"
+      "name": "Simona Waltert",
+      "country": "Suíça",
+      "points": "825"
     },
     {
       "position": 89,
-      "name": "Renata Zarazua",
-      "country": "México",
-      "points": "460"
+      "name": "Yuliia Starodubtseva",
+      "country": "Ucrânia",
+      "points": "816"
     },
     {
       "position": 90,
-      "name": "Laura Pigossi",
-      "country": "Brasil",
-      "points": "450"
+      "name": "Taylor Townsend",
+      "country": "EUA",
+      "points": "814"
     },
     {
       "position": 91,
-      "name": "Anna Bondar",
-      "country": "Hungria",
-      "points": "445"
+      "name": "Diane Parry",
+      "country": "França",
+      "points": "806"
     },
     {
       "position": 92,
-      "name": "Kamilla Rakhimova",
-      "country": "Rússia",
-      "points": "440"
+      "name": "Panna Udvardy",
+      "country": "Hungria",
+      "points": "804"
     },
     {
       "position": 93,
-      "name": "Arantxa Rus",
-      "country": "Holanda",
-      "points": "435"
+      "name": "Daria Snigur",
+      "country": "Ucrânia",
+      "points": "803"
     },
     {
       "position": 94,
-      "name": "McCartney Kessler",
-      "country": "EUA",
-      "points": "430"
+      "name": "Anastasia Potapova",
+      "country": "Áustria",
+      "points": "800"
     },
     {
       "position": 95,
-      "name": "Brenda Fruhvirtova",
+      "name": "Nikola Bartunkova",
       "country": "Rep. Tcheca",
-      "points": "425"
+      "points": "800"
     },
     {
       "position": 96,
-      "name": "Julia Riera",
-      "country": "Argentina",
-      "points": "420"
+      "name": "Hanne Vandewinkel",
+      "country": "Bélgica",
+      "points": "795"
     },
     {
       "position": 97,
       "name": "Alycia Parks",
       "country": "EUA",
-      "points": "415"
+      "points": "794"
     },
     {
-      "position": 91,
-      "name": "Anna Karolina Schmiedlova",
-      "country": "Eslováquia",
-      "points": "410"
+      "position": 98,
+      "name": "Darja Semenistaja",
+      "country": "Letônia",
+      "points": "791"
     },
     {
       "position": 99,
-      "name": "Nao Hibino",
-      "country": "Japão",
-      "points": "405"
+      "name": "Anna Blinkova",
+      "country": "Rússia",
+      "points": "790"
     },
     {
       "position": 100,
-      "name": "Emma Raducanu",
-      "country": "Reino Unido",
-      "points": "400"
+      "name": "Veronika Erjavec",
+      "country": "Eslovênia",
+      "points": "786"
     }
   ],
   "grand_slams": {
@@ -2716,5 +2716,6 @@
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Reino Unido"
     }
-  }
+  },
+  "last_updated": "2026-03-30T23:07:32.323134"
 }
