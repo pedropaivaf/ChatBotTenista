@@ -38,6 +38,10 @@ O projeto utiliza uma arquitetura Cliente-Servidor com Flask no backend, NLTK pa
 - Gera follow-ups **abertos** (nunca sim/nao).
 - Resolve entidades contextualmente: "Alcaraz" apos ranking -> Carlos Alcaraz.
 - Rastreia `focus_player` para perguntas como "qual o pais dele".
+- **Fuzzy matching** via `difflib.SequenceMatcher` — tolera typos como "Medevedev" -> Medvedev, "Tsitipas" -> Tsitsipas.
+- **Stop words** filtradas no fuzzy para evitar falsos positivos ("dela" nao faz match com "Elena").
+- **Prioridade torneio > jogador**: detecta Roland Garros/Wimbledon antes de tentar resolver como nome de jogador.
+- **open_topic**: apos trivia, o bot aceita jogador ou torneio como resposta contextual.
 
 ### 7. Cliente de Dados (`api_client.py`)
 - Atualiza rankings ATP e WTA de fontes externas reais.
@@ -71,11 +75,13 @@ Mensagem do Usuario
         |
   [Filtro Off-Topic] Copa, futebol, etc.
         |
-  [Resolucao Contextual] Arvore de decisao verifica pending_follow_up
+  [Resolucao Contextual] Arvore de decisao (torneio > jogador > fuzzy)
         |
   [Query Parser] Detecta pais/temporal/superlativo
         |
-  [Dados Tecnicos] Ranking, Campeoes, Jogadores
+  [Dados Tecnicos] Ranking, Campeoes, Jogadores (+ fuzzy fallback)
+        |
+  [Deteccao Direta de Torneio] Roland Garros, Wimbledon, etc.
         |
   [Intents Conversacionais] knowledge_base.json
         |

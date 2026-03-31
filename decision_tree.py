@@ -1,4 +1,5 @@
 import random
+import difflib
 from nltk_utils import tokenize, stem, extract_entities
 
 # Templates de follow-up abertos (nunca sim/não) organizados por (topic, bot_action)
@@ -92,25 +93,76 @@ def _pick_follow_up(topic, bot_action, player_name=None, engine=None):
     return template
 
 
+# Palavras comuns do português que não devem fazer fuzzy match com nomes de jogadores
+_STOP_WORDS = {
+    "qual", "quem", "como", "onde", "quando", "porque", "para", "sobre", "dele", "dela",
+    "deles", "delas", "ele", "ela", "eles", "elas", "esse", "essa", "este", "esta",
+    "isso", "isto", "aqui", "mais", "menos", "muito", "pouco", "bem", "mal", "bom",
+    "mau", "melhor", "pior", "maior", "menor", "gosto", "gosta", "conta", "contar",
+    "fala", "falar", "fale", "diga", "saber", "quero", "quer", "pode", "acho",
+    "voce", "você", "meu", "minha", "seu", "sua", "nos", "nas", "dos", "das",
+    "uma", "umas", "uns", "com", "sem", "por", "entre", "até", "após", "desde",
+    "durante", "antes", "depois", "ainda", "também", "sempre", "nunca", "algo",
+    "tudo", "nada", "cada", "outra", "outro", "nova", "novo", "velha", "velho",
+    "curiosidade", "curiosidades", "detalhe", "detalhes", "informação", "informações",
+    "historia", "história", "ranking", "dados", "atual", "atualmente", "hoje",
+    "brasil", "espanha", "italia", "franca", "alemanha", "russia", "portugal",
+}
+
+
+def _fuzzy_match_player(msg_lower, candidates, threshold=0.65):
+    """
+    Match fuzzy de nome de jogador com tolerância a typos.
+    Compara cada palavra da mensagem com cada parte dos nomes candidatos.
+    Ignora stop words para evitar falsos positivos (ex: 'dela' vs 'elena').
+    """
+    words = msg_lower.replace(',', ' ').replace('.', ' ').replace('?', ' ').replace('!', ' ').split()
+    # Filtra stop words e palavras muito curtas
+    words = [w for w in words if len(w) > 2 and w not in _STOP_WORDS]
+    if not words:
+        return None
+
+    best_match = None
+    best_ratio = 0
+
+    for player_name in candidates:
+        name_parts = player_name.lower().split()
+        for part in name_parts:
+            if len(part) <= 2:
+                continue
+            for word in words:
+                ratio = difflib.SequenceMatcher(None, word, part).ratio()
+                if ratio > best_ratio and ratio >= threshold:
+                    best_ratio = ratio
+                    best_match = player_name
+
+    return best_match
+
+
 def _resolve_player_from_context(msg_lower, msg_stems, context, engine):
     """
     Tenta resolver uma menção a jogador usando o contexto da conversa.
     Ex: usuário diz "Alcaraz" após ver ranking → resolve para "Carlos Alcaraz".
+    Suporta typos via fuzzy matching (ex: "Medevedev" → "Daniil Medvedev").
     """
     mentioned = context.get("mentioned_entities", {}).get("players", [])
     if not mentioned:
         return None
 
-    # Tenta match direto por sobrenome ou nome parcial
+    # 1. Tenta match direto por sobrenome ou nome parcial
     for player_name in mentioned:
         name_parts = player_name.lower().split()
         for part in name_parts:
             if len(part) > 2 and part in msg_lower:
                 return player_name
 
-    # Tenta via extract_entities com a lista de mencionados
+    # 2. Tenta via extract_entities com a lista de mencionados
     result = extract_entities(msg_stems, mentioned)
-    return result
+    if result:
+        return result
+
+    # 3. Fuzzy match — tolera typos como "Medevedev" → "Medvedev"
+    return _fuzzy_match_player(msg_lower, mentioned, threshold=0.65)
 
 
 class DecisionTree:
@@ -131,6 +183,20 @@ class DecisionTree:
         last_topic = context.get("current_topic")
         add_log(f"[CONTEXTO] Tentando resolver via contexto: pending={pending}, topic={last_topic}", "DEBUG")
 
+        # --- Prioridade: Torneio detectado? (evita "roland garros" fazer match com jogador) ---
+        if pending in ("player_from_ranking", "player_from_country_ranking", "player_detail"):
+            tournaments = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
+            target_t = extract_entities(msg_stems, tournaments)
+            if not target_t:
+                for t in tournaments:
+                    if t.lower() in msg_lower:
+                        target_t = t
+                        break
+            if target_t:
+                add_log(f"[CONTEXTO] Torneio '{target_t}' detectado no contexto!", "SUCCESS")
+                result = self.engine.get_last_champions(tournament=target_t)
+                return (result, "tournament", "showed_champions", [])
+
         # --- Contexto: Jogador mencionado no ranking ---
         if pending in ("player_from_ranking", "player_from_country_ranking", "player_detail"):
             player = _resolve_player_from_context(msg_lower, msg_stems, context, self.engine)
@@ -142,11 +208,9 @@ class DecisionTree:
 
         # --- Contexto: Detalhes do jogador em foco ---
         if pending == "player_detail":
-            # Jogador em foco = último jogador sobre quem o bot deu info detalhada
             focus = context.get("focus_player")
 
             if any(kw in msg_lower for kw in COMPARISON_KEYWORDS):
-                # Usuário quer comparar — tenta encontrar outro jogador
                 all_players = self.engine.get_all_player_names()
                 other = extract_entities(msg_stems, all_players)
                 if other and focus:
@@ -171,13 +235,34 @@ class DecisionTree:
                     if info:
                         return (info, "player", "showed_player_info", [focus])
 
-            # Torneio — busca campeões
-            if any(kw in msg_lower for kw in TOURNAMENT_KEYWORDS):
-                tournaments = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
-                target = extract_entities(msg_stems, tournaments)
-                if target:
-                    result = self.engine.get_last_champions(tournament=target)
-                    return (result, "tournament", "showed_champions", [])
+        # --- Contexto: Resposta aberta (trivia perguntou sobre jogador/torneio) ---
+        if pending == "open_topic":
+            add_log("[CONTEXTO] Tentando resolver resposta aberta (open_topic)...", "DEBUG")
+
+            # Tenta resolver como torneio
+            tournaments = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
+            target_tournament = extract_entities(msg_stems, tournaments)
+            if not target_tournament:
+                # Fallback: verifica keywords de torneio no texto
+                for t in tournaments:
+                    if t.lower() in msg_lower:
+                        target_tournament = t
+                        break
+            if target_tournament:
+                add_log(f"[CONTEXTO] Torneio '{target_tournament}' resolvido via open_topic!", "SUCCESS")
+                result = self.engine.get_last_champions(tournament=target_tournament)
+                return (result, "tournament", "showed_champions", [])
+
+            # Tenta resolver como jogador (fuzzy match contra toda a base)
+            all_players = self.engine.get_all_player_names()
+            player = _fuzzy_match_player(msg_lower, all_players, threshold=0.75)
+            if not player:
+                player = extract_entities(msg_stems, all_players)
+            if player:
+                add_log(f"[CONTEXTO] Jogador '{player}' resolvido via open_topic!", "SUCCESS")
+                info = self.engine.get_player_info(player)
+                if info:
+                    return (info, "player", "showed_player_from_context", [player])
 
         return None
 
@@ -209,6 +294,8 @@ class DecisionTree:
             pending = "player_detail"
         elif bot_action in ("showed_champions",):
             pending = "player_from_ranking"
+        elif bot_action in ("showed_trivia",):
+            pending = "open_topic"
 
         # Define o jogador em foco (último jogador discutido em detalhe)
         focus_player = None
