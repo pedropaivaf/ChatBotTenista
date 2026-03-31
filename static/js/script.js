@@ -4,7 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input'); // Campo onde o usuário digita
     const sendBtn = document.getElementById('send-btn'); // Botão com ícone de bolinha para enviar
     const chatMessages = document.getElementById('chat-messages'); // Área que exibe o histórico de conversa
-    
+
+    // Gerenciamento de sessão para manter contexto entre mensagens
+    let sessionId = sessionStorage.getItem('tennis_session_id');
+    if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        sessionStorage.setItem('tennis_session_id', sessionId);
+    }
+
     // Referências aos elementos do Console/Terminal (Painel técnico lateral)
     const consoleToggleBtn = document.getElementById('console-toggle-btn'); // Botão que abre o terminal
     const consolePanel = document.getElementById('console-panel'); // O painel principal do terminal
@@ -95,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/predict', {
                 method: 'POST', // Método de envio de dados
                 headers: { 'Content-Type': 'application/json' }, // Indica que os dados são JSON
-                body: JSON.stringify({ message }) // Converte o objeto JS para string JSON
+                body: JSON.stringify({ message, session_id: sessionId }) // Envia mensagem + ID da sessão
             });
 
             // Converte a resposta bruta do servidor para objeto JS
