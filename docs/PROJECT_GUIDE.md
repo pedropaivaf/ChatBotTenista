@@ -65,11 +65,12 @@ Busca rankings atualizados de fontes externas reais.
 
 ## Pontos Fortes para Apresentacao
 
-1.  **Contexto Conversacional**: O bot mantem ate 20 turnos de contexto, faz perguntas abertas e entende respostas como "Alcaraz" ou "qual o pais dele" no contexto certo.
-2.  **Parser Inteligente**: "Qual o melhor jogador do brasil atualmente" retorna Joao Fonseca (nao o top 10 generico) porque reconhece "brasil" + "melhor" + "atualmente".
-3.  **Dados em Tempo Real**: Rankings ATP e WTA sao atualizados automaticamente via scraping/API a cada 24h.
-4.  **Arquitetura Hibrida**: Combina regras tecnicas (`engine.py`), NLP (`NLTK`) e contexto (`decision_tree.py`).
-5.  **Design Profissional**: Interface Glassmorphism com console tecnico lateral mostrando logs em tempo real.
+1.  **Contexto de 20 Turnos**: O bot mantem contexto entre mensagens, entende "Alcaraz" apos ranking, "qual o pais dele" apos ficha de jogador, e "roland garros" apos curiosidade.
+2.  **Tolerancia a Erros de Digitacao**: Fuzzy matching com `difflib` permite que "Medevedev", "Tsitipas" e outros typos sejam resolvidos automaticamente para o jogador correto.
+3.  **Parser Inteligente**: "Qual o melhor jogador do brasil atualmente" retorna Joao Fonseca porque reconhece "brasil" + "melhor" + "atualmente" como filtros estruturados.
+4.  **Dados em Tempo Real**: Rankings ATP e WTA Top 100 atualizados automaticamente via scraping/API a cada 24h.
+5.  **Arquitetura Hibrida**: Combina regras tecnicas (`engine.py`), NLP (`NLTK`), contexto (`decision_tree.py`) e fuzzy matching.
+6.  **Design Profissional**: Interface Glassmorphism com console tecnico lateral mostrando logs em tempo real.
 
 ---
 

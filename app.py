@@ -5,7 +5,7 @@ from engine import TennisEngine # Importa o nosso motor de dados técnicos de t�
 from nltk_utils import tokenize, stem, bag_of_words # Utilitários de Processamento de Linguagem Natural
 from session_manager import SessionManager # Gerenciador de sessões com contexto
 from query_parser import parse_query # Parser inteligente de queries (país/temporal/superlativo)
-from decision_tree import DecisionTree # Árvore de decisão contextual com follow-ups
+from decision_tree import DecisionTree, _fuzzy_match_player # Árvore de decisão contextual com follow-ups
 from api_client import TennisAPIClient # Cliente de atualização de rankings (ATP/WTA)
 import json # Para manipular arquivos de dados estruturados
 import os # Para verificar a existência de arquivos no sistema
@@ -210,6 +210,11 @@ def predict(): # Função principal de "predição" ou resposta
     players_list = tennis_engine.get_all_player_names() # Lê o banco de dados
     # Tenta extrair o nome de um jogador da frase do usuário
     target_player = __import__('nltk_utils').extract_entities(msg_stems, players_list)
+    # Fuzzy fallback: tolera typos como "Medevedev" → "Medvedev"
+    if not target_player:
+        target_player = _fuzzy_match_player(msg_lower, players_list, threshold=0.75)
+        if target_player:
+            add_log(f"Jogador detectado via fuzzy matching: {target_player}", "SUCCESS")
 
     if target_player: # Se o robô reconheceu o jogador citado
         add_log(f"Perfil de jogador detectado com NLTK: {target_player}", "SUCCESS")
@@ -229,6 +234,21 @@ def predict(): # Função principal de "predição" ou resposta
         if player_info: # Se houver informações no JSON
             return respond(player_info, topic="player", bot_action="showed_player_info",
                            mentioned_players=[target_player])
+
+    # --- Passo 1.5: Detecção direta de torneio por nome ---
+    tournaments_list = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
+    target_tournament = __import__('nltk_utils').extract_entities(msg_stems, tournaments_list)
+    if not target_tournament:
+        # Fallback: verifica se o nome do torneio aparece diretamente no texto
+        for t in tournaments_list:
+            if t.lower() in msg_lower:
+                target_tournament = t
+                break
+    if target_tournament:
+        add_log(f"Torneio detectado diretamente: {target_tournament}", "SUCCESS")
+        result = tennis_engine.get_last_champions(tournament=target_tournament)
+        return respond(result, topic="tournament", bot_action="showed_champions",
+                       mentioned_tournaments=[target_tournament])
 
     # --- Passo 2: Lógica Conversacional (Base de Conhecimento JSON) ---
     add_log("Analisando padrões conversacionais via NLTK...") # Inicia busca por intenções (Intents)
