@@ -8,63 +8,39 @@ from nltk_utils import tokenize, stem, extract_entities
 # Templates de follow-up abertos (nunca sim/não) organizados por (topic, bot_action)
 # Dicionário que mapeia tuplas (tópico, ação_do_bot) para listas de perguntas de acompanhamento
 FOLLOW_UPS = {
-    # Ranking
-    # Perguntas de follow-up para quando o bot mostrou o ranking geral
+    # Ranking — abre para jogador ou torneio
     ("ranking", "showed_ranking"): [
-        "Qual desses jogadores você mais admira?",
-        "Algum nome dessa lista te surpreende na posição em que está?",
-        "Sobre qual desses jogadores você gostaria de saber mais?",
-        "Quem dessa lista você acha que vai subir mais posições esse ano?",
+        "Sobre qual desses jogadores você quer saber mais?",
+        "Quer ver os campeões de algum Grand Slam?",
     ],
-    # Perguntas de follow-up para quando o bot mostrou o ranking filtrado por país
     ("ranking", "showed_country_ranking"): [
-        "O que você acha do momento atual do tênis nesse país?",
-        "Qual desses jogadores você mais acompanha?",
-        "Quer saber mais detalhes sobre algum deles?",
+        "Quer ver a ficha de algum deles ou explorar outro tema?",
     ],
-    # Jogador
-    # Perguntas de follow-up para quando o bot mostrou informações de um jogador específico
+    # Jogador — abre para torneio, ranking, outro jogador
     ("player", "showed_player_info"): [
-        "O que mais te impressiona no jogo {dele_dela}?",
-        "Em qual torneio você mais gosta de acompanhar {ele_ela}?",
-        "Quer comparar {ele_ela} com outro jogador?",
-        "O que você acha do estilo de jogo {dele_dela}?",
+        "Quer explorar algum torneio, ver o ranking ou saber sobre outro jogador?",
+        "O que mais te interessa: torneios, ranking ou outro jogador?",
     ],
-    # Perguntas de follow-up para quando o bot mostrou um jogador resolvido pelo contexto da conversa
     ("player", "showed_player_from_context"): [
-        "O que mais te chama atenção no estilo de jogo {dele_dela}?",
-        "Quer saber como {ele_ela} se compara com os outros do ranking?",
-        "Qual torneio você acha que é o forte {dele_dela}?",
+        "Quer ver algum Grand Slam ou saber sobre outro jogador?",
     ],
-    # Perguntas de follow-up para quando o bot mostrou o país de um jogador
     ("player", "showed_player_country"): [
-        "Quer saber mais sobre a carreira {dele_dela}?",
-        "Conhece outros jogadores desse país?",
+        "Posso te contar sobre torneios, ranking ou outros jogadores!",
     ],
-    # Perguntas de follow-up para quando o bot mostrou os melhores jogadores de um país
     ("player", "showed_country_best"): [
-        "O que você acha da nova geração desse país no tênis?",
-        "Quer ver a ficha completa de algum desses jogadores?",
-        "Qual deles você acompanha mais de perto?",
+        "Quer ver a ficha de algum desses ou explorar outro tema?",
     ],
-    # Torneio
-    # Perguntas de follow-up para quando o bot mostrou os campeões de um torneio
+    # Torneio — abre para jogador ou outro torneio
     ("tournament", "showed_champions"): [
-        "Qual desses campeões te impressionou mais?",
-        "O que você acha que define quem vence esse torneio?",
-        "Quer saber mais sobre algum desses jogadores?",
+        "Quer saber sobre algum desses jogadores ou ver outro torneio?",
     ],
-    # Superfície
-    # Perguntas de follow-up para quando o bot mostrou informações sobre uma superfície de quadra
+    # Superfície — abre para jogador ou torneio
     ("surface", "showed_surface_info"): [
-        "Qual superfície você prefere assistir?",
-        "Quem você acha que é o melhor jogador nessa superfície?",
+        "Quer saber sobre algum jogador ou torneio?",
     ],
-    # Conversacional genérico
-    # Perguntas de follow-up para quando o bot mostrou uma curiosidade/trivia sobre tênis
+    # Trivia — abre para qualquer tema
     ("trivia", "showed_trivia"): [
-        "Sobre qual tema do tênis você gostaria de saber mais?",
-        "Tem algum jogador ou torneio que te interessa?",
+        "Sobre o que mais quer conversar? Jogadores, torneios, curiosidades...",
     ],
 }
 
@@ -102,10 +78,18 @@ REACTION_KEYWORDS = {
     "inteligencia": ["A inteligência tática {dele_dela} é de outro nível! 🧠", "{Ele_Ela} sempre lê o jogo do adversário!"],
     "tatica": ["A tática {dele_dela} é brilhante! 🧠", "{Ele_Ela} sempre encontra a jogada certa!"],
 }
-# Lista de palavras-chave que indicam que o usuário quer informações pessoais/biográficas do jogador
 PLAYER_INFO_KEYWORDS = ["idade", "quantos anos", "titulo", "títulos", "titulos", "curiosidade",
                          "fato", "carreira", "biografia", "ficha",
                          "informação", "informacao", "perfil", "detalhes", "mais sobre"]
+
+# Elogios genéricos que devem ser reconhecidos no contexto de player_detail
+GENERIC_PRAISE = [
+    "melhores", "o melhor", "o maior", "um dos maiores", "um dos melhores",
+    "incrível", "incrivel", "sensacional", "fantástico", "fantastico",
+    "lenda", "lendário", "lendario", "goat", "fera", "monstro",
+    "demais", "muito bom", "espetacular", "fenomenal", "genial",
+    "absurdo", "impressionante", "fora de série",
+]
 
 
 # Função interna que gera uma reação empática sobre um atributo técnico do jogador em foco
@@ -397,6 +381,20 @@ class DecisionTree:
                     trace.append({"branch": "Reação empática", "icon": "🗣️", "matched": True, "detail": f"{reaction_kw} → reação sobre {focus}"})
                     trace.append({"branch": "Ficha do jogador", "icon": "📋", "matched": True, "detail": f"Re-exibindo {focus}"})
                     return (f"{reaction}\n\n{info}", "player", "showed_player_info", [focus], trace)
+
+            # Sub-branch: Elogio genérico ("um dos melhores", "lenda", "goat")
+            if any(p in msg_lower for p in GENERIC_PRAISE) and focus:
+                pronouns = _get_pronoun(focus, self.engine)
+                pronouns_cap = {"Ele_Ela": pronouns["ele_ela"].capitalize(), **pronouns}
+                praise_reactions = [
+                    "Concordo! {Ele_Ela} é realmente especial! 🎾",
+                    "Com certeza! {Ele_Ela} marcou a história do tênis! 🏆",
+                    "Sem dúvida! Uma verdadeira lenda do esporte!",
+                    "{Ele_Ela} é daqueles talentos únicos que aparecem uma vez na vida! ✨",
+                ]
+                praise_text = random.choice(praise_reactions).format(**pronouns_cap)
+                trace.append({"branch": "Elogio genérico", "icon": "👏", "matched": True, "detail": f"Reação a elogio sobre {focus}"})
+                return (praise_text, "player", "showed_player_info", [focus], trace)
 
             # Nenhum sub-branch matched
             if not has_comparison: trace.append({"branch": "Comparação", "icon": "⚔️", "matched": False, "detail": "Não solicitado"})
