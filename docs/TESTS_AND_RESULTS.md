@@ -1,185 +1,183 @@
 # Testes e Resultados
 
-Documento com todos os testes realizados no chatbot, cenarios cobertos e resultados obtidos.
+Bateria automatizada com 98 testes em 7 cenarios, executada 3x consecutivas com 100% de aprovacao.
 
 ---
 
-## Teste de Maratona: 20 Interacoes com Contexto
-
-Teste principal que valida a manutencao de contexto ao longo de 20 turnos consecutivos na mesma sessao, cobrindo ranking, jogadores, torneios, typos e trocas de topico.
-
-| Turno | Input do Usuario | Resposta Esperada | Resultado |
-|-------|-----------------|-------------------|-----------|
-| 1 | ranking atp | Top 10 ATP com Alcaraz #1 | OK |
-| 2 | Sinner | Ficha completa do Jannik Sinner (contexto do ranking) | OK |
-| 3 | qual o pais dele | Italia (focus_player = Sinner) | OK |
-| 4 | e o estilo de jogo dele? | Re-mostra ficha do Sinner com estilo | OK |
-| 5 | Alcaraz | Ficha completa do Carlos Alcaraz (troca de jogador) | OK |
-| 6 | qual o pais dele | Espanha (focus_player atualizado para Alcaraz) | OK |
-| 7 | gosto de roland garros | Campeoes de Roland Garros (torneio tem prioridade) | OK |
-| 8 | e wimbledon? | Campeoes de Wimbledon (contexto de torneio) | OK |
-| 9 | qual o melhor jogador do brasil atualmente | Joao Fonseca #40 ATP + Bia Haddad #70 WTA | OK |
-| 10 | Fonseca | Ficha completa do Joao Fonseca (contexto do pais) | OK |
-| 11 | qual o pais dele | Brasil (focus_player = Fonseca) | OK |
-| 12 | ranking wta | Top 10 WTA com Sabalenka #1 | OK |
-| 13 | Sabalenka | Ficha completa da Aryna Sabalenka (contexto WTA) | OK |
-| 14 | qual o pais dela | Bielorrussia (focus_player = Sabalenka) | OK |
-| 15 | Medevedev | Ficha do Daniil Medvedev (typo corrigido via fuzzy) | OK |
-| 16 | Tsitipas | Ficha do Stefanos Tsitsipas (typo corrigido via fuzzy) | OK |
-| 17 | me conta uma curiosidade | Curiosidade aleatoria sobre tenis | OK |
-| 18 | gosto do us open | Campeoes do US Open (open_topic -> torneio) | OK |
-| 19 | melhor tenista espanhol | Melhores jogadores da Espanha (query parser) | OK |
-| 20 | quem ganhou o australian open | Campeoes do Australian Open | OK |
-
-**Estado final da sessao**: 20 turnos, 40 entries no historico, 22 jogadores mencionados.
+## Resultado Geral: 98/98 (ZERO FALHAS, 3 execucoes consecutivas)
 
 ---
 
-## Teste de Fuzzy Matching (Tolerancia a Typos)
+## Bateria 1: Ranking + Contexto de Jogador (20 turnos)
 
-Validacao do `_fuzzy_match_player` com `difflib.SequenceMatcher` e threshold de 0.65 (contexto) / 0.75 (global).
+Fluxo completo: ranking → jogador → pais → estilo → troca de jogador → torneio → pais filtrado → WTA → typos → curiosidade.
 
-| Input com Typo | Jogador Esperado | Ratio | Resultado |
-|---------------|-----------------|-------|-----------|
-| Medevedev | Daniil Medvedev | 0.82 | OK |
-| Tsitipas | Stefanos Tsitsipas | 0.88 | OK |
-| Danill Medevedev | Daniil Medvedev | 0.77 | OK |
-| Alcaras | Carlos Alcaraz | 0.86 | OK |
-
-### Falsos Positivos Corrigidos (Stop Words)
-
-Palavras comuns do portugues que geravam falsos positivos antes da correcao:
-
-| Palavra | Falso Match | Ratio | Status |
-|---------|-----------|-------|--------|
-| "dela" | "Elena" Rybakina | 0.67 | Bloqueado (stop word) |
-| "dela" | "Elina" Svitolina | 0.67 | Bloqueado (stop word) |
-| "conta" | "Constant" Lestienne | 0.77 | Bloqueado (stop word) |
-| "gosto" | - | - | Bloqueado (stop word) |
-| "curiosidade" | - | - | Bloqueado (stop word) |
-
-A lista de stop words contem 80+ palavras comuns em portugues filtradas antes do fuzzy.
-
----
-
-## Teste do Query Parser (Pais/Temporal/Superlativo)
-
-Validacao do `parse_query()` com string matching direto (sem stems).
-
-| Input | country_filter | wants_best | is_current | Resultado |
-|-------|---------------|-----------|-----------|-----------|
-| qual o melhor jogador do brasil atualmente | Brasil | True | True | OK |
-| melhor tenista brasileiro | Brasil | True | False | OK |
-| ranking atp brasileiro | Brasil | False | False | OK |
-| melhor tenista espanhol | Espanha | True | False | OK |
-| ranking wta | None | False | False | OK |
-| jogadores da italia | Italia | False | False | OK |
+| # | Input | Esperado | Resultado |
+|---|-------|----------|-----------|
+| 1.01 | ranking atp | Top 10 com Alcaraz, Sinner, Zverev | OK |
+| 1.02 | Sinner | Ficha Jannik Sinner + Italia | OK |
+| 1.03 | qual o pais dele | Sinner + Italia (focus_player) | OK |
+| 1.04 | e o estilo de jogo dele? | Re-mostra Sinner | OK |
+| 1.05 | Alcaraz | Ficha Carlos Alcaraz + Espanha | OK |
+| 1.06 | qual o pais dele | Alcaraz + Espanha (focus atualizado) | OK |
+| 1.07 | gosto de roland garros | Campeoes RG (torneio prioridade > jogador) | OK |
+| 1.08 | e wimbledon? | Campeoes Wimbledon | OK |
+| 1.09 | melhor jogador do brasil atualmente | Fonseca + Brasil | OK |
+| 1.10 | Fonseca | Ficha Joao Fonseca | OK |
+| 1.11 | qual o pais dele | Fonseca + Brasil | OK |
+| 1.12 | ranking wta | Top 10 WTA com Sabalenka | OK |
+| 1.13 | Sabalenka | Ficha Aryna Sabalenka | OK |
+| 1.14 | qual o pais dela | Sabalenka + Bielorrussia | OK |
+| 1.15 | Medevedev (typo) | Daniil Medvedev via fuzzy | OK |
+| 1.16 | Tsitipas (typo) | Stefanos Tsitsipas via fuzzy | OK |
+| 1.17 | me conta uma curiosidade | Curiosidade (sem falso positivo) | OK |
+| 1.18 | gosto do us open | Campeoes US Open | OK |
+| 1.19 | melhor tenista espanhol | Melhores da Espanha + Alcaraz | OK |
+| 1.20 | quem ganhou o australian open | Campeoes Australian Open | OK |
 
 ---
 
-## Teste de Contexto: focus_player
+## Bateria 2: Trivia + Contexto Aberto (20 turnos)
 
-Validacao de que `focus_player` rastreia o ultimo jogador discutido em detalhe, nao o ultimo mencionado na lista.
+Fluxo conversacional: saudacao → superficies → cor da bolinha → regras → curiosidade → torneio → jogador → pais → WTA.
 
-| Acao | focus_player | Correto |
-|------|-------------|---------|
-| Apos ranking atp (10 jogadores listados) | None | OK |
-| Apos "Sinner" (ficha mostrada) | Jannik Sinner | OK |
-| Apos "qual o pais dele" (pais mostrado) | Jannik Sinner | OK |
-| Apos "Alcaraz" (nova ficha) | Carlos Alcaraz | OK |
-| Apos "Fonseca" (ficha apos query Brasil) | Joao Fonseca | OK |
-| Apos "Sabalenka" (ficha WTA) | Aryna Sabalenka | OK |
-
----
-
-## Teste de Prioridade: Torneio vs Jogador
-
-Validacao de que nomes de torneio tem prioridade sobre fuzzy match de jogador na arvore de decisao.
-
-| Contexto Anterior | Input | Esperado | Resultado |
-|------------------|-------|----------|-----------|
-| Ficha do Alcaraz (player_detail) | gosto de roland garros | Campeoes RG | OK |
-| Ficha do Sinner (player_detail) | e wimbledon? | Campeoes Wimbledon | OK |
-| Curiosidade (open_topic) | gosto do us open | Campeoes US Open | OK |
-| Campeoes RG (player_from_ranking) | e wimbledon? | Campeoes Wimbledon | OK |
-
-Antes da correcao, "garros" fazia fuzzy match com "carlos" (ratio 0.67) e mostrava Alcaraz ao inves dos campeoes. Agora torneio e detectado primeiro.
-
----
-
-## Teste de Scraping: Dados ATP e WTA
-
-Validacao da integridade dos dados obtidos via scraping/API.
-
-| Verificacao | ATP | WTA |
-|------------|-----|-----|
-| Total de jogadores | 100 | 100 |
-| Posicoes sequenciais 1-100 | OK | OK |
-| Zero duplicatas | OK | OK |
-| Todos paises traduzidos para PT-BR | OK | OK |
-| Nomes com acentos corrigidos | OK | OK |
-| Pontos em ordem decrescente | OK | OK |
-
-### Fontes de Dados
-- **ATP**: tennisexplorer.com/ranking/atp-men/ (2 paginas, HTML scraping)
-- **WTA**: api.wtatennis.com/tennis/players/ranked (API JSON oficial)
-- **Fallback WTA**: tennisexplorer.com/ranking/wta-women/ (se API falhar)
-
-### Nomes Corrigidos pelo Scraper
-
-| Nome no Site | Nome Corrigido |
-|-------------|---------------|
-| Fonseca Joao | Joao Fonseca |
-| Auger Aliassime Felix | Felix Auger-Aliassime |
-| Lehecka Jiri | Jiri Lehecka |
-| Etcheverry Tomas Martin | Tomas Martin Etcheverry |
-| Cerundolo Juan Manuel | Juan Manuel Cerundolo |
+| # | Input | Esperado | Resultado |
+|---|-------|----------|-----------|
+| 2.01 | oi | Saudacao sobre Tenis | OK |
+| 2.02 | quais os tipos de quadra? | Saibro, Grama, Piso Duro | OK |
+| 2.03 | qual a cor da bolinha | Amarelo optico (sem Coria/Coric) | OK |
+| 2.04 | quais as regras do tenis? | 15, 30, 40, Deuce | OK |
+| 2.05 | me conta uma curiosidade | Curiosidade (sem falso positivo) | OK |
+| 2.06 | roland garros | Campeoes RG (open_topic resolve) | OK |
+| 2.07 | prefiro saibro | Resposta sobre saibro | OK |
+| 2.08 | quem e o Djokovic? | Ficha Djokovic | OK |
+| 2.09 | e o Nadal? | Ficha Nadal | OK |
+| 2.10 | tenistas brasileiros | Fonseca + Haddad (sem Shapovalov) | OK |
+| 2.11 | Fonseca | Ficha Joao Fonseca | OK |
+| 2.12 | qual a idade dele | Re-mostra ficha Fonseca (idade) | OK |
+| 2.13 | como funciona o ranking da atp? | Historia da ATP 1972 | OK |
+| 2.14 | obrigado | Despedida | OK |
+| 2.15 | oi de novo | Nova saudacao | OK |
+| 2.16 | ranking wta | Top 10 WTA | OK |
+| 2.17 | Swiatek | Ficha Iga Swiatek + Polonia | OK |
+| 2.18 | qual o pais dela | Swiatek + Polonia | OK |
+| 2.19 | quem ganhou wimbledon | Campeoes Wimbledon | OK |
+| 2.20 | como o tenis surgiu? | Historia do tenis + Inglaterra | OK |
 
 ---
 
-## Teste de Sessao: Expiracao e Limites
+## Bateria 3: Typos, Edge Cases e Filtragem por Pais (12 testes)
 
-| Cenario | Resultado |
-|---------|-----------|
-| Nova aba gera novo session_id | OK (crypto.randomUUID + sessionStorage) |
-| Sessao persiste entre mensagens | OK (mesmo session_id enviado) |
-| Historico limitado a 40 entries (20 turnos x2) | OK |
-| turn_count incrementa a cada mensagem do usuario | OK |
-| Sessoes expiram apos 30min de inatividade | OK (cleanup_expired) |
+| # | Input | Esperado | Resultado |
+|---|-------|----------|-----------|
+| 3.01 | Danill Medevedev | Daniil Medvedev (fuzzy) | OK |
+| 3.02 | Tsitipas | Stefanos Tsitsipas (fuzzy) | OK |
+| 3.03 | Alcaras | Carlos Alcaraz (fuzzy) | OK |
+| 3.04 | jogadores brasileiros | Fonseca + Brasil (sem Shapovalov) | OK |
+| 3.05 | melhor jogador da italia | Italia + Sinner | OK |
+| 3.06 | melhor jogador americano | EUA | OK |
+| 3.07 | futebol | Bloqueado (off-topic) | OK |
+| 3.08 | qual a melhor raquete | Resposta sobre raquetes | OK |
+| 3.09 | o que e um Grand Slam? | 4 torneios | OK |
+| 3.10 | quem e Roger Federer? | Federer + 20 titulos | OK |
+| 3.11 | quem e Carlos Alcaraz? | Alcaraz | OK |
+| 3.12 | receita de bolo | Bloqueado (off-topic) | OK |
 
 ---
 
-## Teste Off-Topic
+## Bateria 4: Queries Diretas sem Contexto (8 testes)
 
-| Input | Resultado |
-|-------|-----------|
-| quem ganhou a copa do mundo | Bloqueado ("copa" + "futebol" detectados) |
-| resultado do basquete | Bloqueado ("basquete" detectado) |
-| receita de bolo | Bloqueado ("receita" detectado) |
-| ranking atp | Permitido (tenis) |
+| # | Input | Resultado |
+|---|-------|-----------|
+| 4.01 | ranking atp | OK - Top 10 ATP |
+| 4.02 | ranking wta | OK - Top 10 WTA |
+| 4.03 | quem e Jannik Sinner? | OK - Ficha completa |
+| 4.04 | quem ganhou o us open | OK - Campeoes US Open |
+| 4.05 | melhor jogador do brasil | OK - Fonseca + Haddad |
+| 4.06 | qual a cor da bolinha de tenis | OK - Amarelo optico |
+| 4.07 | quais as regras basicas | OK - 15, 30, 40 |
+| 4.08 | me conta uma curiosidade | OK - Curiosidade |
+
+---
+
+## Bateria 5: Fluxo Longo WTA (20 turnos)
+
+| # | Input | Resultado |
+|---|-------|-----------|
+| 5.01 | ranking wta | OK - Top 10 WTA |
+| 5.02 | Gauff | OK - Coco Gauff |
+| 5.03 | qual o pais dela | OK - Gauff + EUA |
+| 5.04 | Swiatek | OK - Iga Swiatek |
+| 5.05 | qual o pais dela | OK - Swiatek + Polonia |
+| 5.06 | gosto de wimbledon | OK - Campeoes Wimbledon |
+| 5.07 | e o australian open? | OK - Campeoes AO |
+| 5.08 | melhor jogadora do brasil | OK - Haddad Maia |
+| 5.09 | quais as regras do tenis | OK - 15, 30, 40 |
+| 5.10 | prefiro grama | OK - Resposta sobre grama |
+| 5.11 | ranking atp | OK - Top 10 ATP |
+| 5.12 | Djokovic | OK - Novak Djokovic |
+| 5.13 | qual o pais dele | OK - Djokovic + Servia |
+| 5.14 | Zverev | OK - Alexander Zverev |
+| 5.15 | qual o pais dele | OK - Zverev + Alemanha |
+| 5.16 | me conta uma curiosidade | OK - Sem falso positivo |
+| 5.17 | us open | OK - Campeoes US Open |
+| 5.18 | quem e o Sinner | OK - Jannik Sinner |
+| 5.19 | qual a idade dele | OK - Ficha Sinner (idade) |
+| 5.20 | obrigado | OK - Despedida |
+
+---
+
+## Bateria 6: Detalhes do Jogador em Foco (10 testes)
+
+| # | Input | Resultado |
+|---|-------|-----------|
+| 6.01 | quem e o Alcaraz? | OK - Carlos Alcaraz |
+| 6.02 | qual a idade dele | OK - Alcaraz (22 anos) |
+| 6.03 | qual o pais dele | OK - Alcaraz + Espanha |
+| 6.04 | qual o estilo dele | OK - Alcaraz |
+| 6.05 | ranking atp | OK - Top 10 (nao confunde com ficha) |
+| 6.06 | Djokovic | OK - Novak Djokovic |
+| 6.07 | qual a idade dele | OK - Djokovic |
+| 6.08 | qual o pais dele | OK - Djokovic + Servia |
+| 6.09 | quem ganhou roland garros | OK - Campeoes RG |
+| 6.10 | e o us open? | OK - Campeoes US Open |
+
+---
+
+## Bateria 7: Perguntas Genericas sobre Tenis (8 testes)
+
+| # | Input | Resultado |
+|---|-------|-----------|
+| 7.01 | o que e um ace no tenis? | OK - Regras |
+| 7.02 | qual a origem do tenis? | OK - Inglaterra |
+| 7.03 | o que e a ATP? | OK - ATP 1972 |
+| 7.04 | piso duro | OK - Superficies |
+| 7.05 | grama | OK - Grama |
+| 7.06 | quem e o numero 1 do mundo | OK - Carlos Alcaraz |
+| 7.07 | melhor jogador da franca | OK - Franca |
+| 7.08 | melhor jogador da argentina | OK - Argentina |
+
+---
+
+## Bugs Corrigidos Durante os Testes
+
+| Bug | Causa | Correcao |
+|-----|-------|----------|
+| "cor da bolinha" → Coria/Coric | Fuzzy match "cor" vs "coria" (0.86) | Stop words: adicionou "cor", "bola", "bolinha", etc |
+| "jogadores brasileiros" → Shapovalov | Fuzzy match "tenis" vs "denis" (0.80) | Stop words: adicionou "tenis", "jogador", etc |
+| "me conta curiosidade" → Lestienne | Fuzzy match "conta" vs "constant" (0.77) | Stop words: adicionou "conta", "curiosidade" |
+| "dela" → Elena Rybakina | Fuzzy match "dela" vs "elena" (0.67) | Stop words: adicionou "dela", "dele", "ela", etc |
+| "qual a idade dele" → nacionalidade | Intent match 60% com "Qual a nacionalidade dele?" | PLAYER_INFO_KEYWORDS detecta "idade" no contexto player_detail |
+| "ranking wta" → ficha jogador | "rank" dentro de "ranking" acionava PLAYER_INFO_KEYWORDS | Removeu "rank" e "pontos" de PLAYER_INFO_KEYWORDS |
+| "qual a melhor raquete" → Alcaraz | wants_best=True sem contexto de jogador | Superlativo global precisa de palavras de contexto ("jogador", "mundo") |
+| open_topic fuzzy match | Fuzzy contra 200+ jogadores com threshold 0.75 | open_topic usa apenas extract_entities (match exato) |
 
 ---
 
 ## Como Executar os Testes
 
-Os testes sao executados via test client do Flask sem precisar do navegador:
-
-```python
-import app as app_module
-client = app_module.app.test_client()
-
-# Enviar mensagem
-response = client.post('/predict', json={
-    'message': 'ranking atp',
-    'session_id': 'test-session'
-})
-data = response.get_json()
-print(data['answer'])  # Resposta do bot
-print(data['logs'])    # Logs tecnicos
-```
-
-Para testar no navegador, inicie o servidor e acesse http://127.0.0.1:5000/:
-
 ```bash
-python app.py
+python run_tests.py
 ```
+
+Os testes usam o test client do Flask (sem navegador) e verificam 98 cenarios em 7 baterias, validando que nenhuma regressao foi introduzida.

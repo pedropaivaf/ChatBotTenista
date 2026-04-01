@@ -44,45 +44,164 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
+    // Helper: cria elemento com texto seguro
+    const createEl = (tag, className, text) => {
+        const el = document.createElement(tag);
+        if (className) el.className = className;
+        if (text) el.textContent = text;
+        return el;
+    };
+
     /**
-     * Função: addLog
-     * Objetivo: Adiciona uma linha de registro técnico no console/terminal.
-     * @param {string} message - O texto bruto recebido do backend/frontend.
+     * Renderiza o pipeline visual de processamento no painel lateral.
+     * Cada step é um card animado com ícone de status, nome, detalhe e dados extras.
      */
-    const addLog = (message) => {
-        const logEntry = document.createElement('div'); // Cria o elemento da linha de log
-        logEntry.classList.add('log-entry'); // Adiciona a classe base de log
-        
-        // Lógica de coloração baseada em níveis de severidade/tipo
-        if (message.includes('[SYSTEM]')) logEntry.classList.add('system'); // Status do sistema (Azul)
-        else if (message.includes('[DEBUG]')) logEntry.classList.add('DEBUG'); // Informação técnica (Cinza)
-        else if (message.includes('[WARNING]')) logEntry.classList.add('WARNING'); // Alertas de contexto (Amarelo)
-        else if (message.includes('[ERROR]')) logEntry.classList.add('ERROR'); // Erros críticos (Vermelho)
-        else if (message.includes('[SUCCESS]')) logEntry.classList.add('SUCCESS'); // Identificações positivas (Verde)
-        else logEntry.classList.add('INFO'); // Informação geral (Padrão)
+    const renderPipeline = (steps) => {
+        if (!steps || steps.length === 0) return;
 
-        // Processamento visual do texto do log para destacar porcentagens e nomes técnicos
-        let processedMessage = message;
+        const welcome = consoleBody.querySelector('.pipeline-welcome');
+        if (welcome) welcome.remove();
 
-        // 1. Regex para identificar porcentagens (Ex: 88.9%) e aplicar cores dinâmicas
-        processedMessage = processedMessage.replace(/(\d+(\.\d+)?%)/g, (match) => {
-            const percentage = parseFloat(match);
-            let className = 'match-low'; // Padrão: Baixa confiança
-            if (percentage >= 80) className = 'match-high'; // Alta confiança (Verde)
-            else if (percentage >= 50) className = 'match-mid'; // Média confiança (Amarelo)
-            return `<span class="${className}">${match}</span>`;
+        const block = createEl('div', 'pipeline-block');
+        const label = createEl('div', 'pb-label', `Processamento #${document.querySelectorAll('.pipeline-block').length + 1}`);
+        block.appendChild(label);
+
+        const statusIcons = { success: '✓', skipped: '○', fail: '✗' };
+        // Map step name → type class for colors
+        const typeMap = {
+            'Entrada do Usuário': 'input', 'Tokenização NLTK': 'token',
+            'Filtro Off-Topic': 'filter', 'Árvore de Decisão': 'tree',
+            'Query Parser': 'parser', 'Motor de Dados': 'engine',
+            'Base de Conhecimento': 'engine', 'Resposta Final': 'response', 'Fallback': 'fail'
+        };
+        const typeIcons = {
+            input: '📝', token: '🔤', filter: '🛡️', tree: '🌳',
+            parser: '🔍', engine: '⚡', response: '✅', fail: '❌'
+        };
+        const delay = 130;
+
+        steps.forEach((step, i) => {
+            if (i > 0) {
+                const conn = createEl('div', 'pipe-connector');
+                conn.style.opacity = '0';
+                setTimeout(() => { conn.style.opacity = '1'; conn.style.transition = 'opacity 0.3s'; }, i * delay);
+                block.appendChild(conn);
+            }
+
+            const stepType = typeMap[step.name] || '';
+            const el = createEl('div', `pipeline-step ps-${step.status} ps-type-${stepType}`);
+            el.style.opacity = '0';
+            el.style.transform = 'translateX(-10px)';
+
+            const iconText = typeIcons[stepType] || statusIcons[step.status] || '?';
+            const icon = createEl('div', 'ps-icon', iconText);
+            const body = createEl('div', 'ps-body');
+            body.appendChild(createEl('div', 'ps-name', step.name));
+            if (step.detail) body.appendChild(createEl('div', 'ps-detail', step.detail));
+
+            // Token pills para tokenização
+            if (step.data && step.data.tokens && step.data.stems) {
+                const row = createEl('div', 'token-row');
+                step.data.tokens.forEach((tok, j) => {
+                    const pill = createEl('span', 'token-pill');
+                    pill.appendChild(createEl('span', 'tp-word', tok));
+                    pill.appendChild(createEl('span', 'tp-stem', step.data.stems[j] || tok));
+                    row.appendChild(pill);
+                });
+                body.appendChild(row);
+            }
+
+            // Helper: add badge row
+            const addBadges = (container, badges) => {
+                const wrap = createEl('div');
+                wrap.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px;margin-top:4px';
+                badges.forEach(([lbl, val]) => {
+                    const badge = createEl('span', 'session-badge', lbl + ' ');
+                    badge.appendChild(createEl('span', 'sb-val', val));
+                    wrap.appendChild(badge);
+                });
+                container.appendChild(wrap);
+            };
+
+            // Helper: create tree node with colored dot
+            const addTreeNode = (container, color, label, value) => {
+                const node = createEl('div', 'tree-node');
+                node.appendChild(createEl('span', `tn-dot ${color}`));
+                node.appendChild(createEl('span', 'tn-label', label + ': '));
+                node.appendChild(createEl('span', 'tn-val', value));
+                container.appendChild(node);
+            };
+
+            // Árvore de decisão expandível com bolinhas
+            if (step.data && step.data.turn !== undefined) {
+                // Botão toggle
+                const toggle = createEl('button', 'tree-toggle');
+                toggle.appendChild(createEl('span', 'arrow', '▶'));
+                toggle.appendChild(document.createTextNode(' Ver Decisões'));
+                body.appendChild(toggle);
+
+                // Painel expandível
+                const detail = createEl('div', 'tree-detail');
+                addTreeNode(detail, 'blue', 'Turno', String(step.data.turn));
+                addTreeNode(detail, step.data.topic ? 'green' : 'gray', 'Tópico', step.data.topic || 'nenhum');
+                addTreeNode(detail, step.data.pending ? 'yellow' : 'gray', 'Pendente', step.data.pending || 'nenhum');
+                addTreeNode(detail, step.data.focus ? 'green' : 'gray', 'Jogador em Foco', step.data.focus || 'nenhum');
+
+                // Decisões tomadas
+                const decLabel = createEl('div', 'ps-detail');
+                decLabel.style.cssText = 'margin-top:6px;font-weight:700;color:#64748b;font-size:0.65rem;text-transform:uppercase;letter-spacing:1px';
+                decLabel.textContent = 'Caminho da Decisão:';
+                detail.appendChild(decLabel);
+
+                if (step.data.pending) {
+                    addTreeNode(detail, 'green', 'Contexto ativo', 'Tentando resolver via sessão');
+                    addTreeNode(detail, step.status === 'success' ? 'green' : 'red',
+                        'Resolução', step.status === 'success' ? 'Resolvido no contexto' : 'Sem match → pipeline normal');
+                } else {
+                    addTreeNode(detail, 'gray', 'Contexto', 'Primeira mensagem ou sem pendência');
+                    addTreeNode(detail, 'yellow', 'Decisão', 'Seguir pipeline normal');
+                }
+
+                body.appendChild(detail);
+
+                toggle.addEventListener('click', () => {
+                    toggle.classList.toggle('expanded');
+                    detail.classList.toggle('visible');
+                });
+            }
+
+            if (step.name === 'Resposta Final' && step.data) {
+                const badges = [];
+                if (step.data.follow_up) badges.push(['Próximo', step.data.follow_up]);
+                if (step.data.focus) badges.push(['Foco', step.data.focus]);
+                if (badges.length) addBadges(body, badges);
+            }
+
+            if (step.data && step.data.country) {
+                const badges = [['País', step.data.country]];
+                if (step.data.best) badges.push(['Melhor', '✓']);
+                if (step.data.current) badges.push(['Atual', '✓']);
+                if (step.data.circuit) badges.push(['Circuito', step.data.circuit]);
+                addBadges(body, badges);
+            }
+
+            el.appendChild(icon);
+            el.appendChild(body);
+
+            setTimeout(() => {
+                el.style.transition = 'all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                el.style.opacity = '1';
+                el.style.transform = 'translateX(0)';
+            }, i * delay);
+
+            block.appendChild(el);
         });
 
-        // 2. Regex para identificar tags identificadas pelo NLTK (Ex: tag: djokovic)
-        processedMessage = processedMessage.replace(/(tag:\s+)(\w+)/gi, (match, p1, p2) => {
-            return `${p1}<span class="match-tag">${p2}</span>`; // Aplica fundo azul e bordas arredondadas
-        });
-
-        logEntry.innerHTML = processedMessage; // Aplica o texto formatado no elemento
-        consoleBody.appendChild(logEntry); // Insere o log no corpo do terminal
-        
-        // Scroll automático para o final dos logs
-        consoleBody.scrollTop = consoleBody.scrollHeight;
+        consoleBody.appendChild(block);
+        const sep = createEl('div');
+        sep.style.cssText = 'height:1px;background:#1e293b;margin:12px 0';
+        consoleBody.appendChild(sep);
+        setTimeout(() => { consoleBody.scrollTop = consoleBody.scrollHeight; }, steps.length * delay + 100);
     };
 
     /**
@@ -95,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addMessage(message, 'user'); // Exibe a mensagem do usuário imediatamente no chat
         userInput.value = ''; // Limpa o campo de texto
-        addLog(`>> Comando enviado: ${message}`); // Registra a ação no terminal
 
         try {
             // Requisição assíncrona para o servidor Flask
@@ -108,18 +226,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // Converte a resposta bruta do servidor para objeto JS
             const data = await response.json();
             
-            // Exibe a resposta do robô (com os novos destaques CSS .msg-highlight)
+            // Exibe a resposta do robô
             addMessage(data.answer, 'bot');
 
-            // Percorre a lista de logs técnicos enviados pelo backend e os exibe no terminal
-            if (data.logs && data.logs.length > 0) {
-                data.logs.forEach(log => addLog(log));
+            // Renderiza o pipeline visual no painel lateral
+            if (data.pipeline && data.pipeline.length > 0) {
+                renderPipeline(data.pipeline);
             }
 
         } catch (error) {
             // Tratamento de erro caso o servidor esteja offline ou ocorra falha na rede
             console.error('Erro:', error);
-            addLog(`[ERROR] Falha na comunicação com o servidor: ${error.message}`);
             addMessage('Ops, algo deu errado no servidor. Tente novamente.', 'bot');
         }
     };
@@ -138,10 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleModal = () => {
         groupModal.classList.toggle('active'); // Alterna a visibilidade suave via CSS
         
-        // Se abriu o modal, registra no terminal técnico para depuração
-        if (groupModal.classList.contains('active')) {
-            addLog("[DEBUG] Visualizando tela de integrantes do grupo.");
-        }
+        // Modal aberto/fechado
     };
 
     // Listeners para abrir e fechar o modal
@@ -165,9 +279,15 @@ document.addEventListener('DOMContentLoaded', () => {
     consoleToggleBtn.addEventListener('click', toggleConsole); // Abrir pelo botão superior
     closeConsole.addEventListener('click', toggleConsole); // Fechar pelo X interno
     
-    // Botão de "Lixo" para limpar o histórico de logs
+    // Botão para limpar o pipeline visual
     clearConsole.addEventListener('click', () => {
-        consoleBody.innerHTML = '<div class="log-entry system">> Console limpo. Pronto para novos logs...</div>';
+        consoleBody.textContent = '';
+        const welcome = createEl('div', 'pipeline-welcome');
+        const icon = createEl('div', 'pw-icon', '🧠');
+        const text = createEl('div', 'pw-text', 'Pipeline limpo. Envie uma mensagem para começar.');
+        welcome.appendChild(icon);
+        welcome.appendChild(text);
+        consoleBody.appendChild(welcome);
     });
 
     // --- Monitoramento de Eventos (Teclado e Clique) ---
@@ -188,6 +308,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Foca o cursor no campo de texto assim que o site carrega para facilitar o uso
     userInput.focus();
     
-    // Log inicial para confirmar que o sistema está em prontidão
-    addLog("[SYSTEM] Frontend conectado ao backend com sucesso.");
+    // Pipeline pronto
 });

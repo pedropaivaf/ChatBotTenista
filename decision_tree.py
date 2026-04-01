@@ -64,6 +64,9 @@ TOURNAMENT_KEYWORDS = ["torneio", "slam", "grand slam", "australian", "roland",
 COMPARISON_KEYWORDS = ["comparar", "comparação", "versus", "vs", "contra",
                         "diferença", "melhor que", "pior que"]
 COUNTRY_KEYWORDS_CTX = ["país", "pais", "nacionalidade", "onde nasceu", "da onde", "de onde"]
+PLAYER_INFO_KEYWORDS = ["idade", "quantos anos", "titulo", "títulos", "titulos", "curiosidade",
+                         "fato", "carreira", "biografia", "ficha",
+                         "informação", "informacao", "perfil", "detalhes", "mais sobre"]
 
 
 def _get_pronoun(player_name, engine):
@@ -107,6 +110,12 @@ _STOP_WORDS = {
     "curiosidade", "curiosidades", "detalhe", "detalhes", "informação", "informações",
     "historia", "história", "ranking", "dados", "atual", "atualmente", "hoje",
     "brasil", "espanha", "italia", "franca", "alemanha", "russia", "portugal",
+    "tenis", "tênis", "jogador", "jogadora", "jogadores", "jogadoras",
+    "tenista", "tenistas", "atleta", "atletas", "esporte", "campeonato",
+    "torneio", "torneios", "slam", "grand", "open", "masters",
+    "cor", "bola", "bolinha", "quadra", "quadras", "rede", "tipo", "tipos",
+    "regra", "regras", "ponto", "pontos", "set", "sets", "game", "games",
+    "tempo", "tempo", "final", "semi", "vitoria", "derrota",
 }
 
 
@@ -228,8 +237,8 @@ class DecisionTree:
                     if country_info:
                         return (country_info, "player", "showed_player_country", [focus])
 
-            # Estilo de jogo — re-mostra info do jogador em foco
-            if any(kw in msg_lower for kw in STYLE_KEYWORDS):
+            # Estilo de jogo ou info pessoal — re-mostra ficha do jogador em foco
+            if any(kw in msg_lower for kw in STYLE_KEYWORDS) or any(kw in msg_lower for kw in PLAYER_INFO_KEYWORDS):
                 if focus:
                     info = self.engine.get_player_info(focus)
                     if info:
@@ -253,11 +262,9 @@ class DecisionTree:
                 result = self.engine.get_last_champions(tournament=target_tournament)
                 return (result, "tournament", "showed_champions", [])
 
-            # Tenta resolver como jogador (fuzzy match contra toda a base)
+            # Tenta resolver como jogador (match exato apenas — sem fuzzy para evitar falsos positivos)
             all_players = self.engine.get_all_player_names()
-            player = _fuzzy_match_player(msg_lower, all_players, threshold=0.75)
-            if not player:
-                player = extract_entities(msg_stems, all_players)
+            player = extract_entities(msg_stems, all_players)
             if player:
                 add_log(f"[CONTEXTO] Jogador '{player}' resolvido via open_topic!", "SUCCESS")
                 info = self.engine.get_player_info(player)
