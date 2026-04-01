@@ -1,54 +1,67 @@
+# Importa o módulo random para selecionar respostas aleatórias de listas
 import random
+# Importa difflib para realizar comparações fuzzy (aproximadas) entre strings
 import difflib
+# Importa funções utilitárias de processamento de linguagem natural do módulo local nltk_utils
 from nltk_utils import tokenize, stem, extract_entities
 
 # Templates de follow-up abertos (nunca sim/não) organizados por (topic, bot_action)
+# Dicionário que mapeia tuplas (tópico, ação_do_bot) para listas de perguntas de acompanhamento
 FOLLOW_UPS = {
     # Ranking
+    # Perguntas de follow-up para quando o bot mostrou o ranking geral
     ("ranking", "showed_ranking"): [
         "Qual desses jogadores você mais admira?",
         "Algum nome dessa lista te surpreende na posição em que está?",
         "Sobre qual desses jogadores você gostaria de saber mais?",
         "Quem dessa lista você acha que vai subir mais posições esse ano?",
     ],
+    # Perguntas de follow-up para quando o bot mostrou o ranking filtrado por país
     ("ranking", "showed_country_ranking"): [
         "O que você acha do momento atual do tênis nesse país?",
         "Qual desses jogadores você mais acompanha?",
         "Quer saber mais detalhes sobre algum deles?",
     ],
     # Jogador
+    # Perguntas de follow-up para quando o bot mostrou informações de um jogador específico
     ("player", "showed_player_info"): [
         "O que mais te impressiona no jogo {dele_dela}?",
         "Em qual torneio você mais gosta de acompanhar {ele_ela}?",
         "Quer comparar {ele_ela} com outro jogador?",
         "O que você acha do estilo de jogo {dele_dela}?",
     ],
+    # Perguntas de follow-up para quando o bot mostrou um jogador resolvido pelo contexto da conversa
     ("player", "showed_player_from_context"): [
         "O que mais te chama atenção no estilo de jogo {dele_dela}?",
         "Quer saber como {ele_ela} se compara com os outros do ranking?",
         "Qual torneio você acha que é o forte {dele_dela}?",
     ],
+    # Perguntas de follow-up para quando o bot mostrou o país de um jogador
     ("player", "showed_player_country"): [
         "Quer saber mais sobre a carreira {dele_dela}?",
         "Conhece outros jogadores desse país?",
     ],
+    # Perguntas de follow-up para quando o bot mostrou os melhores jogadores de um país
     ("player", "showed_country_best"): [
         "O que você acha da nova geração desse país no tênis?",
         "Quer ver a ficha completa de algum desses jogadores?",
         "Qual deles você acompanha mais de perto?",
     ],
     # Torneio
+    # Perguntas de follow-up para quando o bot mostrou os campeões de um torneio
     ("tournament", "showed_champions"): [
         "Qual desses campeões te impressionou mais?",
         "O que você acha que define quem vence esse torneio?",
         "Quer saber mais sobre algum desses jogadores?",
     ],
     # Superfície
+    # Perguntas de follow-up para quando o bot mostrou informações sobre uma superfície de quadra
     ("surface", "showed_surface_info"): [
         "Qual superfície você prefere assistir?",
         "Quem você acha que é o melhor jogador nessa superfície?",
     ],
     # Conversacional genérico
+    # Perguntas de follow-up para quando o bot mostrou uma curiosidade/trivia sobre tênis
     ("trivia", "showed_trivia"): [
         "Sobre qual tema do tênis você gostaria de saber mais?",
         "Tem algum jogador ou torneio que te interessa?",
@@ -56,16 +69,21 @@ FOLLOW_UPS = {
 }
 
 # Palavras-chave para detectar tópicos na resposta contextual do usuário
+# Lista de palavras relacionadas ao estilo de jogo de um tenista
 STYLE_KEYWORDS = ["estilo", "forehand", "backhand", "saque", "serviço", "voleio",
                    "movimentação", "jogo", "tática", "agressivo", "defensivo",
                    "destro", "canhoto", "mão"]
+# Lista de palavras relacionadas a torneios de tênis
 TOURNAMENT_KEYWORDS = ["torneio", "slam", "grand slam", "australian", "roland",
                         "wimbledon", "us open", "masters", "finals"]
+# Lista de palavras que indicam que o usuário quer comparar jogadores
 COMPARISON_KEYWORDS = ["comparar", "comparação", "versus", "vs", "contra",
                         "diferença", "melhor que", "pior que"]
+# Lista de palavras relacionadas a país/nacionalidade do jogador
 COUNTRY_KEYWORDS_CTX = ["país", "pais", "nacionalidade", "onde nasceu", "da onde", "de onde"]
 
 # Reações empáticas a atributos técnicos de tênis (apenas tema tênis)
+# Dicionário que mapeia palavras-chave técnicas para listas de reações empáticas com emojis
 REACTION_KEYWORDS = {
     "resistencia": ["A resistência {dele_dela} é realmente absurda! 🎾", "Impressionante! {Ele_Ela} não desiste de nenhum ponto!"],
     "forehand": ["O forehand {dele_dela} é uma arma mortal! 🔥", "O forehand é um dos maiores destaques do jogo {dele_dela}."],
@@ -77,52 +95,84 @@ REACTION_KEYWORDS = {
     "agressivo": ["O jogo agressivo {dele_dela} é eletrizante! 🔥", "{Ele_Ela} não dá tempo pro adversário respirar!"],
     "defesa": ["A defesa {dele_dela} é incrível!", "{Ele_Ela} transforma defesa em ataque como ninguém!"],
     "voleio": ["O voleio {dele_dela} é preciso!", "Jogo de rede é uma arte e {ele_ela} domina!"],
+    "rapidez": ["A rapidez {dele_dela} na quadra é incrível! 💨", "{Ele_Ela} cobre a quadra como poucos!"],
+    "rapido": ["A velocidade {dele_dela} é impressionante! 💨", "{Ele_Ela} é rápido demais na quadra!"],
+    "potencia": ["A potência {dele_dela} é absurda! 💥", "Os golpes {dele_dela} são devastadores!"],
+    "consistencia": ["A consistência {dele_dela} é impressionante!", "{Ele_Ela} raramente comete erros não forçados!"],
+    "inteligencia": ["A inteligência tática {dele_dela} é de outro nível! 🧠", "{Ele_Ela} sempre lê o jogo do adversário!"],
+    "tatica": ["A tática {dele_dela} é brilhante! 🧠", "{Ele_Ela} sempre encontra a jogada certa!"],
 }
+# Lista de palavras-chave que indicam que o usuário quer informações pessoais/biográficas do jogador
 PLAYER_INFO_KEYWORDS = ["idade", "quantos anos", "titulo", "títulos", "titulos", "curiosidade",
                          "fato", "carreira", "biografia", "ficha",
                          "informação", "informacao", "perfil", "detalhes", "mais sobre"]
 
 
+# Função interna que gera uma reação empática sobre um atributo técnico do jogador em foco
 def _build_reaction(msg_lower, focus_player, engine):
     """Gera uma reação empática sobre atributo técnico de tênis do jogador em foco."""
+    # Se não há jogador em foco, retorna None pois não é possível gerar reação
     if not focus_player:
         return None
+    # Obtém os pronomes corretos (ele/ela, dele/dela) de acordo com o gênero do jogador
     pronouns = _get_pronoun(focus_player, engine)
+    # Cria versão com inicial maiúscula para início de frase (Ele_Ela) e junta com pronomes normais
     pronouns_cap = {"Ele_Ela": pronouns["ele_ela"].capitalize(), **pronouns}
+    # Percorre cada palavra-chave técnica e suas reações correspondentes
     for keyword, reactions in REACTION_KEYWORDS.items():
+        # Se a palavra-chave técnica está presente na mensagem do usuário
         if keyword in msg_lower:
+            # Escolhe aleatoriamente uma reação e formata com os pronomes corretos
             return random.choice(reactions).format(**pronouns_cap)
+    # Se nenhuma palavra-chave técnica foi encontrada, retorna None
     return None
 
 
+# Função interna que determina os pronomes corretos (masculino/feminino) para um jogador
 def _get_pronoun(player_name, engine):
     """Determina pronome (ele/ela, dele/dela) baseado no circuito."""
+    # Lista de sobrenomes de jogadoras famosas do circuito WTA (feminino)
     wta_legends = ["Haddad Maia", "Swiatek", "Sabalenka", "Williams", "Sharapova",
                    "Bueno", "Jabeur", "Krejcikova", "Gauff", "Rybakina", "Paolini",
                    "Zheng", "Pegula"]
     # Verifica se está no ranking WTA
+    # Percorre cada jogadora do ranking WTA nos dados do engine
     for p in engine.data.get("ranking_wta", []):
+        # Se o nome do jogador está contido no nome de uma jogadora WTA, usa pronomes femininos
         if player_name.lower() in p['name'].lower():
             return {"ele_ela": "ela", "dele_dela": "dela"}
+    # Verifica se o sobrenome do jogador corresponde a alguma lenda WTA da lista
     if any(w in player_name for w in wta_legends):
+        # Se sim, retorna pronomes femininos
         return {"ele_ela": "ela", "dele_dela": "dela"}
+    # Caso padrão: retorna pronomes masculinos (circuito ATP)
     return {"ele_ela": "ele", "dele_dela": "dele"}
 
 
+# Função interna que escolhe e formata um follow-up aleatório para manter a conversa fluindo
 def _pick_follow_up(topic, bot_action, player_name=None, engine=None):
     """Escolhe um follow-up aleatório e formata com pronomes se necessário."""
+    # Cria a chave de busca como tupla (tópico, ação)
     key = (topic, bot_action)
+    # Busca os templates para essa chave; se não encontrar, usa os templates genéricos de trivia
     templates = FOLLOW_UPS.get(key, FOLLOW_UPS.get(("trivia", "showed_trivia"), []))
+    # Se não há templates disponíveis, retorna string vazia
     if not templates:
         return ""
+    # Escolhe aleatoriamente um template da lista
     template = random.choice(templates)
+    # Se há jogador e engine, e o template contém placeholders de pronome, faz a substituição
     if player_name and engine and ("{ele_ela}" in template or "{dele_dela}" in template):
+        # Obtém os pronomes corretos para o jogador
         pronouns = _get_pronoun(player_name, engine)
+        # Substitui os placeholders {ele_ela} e {dele_dela} pelos pronomes corretos
         template = template.format(**pronouns)
+    # Retorna o template formatado pronto para exibição
     return template
 
 
 # Palavras comuns do português que não devem fazer fuzzy match com nomes de jogadores
+# Conjunto (set) de stop words para evitar falsos positivos no matching fuzzy
 _STOP_WORDS = {
     "qual", "quem", "como", "onde", "quando", "porque", "para", "sobre", "dele", "dela",
     "deles", "delas", "ele", "ela", "eles", "elas", "esse", "essa", "este", "esta",
@@ -145,83 +195,126 @@ _STOP_WORDS = {
     "tempo", "final", "semi", "vitoria", "derrota", "ganhou", "perdeu",
     "favorito", "favorita", "melhor", "pior", "maior", "menor",
     "quantos", "quantas", "quando", "quais", "qual", "quem",
+    "joga", "jogar", "jogando", "jogou", "jogo",
+    "tem", "tendo", "teve", "tinha", "teria",
+    "pode", "poder", "poderia", "seria", "será",
+    "sempre", "muito", "demais", "bastante", "incrivel", "incrível",
+    "absurda", "absurdo", "lendaria", "lendário", "perfeito", "perfeita",
+    "impressiona", "impressionante", "admiro", "adoro", "amo",
+    "rapidez", "rápido", "rapido",
 }
 
 
+# Função que realiza matching fuzzy (aproximado) de nomes de jogadores, tolerando erros de digitação
 def _fuzzy_match_player(msg_lower, candidates, threshold=0.65):
     """
     Match fuzzy de nome de jogador com tolerância a typos.
     Compara cada palavra da mensagem com cada parte dos nomes candidatos.
     Ignora stop words para evitar falsos positivos (ex: 'dela' vs 'elena').
     """
+    # Remove pontuação da mensagem e divide em palavras individuais
     words = msg_lower.replace(',', ' ').replace('.', ' ').replace('?', ' ').replace('!', ' ').split()
     # Filtra stop words e palavras muito curtas
+    # Mantém apenas palavras com mais de 2 caracteres que não sejam stop words
     words = [w for w in words if len(w) > 2 and w not in _STOP_WORDS]
+    # Se não sobrou nenhuma palavra válida após a filtragem, retorna None
     if not words:
         return None
 
+    # Variável para armazenar o melhor jogador encontrado até agora
     best_match = None
+    # Variável para armazenar a melhor taxa de similaridade encontrada
     best_ratio = 0
 
+    # Percorre cada nome de jogador na lista de candidatos
     for player_name in candidates:
+        # Divide o nome completo do jogador em partes (nome e sobrenome)
         name_parts = player_name.lower().split()
+        # Percorre cada parte do nome do jogador
         for part in name_parts:
+            # Ignora partes do nome com 2 caracteres ou menos (ex: "de", "da")
             if len(part) <= 2:
                 continue
+            # Compara cada palavra da mensagem do usuário com a parte do nome
             for word in words:
+                # Calcula a taxa de similaridade entre a palavra e a parte do nome usando SequenceMatcher
                 ratio = difflib.SequenceMatcher(None, word, part).ratio()
+                # Se a similaridade é maior que a melhor encontrada e está acima do limiar mínimo
                 if ratio > best_ratio and ratio >= threshold:
+                    # Atualiza a melhor taxa de similaridade
                     best_ratio = ratio
+                    # Atualiza o melhor jogador encontrado
                     best_match = player_name
 
+    # Retorna o jogador com maior similaridade ou None se nenhum atingiu o limiar
     return best_match
 
 
+# Função que tenta resolver o nome de um jogador usando o contexto da conversa anterior
 def _resolve_player_from_context(msg_lower, msg_stems, context, engine):
     """
     Tenta resolver uma menção a jogador usando o contexto da conversa.
     Ex: usuário diz "Alcaraz" após ver ranking → resolve para "Carlos Alcaraz".
     Suporta typos via fuzzy matching (ex: "Medevedev" → "Daniil Medvedev").
     """
+    # Obtém a lista de jogadores que foram mencionados anteriormente no contexto da conversa
     mentioned = context.get("mentioned_entities", {}).get("players", [])
+    # Se não há jogadores no contexto, não há como resolver — retorna None
     if not mentioned:
         return None
 
     # 1. Tenta match direto por sobrenome ou nome parcial
+    # Percorre cada jogador mencionado no contexto
     for player_name in mentioned:
+        # Divide o nome do jogador em partes (nome e sobrenome)
         name_parts = player_name.lower().split()
+        # Verifica cada parte do nome
         for part in name_parts:
+            # Se a parte tem mais de 2 caracteres e aparece na mensagem do usuário
             if len(part) > 2 and part in msg_lower:
+                # Retorna o nome completo do jogador (resolvido pelo contexto)
                 return player_name
 
     # 2. Tenta via extract_entities com a lista de mencionados
+    # Usa a função de extração de entidades do NLTK para tentar encontrar o jogador pelos stems
     result = extract_entities(msg_stems, mentioned)
+    # Se encontrou um resultado, retorna o jogador identificado
     if result:
         return result
 
     # 3. Fuzzy match — tolera typos como "Medevedev" → "Medvedev"
+    # Última tentativa: usa matching fuzzy para tolerar erros de digitação
     return _fuzzy_match_player(msg_lower, mentioned, threshold=0.65)
 
 
+# Classe principal que implementa a árvore de decisão contextual do chatbot
 class DecisionTree:
     """Máquina de estados contextual que gera follow-ups abertos e resolve entidades."""
 
+    # Método construtor que recebe a referência ao engine principal do chatbot
     def __init__(self, engine):
+        # Armazena a referência ao engine para acessar dados e funções do chatbot
         self.engine = engine
 
+    # Método principal que tenta interpretar a mensagem usando o contexto da conversa
     def try_contextual_response(self, msg_lower, msg_stems, context, add_log):
         """
         Tenta interpretar a mensagem usando o contexto da conversa anterior.
-        Retorna (response, topic, bot_action, mentioned_players) ou None se não conseguiu.
+        Retorna (response, topic, bot_action, mentioned_players, trace) ou (None, trace).
+        O trace é uma lista de decisões tomadas para visualização no pipeline.
         """
         pending = context.get("pending_follow_up")
+        trace = []  # Trace visual de cada decisão
+
         if not pending:
-            return None
+            trace.append({"branch": "Contexto", "icon": "💤", "matched": False, "detail": "Sem pendência — pipeline normal"})
+            return None, trace
 
         last_topic = context.get("current_topic")
+        focus = context.get("focus_player")
         add_log(f"[CONTEXTO] Tentando resolver via contexto: pending={pending}, topic={last_topic}", "DEBUG")
 
-        # --- Prioridade: Torneio detectado? (evita "roland garros" fazer match com jogador) ---
+        # --- Branch 1: Torneio ---
         if pending in ("player_from_ranking", "player_from_country_ranking", "player_detail"):
             tournaments = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
             target_t = extract_entities(msg_stems, tournaments)
@@ -231,90 +324,119 @@ class DecisionTree:
                         target_t = t
                         break
             if target_t:
+                trace.append({"branch": "Torneio", "icon": "🏆", "matched": True, "detail": f"{target_t} detectado"})
                 add_log(f"[CONTEXTO] Torneio '{target_t}' detectado no contexto!", "SUCCESS")
                 result = self.engine.get_last_champions(tournament=target_t)
-                return (result, "tournament", "showed_champions", [])
+                return (result, "tournament", "showed_champions", [], trace)
+            else:
+                trace.append({"branch": "Torneio", "icon": "🏆", "matched": False, "detail": "Nenhum Grand Slam na mensagem"})
 
-        # --- Contexto: Jogador mencionado no ranking ---
+        # --- Branch 2: Jogador do contexto ---
         if pending in ("player_from_ranking", "player_from_country_ranking", "player_detail"):
             player = _resolve_player_from_context(msg_lower, msg_stems, context, self.engine)
             if player:
+                trace.append({"branch": "Jogador (contexto)", "icon": "👤", "matched": True, "detail": f"{player}"})
                 add_log(f"[CONTEXTO] Jogador '{player}' resolvido via contexto!", "SUCCESS")
                 info = self.engine.get_player_info(player)
                 if info:
-                    return (info, "player", "showed_player_from_context", [player])
+                    return (info, "player", "showed_player_from_context", [player], trace)
+            else:
+                trace.append({"branch": "Jogador (contexto)", "icon": "👤", "matched": False, "detail": "Nenhum nome reconhecido"})
 
-        # --- Contexto: Detalhes do jogador em foco ---
+        # --- Branch 3: Detalhes do jogador em foco ---
         if pending == "player_detail":
-            focus = context.get("focus_player")
-
-            # Gera reação empática se o usuário opinou sobre atributo técnico
             reaction = _build_reaction(msg_lower, focus, self.engine)
+            reaction_kw = None
+            if reaction:
+                for kw in REACTION_KEYWORDS:
+                    if kw in msg_lower:
+                        reaction_kw = kw
+                        break
 
-            if any(kw in msg_lower for kw in COMPARISON_KEYWORDS):
+            # Sub-branch: Comparação
+            has_comparison = any(kw in msg_lower for kw in COMPARISON_KEYWORDS)
+            if has_comparison:
                 all_players = self.engine.get_all_player_names()
                 other = extract_entities(msg_stems, all_players)
                 if other and focus:
                     info_other = self.engine.get_player_info(other)
                     info_focus = self.engine.get_player_info(focus)
                     if info_other and info_focus:
+                        trace.append({"branch": "Comparação", "icon": "⚔️", "matched": True, "detail": f"{focus} vs {other}"})
                         response = f"{info_focus}\n\n{'─' * 30}\n\n{info_other}"
-                        return (response, "player", "showed_player_info",
-                                [focus, other])
+                        return (response, "player", "showed_player_info", [focus, other], trace)
 
-            # País do jogador em foco (com reação prefixada se houver)
-            if any(kw in msg_lower for kw in COUNTRY_KEYWORDS_CTX):
-                if focus:
-                    country_info = self.engine.get_player_country(focus)
-                    if country_info:
-                        if reaction:
-                            country_info = f"{reaction}\n\n{country_info}"
-                        return (country_info, "player", "showed_player_country", [focus])
+            # Sub-branch: País
+            has_country = any(kw in msg_lower for kw in COUNTRY_KEYWORDS_CTX)
+            if has_country and focus:
+                country_info = self.engine.get_player_country(focus)
+                if country_info:
+                    if reaction:
+                        trace.append({"branch": "Reação empática", "icon": "🗣️", "matched": True, "detail": f"{reaction_kw} → reação sobre {focus}"})
+                        country_info = f"{reaction}\n\n{country_info}"
+                    trace.append({"branch": "País do jogador", "icon": "📍", "matched": True, "detail": f"País de {focus}"})
+                    return (country_info, "player", "showed_player_country", [focus], trace)
 
-            # Estilo de jogo ou info pessoal — re-mostra ficha do jogador em foco
-            if any(kw in msg_lower for kw in STYLE_KEYWORDS) or any(kw in msg_lower for kw in PLAYER_INFO_KEYWORDS):
-                if focus:
-                    info = self.engine.get_player_info(focus)
-                    if info:
-                        if reaction:
-                            info = f"{reaction}\n\n{info}"
-                        return (info, "player", "showed_player_info", [focus])
+            # Sub-branch: Estilo / Info pessoal
+            has_style = any(kw in msg_lower for kw in STYLE_KEYWORDS)
+            has_info = any(kw in msg_lower for kw in PLAYER_INFO_KEYWORDS)
+            if (has_style or has_info) and focus:
+                info = self.engine.get_player_info(focus)
+                if info:
+                    if reaction:
+                        trace.append({"branch": "Reação empática", "icon": "🗣️", "matched": True, "detail": f"{reaction_kw} → reação sobre {focus}"})
+                        info = f"{reaction}\n\n{info}"
+                    label = "Estilo de jogo" if has_style else "Info pessoal"
+                    trace.append({"branch": label, "icon": "🎾", "matched": True, "detail": f"Dados de {focus}"})
+                    return (info, "player", "showed_player_info", [focus], trace)
 
-            # Opinião/sentimento sem pedido técnico → reagir + re-mostrar ficha
+            # Sub-branch: Reação pura (opinião sem pedido técnico)
             if reaction and focus:
                 info = self.engine.get_player_info(focus)
                 if info:
-                    return (f"{reaction}\n\n{info}", "player", "showed_player_info", [focus])
+                    trace.append({"branch": "Reação empática", "icon": "🗣️", "matched": True, "detail": f"{reaction_kw} → reação sobre {focus}"})
+                    trace.append({"branch": "Ficha do jogador", "icon": "📋", "matched": True, "detail": f"Re-exibindo {focus}"})
+                    return (f"{reaction}\n\n{info}", "player", "showed_player_info", [focus], trace)
 
-        # --- Contexto: Resposta aberta (trivia perguntou sobre jogador/torneio) ---
+            # Nenhum sub-branch matched
+            if not has_comparison: trace.append({"branch": "Comparação", "icon": "⚔️", "matched": False, "detail": "Não solicitado"})
+            if not has_country: trace.append({"branch": "País do jogador", "icon": "📍", "matched": False, "detail": "Não solicitado"})
+            if not reaction: trace.append({"branch": "Reação empática", "icon": "🗣️", "matched": False, "detail": "Nenhum atributo técnico detectado"})
+            if not has_style and not has_info: trace.append({"branch": "Estilo/Info", "icon": "🎾", "matched": False, "detail": "Não solicitado"})
+
+        # --- Branch 4: Open topic ---
         if pending == "open_topic":
             add_log("[CONTEXTO] Tentando resolver resposta aberta (open_topic)...", "DEBUG")
-
-            # Tenta resolver como torneio
             tournaments = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
             target_tournament = extract_entities(msg_stems, tournaments)
             if not target_tournament:
-                # Fallback: verifica keywords de torneio no texto
                 for t in tournaments:
                     if t.lower() in msg_lower:
                         target_tournament = t
                         break
             if target_tournament:
+                trace.append({"branch": "Torneio (aberto)", "icon": "🏆", "matched": True, "detail": f"{target_tournament}"})
                 add_log(f"[CONTEXTO] Torneio '{target_tournament}' resolvido via open_topic!", "SUCCESS")
                 result = self.engine.get_last_champions(tournament=target_tournament)
-                return (result, "tournament", "showed_champions", [])
+                return (result, "tournament", "showed_champions", [], trace)
+            else:
+                trace.append({"branch": "Torneio (aberto)", "icon": "🏆", "matched": False, "detail": "Nenhum torneio na mensagem"})
 
-            # Tenta resolver como jogador (match exato apenas — sem fuzzy para evitar falsos positivos)
             all_players = self.engine.get_all_player_names()
             player = extract_entities(msg_stems, all_players)
             if player:
+                trace.append({"branch": "Jogador (aberto)", "icon": "👤", "matched": True, "detail": f"{player}"})
                 add_log(f"[CONTEXTO] Jogador '{player}' resolvido via open_topic!", "SUCCESS")
                 info = self.engine.get_player_info(player)
                 if info:
-                    return (info, "player", "showed_player_from_context", [player])
+                    return (info, "player", "showed_player_from_context", [player], trace)
+            else:
+                trace.append({"branch": "Jogador (aberto)", "icon": "👤", "matched": False, "detail": "Nenhum jogador encontrado"})
 
-        return None
+        trace.append({"branch": "Resultado", "icon": "➡️", "matched": False, "detail": "Sem resolução → pipeline normal"})
+        return None, trace
 
+    # Método que enriquece a resposta adicionando follow-ups e preparando dados de contexto
     def enrich_response(self, response, topic, bot_action, context,
                         mentioned_players=None, mentioned_tournaments=None,
                         mentioned_countries=None):
@@ -322,43 +444,58 @@ class DecisionTree:
         Adiciona um follow-up aberto à resposta e retorna os dados para atualizar o contexto.
         """
         # Determina o jogador principal para pronomes
+        # Inicializa variável para o jogador que será usado nos pronomes do follow-up
         player_for_pronoun = None
+        # Se há jogadores mencionados na resposta atual, usa o último da lista
         if mentioned_players:
             player_for_pronoun = mentioned_players[-1]
+        # Senão, tenta usar o último jogador mencionado no contexto anterior
         elif context.get("mentioned_entities", {}).get("players"):
             player_for_pronoun = context["mentioned_entities"]["players"][-1]
 
+        # Escolhe um follow-up aleatório apropriado para o tópico e ação atual
         follow_up = _pick_follow_up(topic, bot_action, player_for_pronoun, self.engine)
+        # Se um follow-up foi gerado, adiciona-o ao final da resposta com uma linha em branco
         if follow_up:
             response += f"\n\n{follow_up}"
 
         # Determina qual tipo de follow-up esperamos
+        # Inicializa o tipo de pending como None
         pending = None
+        # Se o bot mostrou o ranking geral, espera que o usuário mencione um jogador do ranking
         if bot_action in ("showed_ranking",):
             pending = "player_from_ranking"
+        # Se mostrou ranking por país ou melhores do país, espera jogador do ranking por país
         elif bot_action in ("showed_country_ranking", "showed_country_best"):
             pending = "player_from_country_ranking"
+        # Se mostrou info de jogador, espera mais detalhes sobre esse jogador
         elif bot_action in ("showed_player_info", "showed_player_from_context",
                             "showed_player_country"):
             pending = "player_detail"
+        # Se mostrou campeões de um torneio, espera que o usuário escolha um jogador
         elif bot_action in ("showed_champions",):
             pending = "player_from_ranking"
+        # Se mostrou trivia/curiosidade, espera uma resposta aberta sobre qualquer tema
         elif bot_action in ("showed_trivia",):
             pending = "open_topic"
 
         # Define o jogador em foco (último jogador discutido em detalhe)
+        # Inicializa como None — só será definido se a ação envolveu info detalhada de jogador
         focus_player = None
+        # Se a ação foi de mostrar detalhes de jogador e há jogadores mencionados
         if bot_action in ("showed_player_info", "showed_player_from_context",
                           "showed_player_country") and mentioned_players:
+            # Define o último jogador mencionado como o jogador em foco para o próximo turno
             focus_player = mentioned_players[-1]
 
+        # Retorna um dicionário com todos os dados necessários para atualizar o contexto da conversa
         return {
-            "response": response,
-            "topic": topic,
-            "bot_action": bot_action,
-            "pending_follow_up": pending,
-            "focus_player": focus_player,
-            "mentioned_players": mentioned_players or [],
-            "mentioned_tournaments": mentioned_tournaments or [],
-            "mentioned_countries": mentioned_countries or [],
+            "response": response,                                   # Resposta final com follow-up
+            "topic": topic,                                         # Tópico atual da conversa
+            "bot_action": bot_action,                               # Ação que o bot executou
+            "pending_follow_up": pending,                           # Tipo de resposta esperada do usuário
+            "focus_player": focus_player,                           # Jogador em foco para o próximo turno
+            "mentioned_players": mentioned_players or [],           # Lista de jogadores mencionados
+            "mentioned_tournaments": mentioned_tournaments or [],   # Lista de torneios mencionados
+            "mentioned_countries": mentioned_countries or [],       # Lista de países mencionados
         }

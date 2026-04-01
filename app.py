@@ -145,18 +145,25 @@ def predict(): # Função principal de "predição" ou resposta
     add_step("Filtro Off-Topic", "success", "Mensagem permitida (contexto tênis)")
     pending_ctx = context.get("pending_follow_up")
     focus_ctx = context.get("focus_player")
-    add_step("Árvore de Decisão", "success" if pending_ctx else "skipped",
-             f"Contexto: {pending_ctx or 'nenhum'}" + (f" | Foco: {focus_ctx}" if focus_ctx else ""),
-             {"pending": pending_ctx, "focus": focus_ctx, "topic": context.get("current_topic"), "turn": context.get("turn_count", 0)})
     contextual_result = decision_tree.try_contextual_response(msg_lower, msg_stems, context, add_log)
-    if contextual_result:
-        resp_text, topic, bot_action, mentioned_players = contextual_result
+
+    # try_contextual_response retorna (resp, topic, action, players, trace) ou (None, trace)
+    if contextual_result is not None and contextual_result[0] is not None:
+        resp_text, topic, bot_action, mentioned_players, trace = contextual_result
         add_log(f"[CONTEXTO] Resposta resolvida via árvore de decisão! Ação: {bot_action}", "SUCCESS")
-        # Atualiza o step da árvore para indicar que resolveu
-        pipeline_steps[-1]["status"] = "success"
-        pipeline_steps[-1]["detail"] = f"Resolvido → {bot_action}"
+        add_step("Árvore de Decisão", "success",
+                 f"Resolvido → {bot_action}",
+                 {"pending": pending_ctx, "focus": focus_ctx, "topic": context.get("current_topic"),
+                  "turn": context.get("turn_count", 0), "trace": trace})
         return respond(resp_text, topic=topic, bot_action=bot_action,
                        mentioned_players=mentioned_players)
+
+    # Não resolveu — extrai trace mesmo assim para visualização
+    trace = contextual_result[1] if contextual_result is not None else []
+    add_step("Árvore de Decisão", "success" if pending_ctx else "skipped",
+             f"Contexto: {pending_ctx or 'nenhum'}" + (f" | Foco: {focus_ctx}" if focus_ctx else "") + " → pipeline normal",
+             {"pending": pending_ctx, "focus": focus_ctx, "topic": context.get("current_topic"),
+              "turn": context.get("turn_count", 0), "trace": trace})
 
     # --- Passo 0.7: Parser Inteligente de Query (País/Temporal/Superlativo) ---
     parsed = parse_query(msg_lower)
