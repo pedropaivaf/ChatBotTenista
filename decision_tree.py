@@ -139,9 +139,12 @@ _STOP_WORDS = {
     "tenis", "tênis", "jogador", "jogadora", "jogadores", "jogadoras",
     "tenista", "tenistas", "atleta", "atletas", "esporte", "campeonato",
     "torneio", "torneios", "slam", "grand", "open", "masters",
-    "cor", "bola", "bolinha", "quadra", "quadras", "rede", "tipo", "tipos",
+    "cor", "bola", "bolinha", "amarelo", "amarela", "verde", "branca", "branco",
+    "quadra", "quadras", "rede", "tipo", "tipos",
     "regra", "regras", "ponto", "pontos", "set", "sets", "game", "games",
-    "tempo", "tempo", "final", "semi", "vitoria", "derrota",
+    "tempo", "final", "semi", "vitoria", "derrota", "ganhou", "perdeu",
+    "favorito", "favorita", "melhor", "pior", "maior", "menor",
+    "quantos", "quantas", "quando", "quais", "qual", "quem",
 }
 
 

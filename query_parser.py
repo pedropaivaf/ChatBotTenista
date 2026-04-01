@@ -83,14 +83,19 @@ def _strip_accents(text):
 
 def _detect_country(msg_lower):
     """Detecta menção a um país na mensagem, retornando o nome canônico ou None."""
+    # Remove nomes de torneios para evitar "australian open" → "Austrália"
+    cleaned = msg_lower
+    for tournament in ["australian open", "roland garros", "wimbledon", "us open", "miami open"]:
+        cleaned = cleaned.replace(tournament, "")
+
     # Primeiro tenta gentílicos (mais específicos)
-    msg_no_accents = _strip_accents(msg_lower)
+    msg_no_accents = _strip_accents(cleaned)
     for demonym, country in DEMONYM_MAP.items():
         if demonym in msg_no_accents:
             return country
 
     # Remove preposições comuns para facilitar match de país
-    words = msg_lower.split()
+    words = cleaned.split()
     clean_words = [w for w in words if w not in PREPOSITIONS]
     clean_msg = ' '.join(clean_words)
     clean_msg_no_accents = _strip_accents(clean_msg)
