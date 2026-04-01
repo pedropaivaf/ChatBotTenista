@@ -259,6 +259,13 @@ def predict(): # Função principal de "predição" ou resposta
     players_list = tennis_engine.get_all_player_names() # Lê o banco de dados
     # Tenta extrair o nome de um jogador da frase do usuário
     target_player = __import__('nltk_utils').extract_entities(msg_stems, players_list)
+    # Validação: rejeitar matches fracos (1 stem curto como "mai" → Mai Hontama)
+    if target_player:
+        from nltk_utils import stem as _stem, tokenize as _tok
+        _p_stems = [_stem(w) for w in _tok(target_player.lower()) if len(_stem(w)) > 2]
+        _matched = [s for s in _p_stems if s in msg_stems]
+        if not any(len(s) >= 4 for s in _matched):
+            target_player = None
     # Fuzzy fallback: tolera typos como "Medevedev" → "Medvedev"
     if not target_player:
         target_player = _fuzzy_match_player(msg_lower, players_list, threshold=0.75)

@@ -424,6 +424,13 @@ class DecisionTree:
 
             all_players = self.engine.get_all_player_names()
             player = extract_entities(msg_stems, all_players)
+            # Validação extra: rejeitar matches fracos (1 stem curto como "mai" → Mai Hontama)
+            if player:
+                player_stems = [stem(w) for w in tokenize(player.lower()) if len(stem(w)) > 2]
+                matched_stems = [s for s in player_stems if s in msg_stems]
+                # Exigir pelo menos 1 match com stem de 4+ caracteres
+                if not any(len(s) >= 4 for s in matched_stems):
+                    player = None
             if player:
                 trace.append({"branch": "Jogador (aberto)", "icon": "👤", "matched": True, "detail": f"{player}"})
                 add_log(f"[CONTEXTO] Jogador '{player}' resolvido via open_topic!", "SUCCESS")
