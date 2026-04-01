@@ -35,7 +35,28 @@ decision_tree = DecisionTree(tennis_engine)
 UNRECOGNIZED_FILE = 'unrecognized_queries.json' # Define o nome do arquivo de logs de erro
 
 # Lista de termos que remetem a outros esportes e devem ser barrados (Filtro de Contexto)
-OFF_TOPIC_KEYWORDS = ["copa", "futebol", "gol", "basquete", "nba", "buraco negro", "fisica", "receita", "politica", "eleição"] # Filtro de segurança anti-offtopic
+OFF_TOPIC_KEYWORDS = [
+    # Esportes
+    "copa", "futebol", "gol", "basquete", "nba", "baseball", "beisebol",
+    "formula 1", "f1", "hamilton", "verstappen", "nascar", "motogp",
+    "golf", "golfe", "boxe", "mma", "ufc", "luta", "wrestling",
+    "natação", "natacao", "surf", "skate", "skateboard", "ciclismo",
+    "vôlei", "voleibol", "handball", "handebol", "rugby", "cricket",
+    "nfl", "mlb", "nhl", "premier league", "champions league", "libertadores",
+    "flamengo", "corinthians", "palmeiras", "messi", "neymar", "cristiano",
+    "lebron", "curry", "jordan",
+    # Outros temas
+    "buraco negro", "fisica", "física", "química", "quimica",
+    "receita", "cozinha", "comida", "bolo", "pizza",
+    "politica", "política", "eleição", "eleicao", "presidente", "deputado",
+    "bitcoin", "crypto", "criptomoeda", "bolsa de valores",
+    "filme", "netflix", "série", "serie", "anime",
+    "música", "musica", "cantor", "cantora", "banda",
+    "carro", "moto", "avião", "aviao",
+    "programação", "programacao", "javascript", "código", "codigo",
+    "clima", "previsão", "previsao",
+    "religião", "religiao", "igreja",
+]
 
 # Função que carrega a base de conhecimento (Intents) do arquivo JSON
 def load_knowledge_base(): # Define a função de carregamento
@@ -130,14 +151,52 @@ def predict(): # Função principal de "predição" ou resposta
     add_step("Entrada do Usuário", "success", text, {"original": text})
     add_step("Tokenização NLTK", "success", " → ".join(msg_tokens), {"tokens": msg_tokens, "stems": msg_stems})
 
-    # --- Passo 0: Filtro de Contexto (Anti-Futebol e Anti-Offtopic) ---
-    if any(off in msg_lower for off in OFF_TOPIC_KEYWORDS):
+    # --- Passo 0: Filtro de Contexto (Anti-Offtopic + Gibberish) ---
+    # Detecta gibberish: palavras longas com padrões não-naturais
+    import re as _re
+    def is_gibberish(text_to_check):
+        words = [w for w in text_to_check.split() if len(w) > 5 and w.isalpha()]
+        if not words:
+            return False
+        vowels = set('aeiouáéíóúâêîôûãõ')
+        for w in words:
+            # Proporção de vogais muito baixa ou alta
+            ratio = sum(1 for c in w if c in vowels) / len(w)
+            if ratio < 0.15 or ratio > 0.85:
+                return True
+            # 4+ consoantes consecutivas (raro em português/inglês)
+            consonant_run = _re.search(r'[^aeiouáéíóúâêîôûãõ]{4,}', w)
+            if consonant_run and len(w) > 6:
+                return True
+            # Mesma letra repetida 3+ vezes
+            if _re.search(r'(.)\1{2,}', w):
+                return True
+            # Palavra muito longa (>10 chars) sem nenhum bigrama comum do português
+            if len(w) > 10:
+                common_bigrams = {'de', 'er', 'ar', 'en', 'an', 'es', 'al', 'or', 'os', 'ra',
+                                  'te', 'co', 'se', 'ta', 'do', 'in', 'on', 're', 'ao', 'ão',
+                                  'ca', 'to', 'is', 'la', 'ma', 'da', 'na', 'ad', 'qu', 'pa',
+                                  'si', 'le', 'ei', 'ir', 'as', 'il', 'br', 'ro', 'at', 'it',
+                                  'io', 'ia', 'ri', 'li', 'lo', 'me', 'no', 'ti', 'sa', 'ni'}
+                bigrams = {w[i:i+2] for i in range(len(w)-1)}
+                if len(bigrams & common_bigrams) < 2:
+                    return True
+        return False
+
+    is_off_topic = any(off in msg_lower for off in OFF_TOPIC_KEYWORDS)
+    is_gibber = is_gibberish(msg_lower)
+
+    if is_off_topic or is_gibber:
+        reason = "Texto sem sentido detectado" if is_gibber else "Palavra bloqueada detectada na mensagem"
         add_log("Assunto fora de contexto (Tênis) detectado!", "WARNING")
-        add_step("Filtro Off-Topic", "fail", f"Palavra bloqueada detectada na mensagem")
+        add_step("Filtro Off-Topic", "fail", reason)
         log_unrecognized_query(text)
         session_mgr.update(session_id, "user", text)
+        resp_text = ("Hmm, não entendi essa mensagem. 🤔\nTenta me perguntar sobre ranking ATP, jogadores ou torneios de Grand Slam!"
+                     if is_gibber else
+                     "Desculpe, mas eu respiro apenas Tênis! 🎾\nPosso te contar sobre o ranking da ATP ou os campeões de Grand Slam, mas sobre esse assunto eu prefiro não comentar.")
         return jsonify({
-            "answer": "Desculpe, mas eu respiro apenas Tênis! 🎾\nPosso te contar sobre o ranking da ATP ou os campeões de Grand Slam, mas sobre esse assunto eu prefiro não comentar.",
+            "answer": resp_text,
             "logs": current_logs, "pipeline": pipeline_steps
         })
 
