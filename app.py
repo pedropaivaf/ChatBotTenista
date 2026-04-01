@@ -75,6 +75,7 @@ def predict(): # Função principal de "predição" ou resposta
     text = request.get_json().get("message") # Extrai a mensagem enviada pelo usuário via JSON
     session_id = request.get_json().get("session_id") # Extrai o ID da sessão para contexto
     current_logs = [] # Inicializa uma lista de logs técnicos para enviar ao frontend
+    pipeline_steps = [] # Pipeline visual estruturado para o frontend
 
     # Carrega ou cria a sessão do usuário
     context = session_mgr.get_or_create(session_id)
@@ -83,6 +84,10 @@ def predict(): # Função principal de "predição" ou resposta
     # Função auxiliar interna para preencher a lista de logs do processo
     def add_log(msg, level="INFO"): # Define a função de log interno
         current_logs.append(f"[{level}] {msg}") # Formata e adiciona a mensagem ao log
+
+    def add_step(name, status, detail=None, data=None):
+        """Adiciona um passo visual ao pipeline. status: waiting/active/success/skipped/fail"""
+        pipeline_steps.append({"name": name, "status": status, "detail": detail or "", "data": data or {}})
 
     # Função auxiliar para enviar resposta e atualizar sessão
     def respond(answer, topic=None, bot_action=None, mentioned_players=None,
@@ -110,48 +115,86 @@ def predict(): # Função principal de "predição" ou resposta
             focus_player=enriched.get("focus_player"),
         )
         add_log(f"[SESSÃO] Turno {context['turn_count']}, Tópico: {enriched['topic']}, Pendente: {enriched['pending_follow_up']}, Foco: {enriched.get('focus_player')}", "DEBUG")
-        return jsonify({"answer": enriched["response"], "logs": current_logs})
+        add_step("Resposta Final", "success", f"Tópico: {enriched['topic']} | Ação: {enriched['bot_action']}", {"follow_up": enriched['pending_follow_up'], "focus": enriched.get('focus_player')})
+        return jsonify({"answer": enriched["response"], "logs": current_logs, "pipeline": pipeline_steps})
 
     # Processamento inicial da mensagem (Pré-processamento)
     add_log(f">> Comando recebido: {text}", "INFO")
-    msg_lower = text.lower().strip() # Converte tudo para minúsculo e limpa espaços extras
-    msg_tokens = tokenize(msg_lower) # Fatias a frase em palavras (tokens) via NLTK
-    msg_stems = [stem(w) for w in msg_tokens] # Reduz cada palavra ao seu radical (raiz)
+    msg_lower = text.lower().strip()
+    msg_tokens = tokenize(msg_lower)
+    msg_stems = [stem(w) for w in msg_tokens]
     add_log(f"[NLTK] Tokens: {msg_tokens}", "DEBUG")
     add_log(f"[NLTK] Radicais estruturados: {msg_stems}", "DEBUG")
 
+    # Pipeline visual: Entrada + Tokenização
+    add_step("Entrada do Usuário", "success", text, {"original": text})
+    add_step("Tokenização NLTK", "success", " → ".join(msg_tokens), {"tokens": msg_tokens, "stems": msg_stems})
+
     # --- Passo 0: Filtro de Contexto (Anti-Futebol e Anti-Offtopic) ---
-    if any(off in msg_lower for off in OFF_TOPIC_KEYWORDS): # Se detectar palavras proibidas
-        add_log("Assunto fora de contexto (Tênis) detectado!", "WARNING") # Avisa no log
-        log_unrecognized_query(text) # Registra a tentativa de fuga de contexto
+    if any(off in msg_lower for off in OFF_TOPIC_KEYWORDS):
+        add_log("Assunto fora de contexto (Tênis) detectado!", "WARNING")
+        add_step("Filtro Off-Topic", "fail", f"Palavra bloqueada detectada na mensagem")
+        log_unrecognized_query(text)
         session_mgr.update(session_id, "user", text)
-        return jsonify({ # Retorna uma resposta amigável de corte
+        return jsonify({
             "answer": "Desculpe, mas eu respiro apenas Tênis! 🎾\nPosso te contar sobre o ranking da ATP ou os campeões de Grand Slam, mas sobre esse assunto eu prefiro não comentar.",
-            "logs": current_logs # Envia os logs gerados até aqui
-        }) # Finaliza a requisição
+            "logs": current_logs, "pipeline": pipeline_steps
+        })
 
     # --- Passo 0.5: Resolução Contextual (Árvore de Decisão) ---
+    add_step("Filtro Off-Topic", "success", "Mensagem permitida (contexto tênis)")
+    pending_ctx = context.get("pending_follow_up")
+    focus_ctx = context.get("focus_player")
+    add_step("Árvore de Decisão", "success" if pending_ctx else "skipped",
+             f"Contexto: {pending_ctx or 'nenhum'}" + (f" | Foco: {focus_ctx}" if focus_ctx else ""),
+             {"pending": pending_ctx, "focus": focus_ctx, "topic": context.get("current_topic"), "turn": context.get("turn_count", 0)})
     contextual_result = decision_tree.try_contextual_response(msg_lower, msg_stems, context, add_log)
     if contextual_result:
         resp_text, topic, bot_action, mentioned_players = contextual_result
         add_log(f"[CONTEXTO] Resposta resolvida via árvore de decisão! Ação: {bot_action}", "SUCCESS")
+        # Atualiza o step da árvore para indicar que resolveu
+        pipeline_steps[-1]["status"] = "success"
+        pipeline_steps[-1]["detail"] = f"Resolvido → {bot_action}"
         return respond(resp_text, topic=topic, bot_action=bot_action,
                        mentioned_players=mentioned_players)
 
     # --- Passo 0.7: Parser Inteligente de Query (País/Temporal/Superlativo) ---
     parsed = parse_query(msg_lower)
+    parser_detail = []
+    if parsed["country_filter"]: parser_detail.append(f"País: {parsed['country_filter']}")
+    if parsed["wants_best"]: parser_detail.append("Superlativo: melhor")
+    if parsed["is_current"]: parser_detail.append("Temporal: atual")
+    if parsed["circuit"]: parser_detail.append(f"Circuito: {parsed['circuit']}")
+    add_step("Query Parser", "success" if parser_detail else "skipped",
+             " | ".join(parser_detail) if parser_detail else "Nenhum modificador detectado",
+             {"country": parsed["country_filter"], "best": parsed["wants_best"], "current": parsed["is_current"], "circuit": parsed["circuit"]})
+    # "quem é o numero 1 do mundo" → sem país, com superlativo + contexto de jogador → mostra #1
+    player_context_words = ["jogador", "jogadora", "tenista", "numero 1", "número 1", "mundo", "ranking"]
+    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words):
+        circuit = parsed["circuit"] or 'ATP'
+        ranking_data = tennis_engine.data.get(f"ranking_{circuit.lower()}", [])
+        if ranking_data:
+            top_player = ranking_data[0]['name']
+            add_log(f"[PARSER] Superlativo sem país → #1 {circuit}: {top_player}", "SUCCESS")
+            add_step("Motor de Dados", "success", f"#1 {circuit}: {top_player}")
+            info = tennis_engine.get_player_info(top_player)
+            if info:
+                return respond(info, topic="player", bot_action="showed_player_info",
+                               mentioned_players=[top_player])
+
     if parsed["country_filter"]:
         add_log(f"[PARSER] País detectado: {parsed['country_filter']}, Melhor: {parsed['wants_best']}, Atual: {parsed['is_current']}", "DEBUG")
 
-        # "melhor jogador do brasil atualmente" → retorna os melhores do país
-        if parsed["wants_best"] or parsed["is_current"]:
+        # "melhor jogador do brasil atualmente" ou "jogadores brasileiros" → retorna melhores do país
+        rank_keywords_local = ["ranking", "top", "melhores", "rank", "posição", "tabela"]
+        is_ranking_query = any(word in msg_lower for word in rank_keywords_local)
+        if parsed["wants_best"] or parsed["is_current"] or not is_ranking_query:
             result = tennis_engine.get_best_from_country(parsed["country_filter"])
             return respond(result, topic="player", bot_action="showed_country_best",
                            mentioned_countries=[parsed["country_filter"]])
 
         # "ranking atp do brasil" → filtra ranking por país
-        rank_keywords = ["ranking", "top", "melhores", "rank", "posição", "tabela"]
-        if any(word in msg_lower for word in rank_keywords):
+        if is_ranking_query:
             circuit = parsed["circuit"] or 'ATP'
             limit = parsed["limit"] or 10
             filtered = tennis_engine.get_filtered_ranking(circuit, country=parsed["country_filter"], limit=limit)
@@ -175,12 +218,9 @@ def predict(): # Função principal de "predição" ou resposta
     # Lógica de Separação Inteligente: Se quer dados e NÃO quer apenas definição/história
     if any(word in msg_lower for word in rank_keywords) and not any(info in msg_lower for info in info_keywords):
         add_log(f"Requisição de dados técnicos detectada através de: {next(w for w in rank_keywords if w in msg_lower)}")
-
-        # Identifica o circuito solicitado (Masculino/ATP ou Feminino/WTA)
         circuit = parsed["circuit"] or ('WTA' if any(w in msg_lower for w in ['wta', 'feminino', 'mulheres']) else 'ATP')
-
+        add_step("Motor de Dados", "success", f"Ranking {circuit} Top 10 solicitado")
         ranking_text = tennis_engine.get_ranking_summary(circuit=circuit)
-        # Coleta nomes do top 10 para o contexto
         ranking_data = tennis_engine.data.get(f"ranking_{circuit.lower()}", [])
         top_players = [p['name'] for p in ranking_data[:10]]
         return respond(ranking_text, topic="ranking", bot_action="showed_ranking",
@@ -218,6 +258,7 @@ def predict(): # Função principal de "predição" ou resposta
 
     if target_player: # Se o robô reconheceu o jogador citado
         add_log(f"Perfil de jogador detectado com NLTK: {target_player}", "SUCCESS")
+        add_step("Motor de Dados", "success", f"Jogador identificado: {target_player}")
 
         # Verifica se o usuário perguntou sobre a nacionalidade/origem
         country_keywords = ["país", "pais", "nacionalidade", "onde nasceu", "onde é", "da onde", "de onde"]
@@ -251,6 +292,7 @@ def predict(): # Função principal de "predição" ou resposta
                        mentioned_tournaments=[target_tournament])
 
     # --- Passo 2: Lógica Conversacional (Base de Conhecimento JSON) ---
+    add_step("Motor de Dados", "skipped", "Nenhum ranking/jogador/torneio detectado")
     add_log("Analisando padrões conversacionais via NLTK...") # Inicia busca por intenções (Intents)
     kb = load_knowledge_base() # Carrega o arquivo knowledge_base.json
     best_match_tag = None # Variável para guardar a melhor etiqueta (tag)
@@ -274,13 +316,16 @@ def predict(): # Função principal de "predição" ou resposta
     # Se a similaridade for convincente (>= 50%)
     if max_match_score >= 50:
         add_log(f"Match encontrado! Tag: {best_match_tag} ({max_match_score:.1f}%)", "SUCCESS")
-        matched_intent = next(i for i in kb["intents"] if i["tag"] == best_match_tag) # Pega o objeto da tag
-        response = random.choice(matched_intent["responses"]) # Escolhe uma resposta aleatória da lista
+        add_step("Base de Conhecimento", "success", f"Intent: {best_match_tag} ({max_match_score:.0f}%)")
+        matched_intent = next(i for i in kb["intents"] if i["tag"] == best_match_tag)
+        response = random.choice(matched_intent["responses"])
         return respond(response, topic="trivia", bot_action="showed_trivia")
 
     # --- Passo 3: Fallback (Quando o robô não entende a pergunta) ---
+    add_step("Base de Conhecimento", "skipped", f"Melhor match: {max_match_score:.0f}% (mínimo 50%)")
+    add_step("Fallback", "fail", "Nenhum padrão identificado com confiança")
     add_log("Nenhum padrão identificado com confiança suficiente.", "WARNING")
-    log_unrecognized_query(text) # Registra no banco de aprendizado para revisão humana
+    log_unrecognized_query(text)
     add_log("Pergunta enviada para o banco de aprendizado.", "SYSTEM")
 
     # Resposta padrão de erro/confusão (Mantém o foco no Tênis)
@@ -288,7 +333,7 @@ def predict(): # Função principal de "predição" ou resposta
     session_mgr.update(session_id, "user", text)
     session_mgr.update(session_id, "bot", fallback_response, bot_action="fallback",
                        pending_follow_up=None)
-    return jsonify({"answer": fallback_response, "logs": current_logs}) # Retorna a resposta de fallback
+    return jsonify({"answer": fallback_response, "logs": current_logs, "pipeline": pipeline_steps})
 
 # Ponto de entrada que inicia o servidor se o arquivo for executado diretamente
 if __name__ == "__main__":
