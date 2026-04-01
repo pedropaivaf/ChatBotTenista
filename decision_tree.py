@@ -64,9 +64,35 @@ TOURNAMENT_KEYWORDS = ["torneio", "slam", "grand slam", "australian", "roland",
 COMPARISON_KEYWORDS = ["comparar", "comparação", "versus", "vs", "contra",
                         "diferença", "melhor que", "pior que"]
 COUNTRY_KEYWORDS_CTX = ["país", "pais", "nacionalidade", "onde nasceu", "da onde", "de onde"]
+
+# Reações empáticas a atributos técnicos de tênis (apenas tema tênis)
+REACTION_KEYWORDS = {
+    "resistencia": ["A resistência {dele_dela} é realmente absurda! 🎾", "Impressionante! {Ele_Ela} não desiste de nenhum ponto!"],
+    "forehand": ["O forehand {dele_dela} é uma arma mortal! 🔥", "O forehand é um dos maiores destaques do jogo {dele_dela}."],
+    "backhand": ["O backhand {dele_dela} é de outro nível! 💪", "Um dos backhands mais consistentes do circuito!"],
+    "saque": ["O saque {dele_dela} é devastador! ⚡", "O saque é uma das maiores armas {dele_dela}."],
+    "mental": ["A força mental {dele_dela} é impressionante! 🧠", "Nos momentos decisivos, {ele_ela} sempre aparece!"],
+    "velocidade": ["A velocidade {dele_dela} na quadra é incrível! 💨", "{Ele_Ela} cobre a quadra como poucos!"],
+    "movimentacao": ["A movimentação {dele_dela} é fantástica!", "{Ele_Ela} se desloca na quadra como se flutuasse!"],
+    "agressivo": ["O jogo agressivo {dele_dela} é eletrizante! 🔥", "{Ele_Ela} não dá tempo pro adversário respirar!"],
+    "defesa": ["A defesa {dele_dela} é incrível!", "{Ele_Ela} transforma defesa em ataque como ninguém!"],
+    "voleio": ["O voleio {dele_dela} é preciso!", "Jogo de rede é uma arte e {ele_ela} domina!"],
+}
 PLAYER_INFO_KEYWORDS = ["idade", "quantos anos", "titulo", "títulos", "titulos", "curiosidade",
                          "fato", "carreira", "biografia", "ficha",
                          "informação", "informacao", "perfil", "detalhes", "mais sobre"]
+
+
+def _build_reaction(msg_lower, focus_player, engine):
+    """Gera uma reação empática sobre atributo técnico de tênis do jogador em foco."""
+    if not focus_player:
+        return None
+    pronouns = _get_pronoun(focus_player, engine)
+    pronouns_cap = {"Ele_Ela": pronouns["ele_ela"].capitalize(), **pronouns}
+    for keyword, reactions in REACTION_KEYWORDS.items():
+        if keyword in msg_lower:
+            return random.choice(reactions).format(**pronouns_cap)
+    return None
 
 
 def _get_pronoun(player_name, engine):
@@ -219,6 +245,9 @@ class DecisionTree:
         if pending == "player_detail":
             focus = context.get("focus_player")
 
+            # Gera reação empática se o usuário opinou sobre atributo técnico
+            reaction = _build_reaction(msg_lower, focus, self.engine)
+
             if any(kw in msg_lower for kw in COMPARISON_KEYWORDS):
                 all_players = self.engine.get_all_player_names()
                 other = extract_entities(msg_stems, all_players)
@@ -230,11 +259,13 @@ class DecisionTree:
                         return (response, "player", "showed_player_info",
                                 [focus, other])
 
-            # País do jogador em foco
+            # País do jogador em foco (com reação prefixada se houver)
             if any(kw in msg_lower for kw in COUNTRY_KEYWORDS_CTX):
                 if focus:
                     country_info = self.engine.get_player_country(focus)
                     if country_info:
+                        if reaction:
+                            country_info = f"{reaction}\n\n{country_info}"
                         return (country_info, "player", "showed_player_country", [focus])
 
             # Estilo de jogo ou info pessoal — re-mostra ficha do jogador em foco
@@ -242,7 +273,15 @@ class DecisionTree:
                 if focus:
                     info = self.engine.get_player_info(focus)
                     if info:
+                        if reaction:
+                            info = f"{reaction}\n\n{info}"
                         return (info, "player", "showed_player_info", [focus])
+
+            # Opinião/sentimento sem pedido técnico → reagir + re-mostrar ficha
+            if reaction and focus:
+                info = self.engine.get_player_info(focus)
+                if info:
+                    return (f"{reaction}\n\n{info}", "player", "showed_player_info", [focus])
 
         # --- Contexto: Resposta aberta (trivia perguntou sobre jogador/torneio) ---
         if pending == "open_topic":
