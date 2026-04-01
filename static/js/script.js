@@ -132,42 +132,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.appendChild(node);
             };
 
-            // Árvore de decisão expandível com bolinhas
+            // Árvore de decisão — fluxograma visual com branches
             if (step.data && step.data.turn !== undefined) {
-                // Botão toggle
-                const toggle = createEl('button', 'tree-toggle');
-                toggle.appendChild(createEl('span', 'arrow', '▶'));
-                toggle.appendChild(document.createTextNode(' Ver Decisões'));
-                body.appendChild(toggle);
+                // Estado da sessão (badges compactos)
+                const stateBadges = [['Turno', String(step.data.turn)]];
+                if (step.data.pending) stateBadges.push(['Pendente', step.data.pending]);
+                if (step.data.focus) stateBadges.push(['Foco', step.data.focus]);
+                if (step.data.topic) stateBadges.push(['Tópico', step.data.topic]);
+                addBadges(body, stateBadges);
 
-                // Painel expandível
-                const detail = createEl('div', 'tree-detail');
-                addTreeNode(detail, 'blue', 'Turno', String(step.data.turn));
-                addTreeNode(detail, step.data.topic ? 'green' : 'gray', 'Tópico', step.data.topic || 'nenhum');
-                addTreeNode(detail, step.data.pending ? 'yellow' : 'gray', 'Pendente', step.data.pending || 'nenhum');
-                addTreeNode(detail, step.data.focus ? 'green' : 'gray', 'Jogador em Foco', step.data.focus || 'nenhum');
-
-                // Decisões tomadas
-                const decLabel = createEl('div', 'ps-detail');
-                decLabel.style.cssText = 'margin-top:6px;font-weight:700;color:#64748b;font-size:0.65rem;text-transform:uppercase;letter-spacing:1px';
-                decLabel.textContent = 'Caminho da Decisão:';
-                detail.appendChild(decLabel);
-
-                if (step.data.pending) {
-                    addTreeNode(detail, 'green', 'Contexto ativo', 'Tentando resolver via sessão');
-                    addTreeNode(detail, step.status === 'success' ? 'green' : 'red',
-                        'Resolução', step.status === 'success' ? 'Resolvido no contexto' : 'Sem match → pipeline normal');
-                } else {
-                    addTreeNode(detail, 'gray', 'Contexto', 'Primeira mensagem ou sem pendência');
-                    addTreeNode(detail, 'yellow', 'Decisão', 'Seguir pipeline normal');
+                // Fluxograma de decisões (trace do backend)
+                if (step.data.trace && step.data.trace.length > 0) {
+                    const flowChart = createEl('div', 'tree-flow');
+                    step.data.trace.forEach((node, ni) => {
+                        const branch = createEl('div', `tree-branch ${node.matched ? 'tb-matched' : 'tb-missed'}`);
+                        // Ícone + nome
+                        const header = createEl('div', 'tb-header');
+                        header.appendChild(createEl('span', 'tb-icon', node.icon || ''));
+                        header.appendChild(createEl('span', 'tb-name', node.branch));
+                        header.appendChild(createEl('span', `tb-status ${node.matched ? 'tb-yes' : 'tb-no'}`, node.matched ? '✓' : '✗'));
+                        branch.appendChild(header);
+                        // Detalhe
+                        if (node.detail) {
+                            branch.appendChild(createEl('div', 'tb-detail', node.detail));
+                        }
+                        flowChart.appendChild(branch);
+                        // Connector entre branches
+                        if (ni < step.data.trace.length - 1) {
+                            flowChart.appendChild(createEl('div', 'tb-connector'));
+                        }
+                    });
+                    body.appendChild(flowChart);
                 }
-
-                body.appendChild(detail);
-
-                toggle.addEventListener('click', () => {
-                    toggle.classList.toggle('expanded');
-                    detail.classList.toggle('visible');
-                });
             }
 
             if (step.name === 'Resposta Final' && step.data) {
