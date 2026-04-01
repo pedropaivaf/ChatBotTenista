@@ -170,8 +170,10 @@ def predict(): # Função principal de "predição" ou resposta
              {"country": parsed["country_filter"], "best": parsed["wants_best"], "current": parsed["is_current"], "circuit": parsed["circuit"]})
     # "quem é o numero 1 do mundo" → sem país, com superlativo + contexto de jogador → mostra #1
     player_context_words = ["jogador", "jogadora", "tenista", "numero 1", "número 1", "mundo", "ranking"]
+    feminine_words = ["jogadora", "tenista feminina", "mulher", "feminino"]
     if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words):
-        circuit = parsed["circuit"] or 'ATP'
+        # Detecta se é feminino → WTA
+        circuit = parsed["circuit"] or ('WTA' if any(w in msg_lower for w in feminine_words) else 'ATP')
         ranking_data = tennis_engine.data.get(f"ranking_{circuit.lower()}", [])
         if ranking_data:
             top_player = ranking_data[0]['name']
