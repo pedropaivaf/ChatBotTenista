@@ -74,7 +74,7 @@ Ace, origem, ATP, piso duro, grama, numero 1 mundo, Franca, Argentina. **8/8 OK.
 | 8.01 | resistencia do Djokovic | OK — Reacao + ficha |
 | 8.02 | forehand do Alcaraz | OK — Reacao + ficha |
 | 8.03 | backhand do Djokovic | OK — Reacao + ficha |
-| 8.04 | saque da Sabalenka (WTA) | OK — Reacao + ficha |
+| 8.04 | saque da Sabalenka (WTA) | OK — Reacao + ficha (pronome ela) |
 | 8.05 | forca mental do Sinner | OK — Reacao + ficha |
 | 8.06 | velocidade do Alcaraz | OK — Reacao + ficha |
 | 8.07 | jogo agressivo do Medvedev | OK — Reacao + ficha |
@@ -128,7 +128,7 @@ oi → ranking → Sinner → forehand (reacao) → pais → RG → Brasil → F
 
 ---
 
-## Bugs Corrigidos Nesta Versao
+## Bugs Corrigidos
 
 | Bug | Causa | Correcao |
 |-----|-------|----------|
@@ -136,7 +136,13 @@ oi → ranking → Sinner → forehand (reacao) → pais → RG → Brasil → F
 | "melhor jogadora do mundo" → Alcaraz (ATP) | Feminino nao detectado no superlativo global | Palavras femininas (jogadora) selecionam WTA |
 | "bola de tenis amarela" → Korpatsch | Fuzzy "amarela" vs "tamara" = 0.77 | Stop words: amarelo, amarela |
 | "cor da bolinha" → Coria | Fuzzy "cor" vs "coria" = 0.86 | Stop words: cor, bola, bolinha |
-| Reacoes empaticas inexistentes | Bot ignorava opiniao do usuario | REACTION_KEYWORDS para 10 atributos tecnicos |
+| "gosto mais de jogar no saibro" → Mai Hontama | Stem "mai" (de "mais") = 3 chars matchava jogadora | Validacao minima de 4 caracteres no stem |
+| "brasileiras" → gibberish | Bigramas "br", "ei", "si" nao estavam na lista | Expandir lista de bigramas validos em portugues |
+| "volei" bloqueava "voleio" | Keyword "volei" no filtro off-topic | Remover "volei", manter "voleibol" e "vôlei" |
+| Denis Shapovalov retornado como brasileiro | Fuzzy match "brasil" vs "Denis" | Stop words + filtro de gentilicos |
+| Reacoes empaticas inexistentes | Bot ignorava opiniao do usuario | REACTION_KEYWORDS para 13 atributos tecnicos |
+| Follow-ups repetitivos | Sempre a mesma pergunta | Follow-ups abertos que mudam de tema |
+| Elogios genericos → fallback | "um dos melhores" nao reconhecido | GENERIC_PRAISE com 16+ expressoes |
 
 ---
 
