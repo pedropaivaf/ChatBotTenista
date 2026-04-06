@@ -5,7 +5,7 @@ o ChatBot de Tenis. Ele descreve **todos os comportamentos esperados**, as regra
 de decisao, o sistema de reacoes empaticas, o pipeline de processamento e como adicionar
 novas funcionalidades sem quebrar o que ja funciona.
 
-**Antes de qualquer mudanca, rode `python run_tests.py` e garanta 170/170.**
+**Antes de qualquer mudanca, rode `python run_tests.py` e garanta 245/245.**
 
 ---
 
@@ -346,7 +346,7 @@ Em `engine.py`:
 
 ## 12. Checklist de Testes Antes de Qualquer Commit
 
-1. `python run_tests.py` → **170/170 ZERO FALHAS**
+1. `python run_tests.py` → **245/245 ZERO FALHAS**
 2. Testar manualmente no navegador:
    - Fluxo de 20 turnos sem perder contexto
    - Typo de jogador (ex: "Medevedev")
@@ -445,17 +445,48 @@ Em `engine.py`:
 | `query_parser.py` | 52-70 | TEMPORAL/SUPERLATIVE/ATP/WTA markers |
 | `engine.py` | 10-40 | COUNTRY_FLAGS |
 | `session_manager.py` | 10-20 | SESSION_TTL, MAX_TURNS |
-| `run_tests.py` | 1-349 | 170 testes em 12 baterias |
+| `run_tests.py` | 1-500+ | 245 testes em 17 baterias |
 
 ---
 
-## 16. Proximos Passos Sugeridos
+## 16. Funcionalidades Implementadas (Abril 2026)
 
-1. **Detalhes de Grand Slams**: Localizacao, superficie, premiacao, historia, maior campeao (ver `TODO_GRAND_SLAMS.md`).
-2. **Calendario ATP**: Masters 1000, ATP 250/500, Finals.
-3. **Head-to-Head**: Confrontos diretos entre jogadores.
-4. **Estatisticas**: Aces, % primeiro servico, duplas faltas.
-5. **Mais reacoes**: Adicionar reacoes para "servico", "slice", "drop shot", "lob".
-6. **Mais paises**: Expandir COUNTRY_MAP e DEMONYM_MAP para paises menos comuns.
+### Detalhes de Grand Slams (CONCLUIDO)
+- Ficha completa de cada Slam: local, superficie, fundacao, premiacao, maior campeao/campea, historia.
+- Diferenciacao inteligente: "quem ganhou wimbledon" → campeoes, "me fala sobre wimbledon" → detalhes.
+- `SLAM_DETAIL_KEYWORDS` em `app.py` e `SLAM_DETAIL_KEYWORDS_CTX` em `decision_tree.py`.
+- Metodo `get_grand_slam_details()` em `engine.py` (unificado com torneios ATP).
+
+### Torneios ATP Masters 1000, ATP 500 e ATP Finals (CONCLUIDO)
+- 18 torneios adicionados em `tournament_details` no `tennis_data.json`:
+  - 9 Masters 1000: Indian Wells, Miami, Monte Carlo, Madrid, Roma, Canada, Cincinnati, Shanghai, Paris.
+  - 8 ATP 500: Rio Open, Barcelona, Queen's, Halle, Acapulco, Dubai, Basileia, Viena.
+  - ATP Finals (Turim).
+- Cada torneio com: local, superficie, fundacao, pontos, premiacao, campeoes recentes, historia.
+- Deteccao dinamica via `get_all_tournament_names()` no `engine.py`.
+- Pipeline reordenado: deteccao de torneio ANTES de jogadores (evita colisoes como "Monte Carlo" → "Carlos Alcaraz").
+- Validacao de match por texto direto (mais confiavel que stems para nomes de torneios).
+
+### "Quem foi o ultimo ganhador?" com contexto (CONCLUIDO)
+- Branch 0.7 na arvore de decisao: detecta winner keywords sem torneio explicito → puxa ultimo torneio do contexto.
+- `WINNER_KEYWORDS_CTX` em `decision_tree.py`.
+- `get_last_winner()` em `engine.py`: busca campeao mais recente em Grand Slams (percorre anos) ou `recent_champions` para ATP 1000/500.
+- Guarda: se a mensagem menciona outro torneio, nao usa o do contexto.
+
+### Icone SVG customizado (CONCLUIDO)
+- `static/img/favicon.svg`: favicon na paleta do sistema (raquete + bola, cyan/amarelo sobre azul escuro).
+- `static/img/logo.svg`: icone do header substituindo emoji.
+
+### Atualizacao do Joao Fonseca
+- Ficha atualizada: Rio Open 2025 (ATP 500), Next Gen Finals 2024, US Open Juvenil 2023.
+
+---
+
+## 17. Proximos Passos Sugeridos
+
+1. **Head-to-Head**: Confrontos diretos entre jogadores.
+2. **Estatisticas**: Aces, % primeiro servico, duplas faltas.
+3. **Mais reacoes**: Adicionar reacoes para "servico", "slice", "drop shot", "lob".
+4. **Mais paises**: Expandir COUNTRY_MAP e DEMONYM_MAP para paises menos comuns.
 7. **Mais jogadores**: Expandir player_details com jogadores fora do Top 50.
 8. **Noticias**: Scraping de sites de noticias de tenis em tempo real.

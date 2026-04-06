@@ -44,15 +44,15 @@
     },
     {
       "position": 8,
-      "name": "Taylor Fritz",
+      "name": "Ben Shelton",
       "country": "EUA",
-      "points": "3870"
+      "points": "3900"
     },
     {
       "position": 9,
-      "name": "Ben Shelton",
+      "name": "Taylor Fritz",
       "country": "EUA",
-      "points": "3860"
+      "points": "3870"
     },
     {
       "position": 10,
@@ -74,27 +74,27 @@
     },
     {
       "position": 13,
-      "name": "Flavio Cobolli",
-      "country": "Itália",
-      "points": "2520"
-    },
-    {
-      "position": 14,
       "name": "Jiří Lehečka",
       "country": "Rep. Tcheca",
       "points": "2490"
     },
     {
-      "position": 15,
+      "position": 14,
       "name": "Karen Khachanov",
       "country": "Rússia",
       "points": "2410"
     },
     {
-      "position": 16,
+      "position": 15,
       "name": "Andrey Rublev",
       "country": "Rússia",
       "points": "2400"
+    },
+    {
+      "position": 16,
+      "name": "Flavio Cobolli",
+      "country": "Itália",
+      "points": "2320"
     },
     {
       "position": 17,
@@ -104,39 +104,39 @@
     },
     {
       "position": 18,
-      "name": "Frances Tiafoe",
+      "name": "Tommy Paul",
       "country": "EUA",
-      "points": "2070"
+      "points": "2065"
     },
     {
       "position": 19,
-      "name": "Luciano Darderi",
-      "country": "Itália",
-      "points": "2050"
-    },
-    {
-      "position": 20,
       "name": "Francisco Cerundolo",
       "country": "Argentina",
       "points": "2020"
     },
     {
-      "position": 21,
-      "name": "Tommy Paul",
+      "position": 20,
+      "name": "Frances Tiafoe",
       "country": "EUA",
-      "points": "1915"
+      "points": "2005"
+    },
+    {
+      "position": 21,
+      "name": "Luciano Darderi",
+      "country": "Itália",
+      "points": "1920"
     },
     {
       "position": 22,
       "name": "Learner Tien",
       "country": "EUA",
-      "points": "1845"
+      "points": "1885"
     },
     {
       "position": 23,
       "name": "Valentin Vacherot",
       "country": "Mônaco",
-      "points": "1831"
+      "points": "1818"
     },
     {
       "position": 24,
@@ -176,27 +176,27 @@
     },
     {
       "position": 30,
-      "name": "Tallon Griekspoor",
-      "country": "Holanda",
-      "points": "1585"
+      "name": "Tomás Martin Etcheverry",
+      "country": "Argentina",
+      "points": "1540"
     },
     {
       "position": 31,
-      "name": "Tomás Martin Etcheverry",
-      "country": "Argentina",
-      "points": "1500"
+      "name": "Corentin Moutet",
+      "country": "França",
+      "points": "1433"
     },
     {
       "position": 32,
-      "name": "Corentin Moutet",
-      "country": "França",
-      "points": "1403"
+      "name": "Tallon Griekspoor",
+      "country": "Holanda",
+      "points": "1430"
     },
     {
       "position": 33,
       "name": "Brandon Nakashima",
       "country": "EUA",
-      "points": "1395"
+      "points": "1385"
     },
     {
       "position": 34,
@@ -208,7 +208,7 @@
       "position": 35,
       "name": "Alex Michelsen",
       "country": "EUA",
-      "points": "1225"
+      "points": "1200"
     },
     {
       "position": 36,
@@ -242,315 +242,315 @@
     },
     {
       "position": 41,
-      "name": "Jenson Brooksby",
-      "country": "EUA",
-      "points": "1115"
-    },
-    {
-      "position": 42,
       "name": "Sebastian Korda",
       "country": "EUA",
       "points": "1100"
     },
     {
+      "position": 42,
+      "name": "Mariano Navone",
+      "country": "Argentina",
+      "points": "1100"
+    },
+    {
       "position": 43,
-      "name": "Adrian Mannarino",
-      "country": "França",
-      "points": "1082"
+      "name": "Fabian Marozsan",
+      "country": "Hungria",
+      "points": "1095"
     },
     {
       "position": 44,
+      "name": "Alexei Popyrin",
+      "country": "Austrália",
+      "points": "1060"
+    },
+    {
+      "position": 45,
       "name": "Terence Atmane",
       "country": "França",
       "points": "1058"
     },
     {
-      "position": 45,
-      "name": "Alexei Popyrin",
-      "country": "Austrália",
-      "points": "1010"
+      "position": 46,
+      "name": "Adrian Mannarino",
+      "country": "França",
+      "points": "1050"
     },
     {
-      "position": 46,
+      "position": 47,
       "name": "Zizou Bergs",
       "country": "Bélgica",
       "points": "1010"
     },
     {
-      "position": 47,
-      "name": "Fabian Marozsan",
-      "country": "Hungria",
-      "points": "1005"
-    },
-    {
       "position": 48,
-      "name": "Nuno Borges",
-      "country": "Portugal",
-      "points": "995"
-    },
-    {
-      "position": 49,
       "name": "Stefanos Tsitsipas",
       "country": "Grécia",
       "points": "995"
     },
     {
+      "position": 49,
+      "name": "Daniel Altmaier",
+      "country": "Alemanha",
+      "points": "994"
+    },
+    {
       "position": 50,
-      "name": "Sebastian Baez",
-      "country": "Argentina",
-      "points": "980"
+      "name": "Nuno Borges",
+      "country": "Portugal",
+      "points": "970"
     },
     {
       "position": 51,
-      "name": "Marton Fucsovics",
-      "country": "Hungria",
-      "points": "977"
-    },
-    {
-      "position": 52,
-      "name": "Daniel Altmaier",
-      "country": "Alemanha",
-      "points": "960"
-    },
-    {
-      "position": 53,
-      "name": "Kamil Majchrzak",
-      "country": "Polônia",
-      "points": "955"
-    },
-    {
-      "position": 54,
       "name": "Marin Cilic",
       "country": "Croácia",
       "points": "950"
     },
     {
-      "position": 55,
+      "position": 52,
+      "name": "Botic Van De Zandschulp",
+      "country": "Holanda",
+      "points": "931"
+    },
+    {
+      "position": 53,
       "name": "Tomas Machac",
       "country": "Rep. Tcheca",
       "points": "930"
     },
     {
-      "position": 56,
+      "position": 54,
       "name": "Ethan Quinn",
       "country": "EUA",
-      "points": "926"
+      "points": "911"
     },
     {
-      "position": 57,
+      "position": 55,
+      "name": "Yannick Hanfmann",
+      "country": "Alemanha",
+      "points": "899"
+    },
+    {
+      "position": 56,
       "name": "Giovanni Mpetshi Perricard",
       "country": "França",
       "points": "890"
     },
     {
+      "position": 57,
+      "name": "Rafael Jodar",
+      "country": "Espanha",
+      "points": "886"
+    },
+    {
       "position": 58,
+      "name": "Marton Fucsovics",
+      "country": "Hungria",
+      "points": "877"
+    },
+    {
+      "position": 59,
       "name": "Miomir Kecmanovic",
       "country": "Sérvia",
       "points": "875"
     },
     {
-      "position": 59,
+      "position": 60,
+      "name": "Kamil Majchrzak",
+      "country": "Polônia",
+      "points": "867"
+    },
+    {
+      "position": 61,
       "name": "Ignacio Buse",
       "country": "Peru",
       "points": "864"
     },
     {
-      "position": 60,
-      "name": "Mariano Navone",
+      "position": 62,
+      "name": "Roman Andrés Burruchaga",
       "country": "Argentina",
       "points": "860"
     },
     {
-      "position": 61,
-      "name": "Yannick Hanfmann",
-      "country": "Alemanha",
-      "points": "857"
-    },
-    {
-      "position": 62,
-      "name": "Botic Van De Zandschulp",
-      "country": "Holanda",
-      "points": "841"
-    },
-    {
       "position": 63,
+      "name": "Camilo Ugo Carabelli",
+      "country": "Argentina",
+      "points": "855"
+    },
+    {
+      "position": 64,
+      "name": "Jenson Brooksby",
+      "country": "EUA",
+      "points": "852"
+    },
+    {
+      "position": 65,
+      "name": "Sebastian Baez",
+      "country": "Argentina",
+      "points": "840"
+    },
+    {
+      "position": 66,
       "name": "Lorenzo Sonego",
       "country": "Itália",
       "points": "810"
     },
     {
-      "position": 64,
+      "position": 67,
       "name": "Reilly Opelka",
       "country": "EUA",
       "points": "803"
     },
     {
-      "position": 65,
+      "position": 68,
       "name": "Raphael Collignon",
       "country": "Bélgica",
-      "points": "802"
+      "points": "793"
     },
     {
-      "position": 66,
+      "position": 69,
       "name": "Marcos Giron",
       "country": "EUA",
       "points": "790"
     },
     {
-      "position": 67,
-      "name": "Camilo Ugo Carabelli",
-      "country": "Argentina",
-      "points": "780"
-    },
-    {
-      "position": 68,
+      "position": 70,
       "name": "Arthur Cazaux",
       "country": "França",
       "points": "777"
     },
     {
-      "position": 69,
+      "position": 71,
       "name": "Juan Manuel Cerundolo",
       "country": "Argentina",
-      "points": "776"
-    },
-    {
-      "position": 70,
-      "name": "Vit Kopriva",
-      "country": "Rep. Tcheca",
-      "points": "763"
-    },
-    {
-      "position": 71,
-      "name": "Valentin Royer",
-      "country": "França",
-      "points": "761"
+      "points": "773"
     },
     {
       "position": 72,
+      "name": "Thiago Agustín Tirante",
+      "country": "Argentina",
+      "points": "765"
+    },
+    {
+      "position": 73,
+      "name": "Valentin Royer",
+      "country": "França",
+      "points": "751"
+    },
+    {
+      "position": 74,
       "name": "Hubert Hurkacz",
       "country": "Polônia",
       "points": "745"
     },
     {
-      "position": 73,
-      "name": "Mattia Bellucci",
-      "country": "Itália",
-      "points": "740"
-    },
-    {
-      "position": 74,
-      "name": "Damir Dzumhur",
-      "country": "Bósnia",
-      "points": "731"
-    },
-    {
       "position": 75,
+      "name": "Vit Kopriva",
+      "country": "Rep. Tcheca",
+      "points": "738"
+    },
+    {
+      "position": 76,
+      "name": "Marco Trungelliti",
+      "country": "Argentina",
+      "points": "732"
+    },
+    {
+      "position": 77,
+      "name": "Alexander Shevchenko",
+      "country": "Cazaquistão",
+      "points": "727"
+    },
+    {
+      "position": 78,
       "name": "Jan-Lennard Struff",
       "country": "Alemanha",
       "points": "719"
     },
     {
-      "position": 76,
-      "name": "Alexander Shevchenko",
-      "country": "Cazaquistão",
-      "points": "716"
-    },
-    {
-      "position": 77,
-      "name": "Roman Andrés Burruchaga",
-      "country": "Argentina",
-      "points": "703"
-    },
-    {
-      "position": 78,
-      "name": "Sebastian Ofner",
-      "country": "Áustria",
-      "points": "694"
-    },
-    {
       "position": 79,
+      "name": "Mattia Bellucci",
+      "country": "Itália",
+      "points": "715"
+    },
+    {
+      "position": 80,
       "name": "Eliot Spizzirri",
       "country": "EUA",
       "points": "688"
     },
     {
-      "position": 80,
-      "name": "Roberto Bautista-Agut",
-      "country": "Espanha",
-      "points": "685"
+      "position": 81,
+      "name": "Damir Dzumhur",
+      "country": "Bósnia",
+      "points": "681"
     },
     {
-      "position": 81,
+      "position": 82,
+      "name": "Sebastian Ofner",
+      "country": "Áustria",
+      "points": "680"
+    },
+    {
+      "position": 83,
       "name": "Hamad Medjedovic",
       "country": "Sérvia",
       "points": "680"
     },
     {
-      "position": 82,
+      "position": 84,
       "name": "Zachary Svajda",
       "country": "EUA",
       "points": "674"
     },
     {
-      "position": 83,
-      "name": "Thiago Agustín Tirante",
-      "country": "Argentina",
+      "position": 85,
+      "name": "Roberto Bautista-Agut",
+      "country": "Espanha",
       "points": "673"
     },
     {
-      "position": 84,
+      "position": 86,
+      "name": "James Duckworth",
+      "country": "Austrália",
+      "points": "672"
+    },
+    {
+      "position": 87,
       "name": "Aleksandar Vukic",
       "country": "Austrália",
       "points": "663"
     },
     {
-      "position": 85,
-      "name": "Aleksandar Kovacevic",
-      "country": "EUA",
-      "points": "661"
-    },
-    {
-      "position": 86,
-      "name": "Filip Misolic",
-      "country": "Áustria",
-      "points": "660"
-    },
-    {
-      "position": 87,
-      "name": "Francisco Comesana",
-      "country": "Argentina",
-      "points": "659"
-    },
-    {
       "position": 88,
-      "name": "Pablo Carreno-Busta",
-      "country": "Espanha",
-      "points": "659"
+      "name": "Alexandre Muller",
+      "country": "França",
+      "points": "651"
     },
     {
       "position": 89,
-      "name": "Rafael Jodar",
-      "country": "Espanha",
-      "points": "652"
-    },
-    {
-      "position": 90,
       "name": "Quentin Halys",
       "country": "França",
       "points": "650"
     },
     {
-      "position": 91,
+      "position": 90,
       "name": "Matteo Berrettini",
       "country": "Itália",
       "points": "650"
     },
     {
-      "position": 92,
+      "position": 91,
       "name": "Alexander Blockx",
       "country": "Bélgica",
       "points": "649"
+    },
+    {
+      "position": 92,
+      "name": "Pablo Carreno-Busta",
+      "country": "Espanha",
+      "points": "647"
     },
     {
       "position": 93,
@@ -560,20 +560,20 @@
     },
     {
       "position": 94,
-      "name": "Alexandre Muller",
+      "name": "Luca Van Assche",
       "country": "França",
-      "points": "645"
+      "points": "644"
     },
     {
       "position": 95,
-      "name": "James Duckworth",
-      "country": "Austrália",
+      "name": "Patrick Kypson",
+      "country": "EUA",
       "points": "640"
     },
     {
       "position": 96,
-      "name": "Patrick Kypson",
-      "country": "EUA",
+      "name": "Daniel Vallejo Adolfo",
+      "country": "Paraguai",
       "points": "640"
     },
     {
@@ -584,21 +584,21 @@
     },
     {
       "position": 98,
-      "name": "Stan Wawrinka",
-      "country": "Suíça",
-      "points": "633"
+      "name": "Aleksandar Kovacevic",
+      "country": "EUA",
+      "points": "636"
     },
     {
       "position": 99,
-      "name": "Jesper De Jong",
-      "country": "Holanda",
-      "points": "625"
+      "name": "Francisco Comesana",
+      "country": "Argentina",
+      "points": "634"
     },
     {
       "position": 100,
-      "name": "Cristian Garin",
-      "country": "Chile",
-      "points": "624"
+      "name": "Rinky Hijikata",
+      "country": "Austrália",
+      "points": "632"
     }
   ],
   "ranking_wta": [
@@ -636,7 +636,7 @@
       "position": 6,
       "name": "Amanda Anisimova",
       "country": "EUA",
-      "points": "6180"
+      "points": "5995"
     },
     {
       "position": 7,
@@ -664,21 +664,21 @@
     },
     {
       "position": 11,
+      "name": "Belinda Bencic",
+      "country": "Suíça",
+      "points": "3090"
+    },
+    {
+      "position": 12,
       "name": "Karolina Muchova",
       "country": "Rep. Tcheca",
       "points": "2993"
     },
     {
-      "position": 12,
-      "name": "Belinda Bencic",
-      "country": "Suíça",
-      "points": "2983"
-    },
-    {
       "position": 13,
       "name": "Ekaterina Alexandrova",
       "country": "Rússia",
-      "points": "2973"
+      "points": "2886"
     },
     {
       "position": 14,
@@ -696,31 +696,31 @@
       "position": 16,
       "name": "Iva Jovic",
       "country": "EUA",
-      "points": "2105"
+      "points": "2270"
     },
     {
       "position": 17,
+      "name": "Madison Keys",
+      "country": "EUA",
+      "points": "2161"
+    },
+    {
+      "position": 18,
       "name": "Clara Tauson",
       "country": "Dinamarca",
       "points": "2040"
     },
     {
-      "position": 18,
-      "name": "Madison Keys",
-      "country": "EUA",
-      "points": "2026"
-    },
-    {
       "position": 19,
       "name": "Diana Shnaider",
       "country": "Rússia",
-      "points": "1953"
+      "points": "2001"
     },
     {
       "position": 20,
       "name": "Elise Mertens",
       "country": "Bélgica",
-      "points": "1936"
+      "points": "1906"
     },
     {
       "position": 21,
@@ -738,25 +738,25 @@
       "position": 23,
       "name": "Jelena Ostapenko",
       "country": "Letônia",
-      "points": "1765"
+      "points": "1706"
     },
     {
       "position": 24,
+      "name": "Marie Bouzkova",
+      "country": "Rep. Tcheca",
+      "points": "1676"
+    },
+    {
+      "position": 25,
       "name": "Leylah Fernandez",
       "country": "Canadá",
       "points": "1598"
     },
     {
-      "position": 25,
+      "position": 26,
       "name": "Emma Navarro",
       "country": "EUA",
-      "points": "1540"
-    },
-    {
-      "position": 26,
-      "name": "Marie Bouzkova",
-      "country": "Rep. Tcheca",
-      "points": "1480"
+      "points": "1492"
     },
     {
       "position": 27,
@@ -778,69 +778,69 @@
     },
     {
       "position": 30,
-      "name": "Qinwen Zheng",
-      "country": "China",
-      "points": "1458"
-    },
-    {
-      "position": 31,
       "name": "Maya Joint",
       "country": "Austrália",
       "points": "1435"
     },
     {
-      "position": 32,
+      "position": 31,
       "name": "Cristina Bucsa",
       "country": "Espanha",
-      "points": "1431"
+      "points": "1426"
     },
     {
-      "position": 33,
-      "name": "Hailey Baptiste",
-      "country": "EUA",
-      "points": "1394"
-    },
-    {
-      "position": 34,
+      "position": 32,
       "name": "Xinyu Wang",
       "country": "China",
       "points": "1383"
     },
     {
-      "position": 35,
+      "position": 33,
       "name": "Jaqueline Cristian",
       "country": "Romênia",
       "points": "1382"
     },
     {
+      "position": 34,
+      "name": "Sara Bejlek",
+      "country": "Rep. Tcheca",
+      "points": "1380"
+    },
+    {
+      "position": 35,
+      "name": "Hailey Baptiste",
+      "country": "EUA",
+      "points": "1372"
+    },
+    {
       "position": 36,
-      "name": "Maria Sakkari",
-      "country": "Grécia",
-      "points": "1370"
+      "name": "Ann Li",
+      "country": "EUA",
+      "points": "1356"
     },
     {
       "position": 37,
-      "name": "Ann Li",
-      "country": "EUA",
-      "points": "1358"
+      "name": "Qinwen Zheng",
+      "country": "China",
+      "points": "1350"
     },
     {
       "position": 38,
+      "name": "Maria Sakkari",
+      "country": "Grécia",
+      "points": "1348"
+    },
+    {
+      "position": 39,
       "name": "Magdalena Frech",
       "country": "Polônia",
       "points": "1348"
     },
     {
-      "position": 39,
+      "position": 40,
       "name": "Lois Boisson",
       "country": "França",
-      "points": "1339"
-    },
-    {
-      "position": 40,
-      "name": "Sara Bejlek",
-      "country": "Rep. Tcheca",
-      "points": "1321"
+      "points": "1318"
     },
     {
       "position": 41,
@@ -850,51 +850,51 @@
     },
     {
       "position": 42,
+      "name": "Elisabetta Cocciaretto",
+      "country": "Itália",
+      "points": "1310"
+    },
+    {
+      "position": 43,
       "name": "Katerina Siniakova",
       "country": "Rep. Tcheca",
       "points": "1299"
     },
     {
-      "position": 43,
-      "name": "Elisabetta Cocciaretto",
-      "country": "Itália",
-      "points": "1280"
+      "position": 44,
+      "name": "Peyton Stearns",
+      "country": "EUA",
+      "points": "1296"
     },
     {
-      "position": 44,
+      "position": 45,
       "name": "Marketa Vondrousova",
       "country": "Rep. Tcheca",
       "points": "1263"
     },
     {
-      "position": 45,
+      "position": 46,
       "name": "Alexandra Eala",
       "country": "Filipinas",
       "points": "1255"
     },
     {
-      "position": 46,
-      "name": "Peyton Stearns",
-      "country": "EUA",
-      "points": "1237"
-    },
-    {
       "position": 47,
-      "name": "Sofia Kenin",
-      "country": "EUA",
-      "points": "1217"
+      "name": "Jessica Bouzas Maneiro",
+      "country": "Espanha",
+      "points": "1230"
     },
     {
       "position": 48,
-      "name": "Jessica Bouzas Maneiro",
-      "country": "Espanha",
-      "points": "1210"
+      "name": "Mccartney Kessler",
+      "country": "EUA",
+      "points": "1214"
     },
     {
       "position": 49,
       "name": "Dayana Yastremska",
       "country": "Ucrânia",
-      "points": "1165"
+      "points": "1172"
     },
     {
       "position": 50,
@@ -916,159 +916,159 @@
     },
     {
       "position": 53,
-      "name": "Mccartney Kessler",
-      "country": "EUA",
-      "points": "1138"
+      "name": "Yuliia Starodubtseva",
+      "country": "Ucrânia",
+      "points": "1139"
     },
     {
       "position": 54,
-      "name": "Camila Osorio",
-      "country": "Colômbia",
-      "points": "1096"
-    },
-    {
-      "position": 55,
       "name": "Sonay Kartal",
       "country": "Reino Unido",
       "points": "1092"
     },
     {
-      "position": 56,
-      "name": "Talia Gibson",
-      "country": "Austrália",
-      "points": "1080"
-    },
-    {
-      "position": 57,
+      "position": 55,
       "name": "Magda Linette",
       "country": "Polônia",
       "points": "1059"
     },
     {
-      "position": 58,
-      "name": "Veronika Kudermetova",
-      "country": "Rússia",
-      "points": "1055"
+      "position": 56,
+      "name": "Talia Gibson",
+      "country": "Austrália",
+      "points": "1050"
     },
     {
-      "position": 59,
-      "name": "Varvara Gracheva",
-      "country": "França",
-      "points": "1047"
-    },
-    {
-      "position": 60,
-      "name": "Tatjana Maria",
-      "country": "Alemanha",
-      "points": "1047"
-    },
-    {
-      "position": 61,
+      "position": 57,
       "name": "Antonia Ruzic",
       "country": "Croácia",
       "points": "1046"
     },
     {
-      "position": 62,
-      "name": "Shuai Zhang",
-      "country": "China",
-      "points": "1031"
+      "position": 58,
+      "name": "Varvara Gracheva",
+      "country": "França",
+      "points": "1045"
     },
     {
-      "position": 63,
+      "position": 59,
       "name": "Elsa Jacquemot",
       "country": "França",
       "points": "1029"
     },
     {
-      "position": 64,
+      "position": 60,
+      "name": "Veronika Kudermetova",
+      "country": "Rússia",
+      "points": "1023"
+    },
+    {
+      "position": 61,
+      "name": "Tatjana Maria",
+      "country": "Alemanha",
+      "points": "1023"
+    },
+    {
+      "position": 62,
       "name": "Katie Boulter",
       "country": "Reino Unido",
       "points": "1012"
     },
     {
-      "position": 65,
-      "name": "Solana Sierra",
-      "country": "Argentina",
+      "position": 63,
+      "name": "Anna Bondar",
+      "country": "Hungria",
+      "points": "999"
+    },
+    {
+      "position": 64,
+      "name": "Shuai Zhang",
+      "country": "China",
       "points": "989"
     },
     {
-      "position": 66,
+      "position": 65,
       "name": "Anastasia Zakharova",
       "country": "Rússia",
       "points": "978"
     },
     {
-      "position": 67,
-      "name": "Daria Kasatkina",
-      "country": "Austrália",
-      "points": "977"
-    },
-    {
-      "position": 68,
-      "name": "Anna Bondar",
-      "country": "Hungria",
-      "points": "966"
-    },
-    {
-      "position": 69,
-      "name": "Caty Mcnally",
+      "position": 66,
+      "name": "Sofia Kenin",
       "country": "EUA",
-      "points": "958"
+      "points": "952"
     },
     {
-      "position": 70,
+      "position": 67,
       "name": "Beatriz Haddad Maia",
       "country": "Brasil",
       "points": "942"
     },
     {
-      "position": 71,
+      "position": 68,
       "name": "Oleksandra Oliynykova",
       "country": "Ucrânia",
       "points": "931"
     },
     {
-      "position": 72,
-      "name": "Yulia Putintseva",
-      "country": "Cazaquistão",
-      "points": "921"
+      "position": 69,
+      "name": "Caty Mcnally",
+      "country": "EUA",
+      "points": "919"
     },
     {
-      "position": 73,
+      "position": 70,
+      "name": "Daria Kasatkina",
+      "country": "Austrália",
+      "points": "918"
+    },
+    {
+      "position": 71,
+      "name": "Panna Udvardy",
+      "country": "Hungria",
+      "points": "918"
+    },
+    {
+      "position": 72,
       "name": "Kamilla Rakhimova",
       "country": "Uzbequistão",
       "points": "914"
     },
     {
-      "position": 74,
+      "position": 73,
       "name": "Oksana Selekhmeteva",
       "country": "Rússia",
       "points": "898"
     },
     {
-      "position": 75,
-      "name": "Ajla Tomljanovic",
-      "country": "Austrália",
-      "points": "897"
-    },
-    {
-      "position": 76,
-      "name": "Eva Lys",
-      "country": "Alemanha",
+      "position": 74,
+      "name": "Yulia Putintseva",
+      "country": "Cazaquistão",
       "points": "893"
     },
     {
-      "position": 77,
+      "position": 75,
+      "name": "Eva Lys",
+      "country": "Alemanha",
+      "points": "891"
+    },
+    {
+      "position": 76,
       "name": "Zeynep Sonmez",
       "country": "Turquia",
       "points": "891"
     },
     {
-      "position": 78,
+      "position": 77,
       "name": "Petra Marcinko",
       "country": "Croácia",
       "points": "890"
+    },
+    {
+      "position": 78,
+      "name": "Solana Sierra",
+      "country": "Argentina",
+      "points": "885"
     },
     {
       "position": 79,
@@ -1084,123 +1084,123 @@
     },
     {
       "position": 81,
+      "name": "Camila Osorio",
+      "country": "Colômbia",
+      "points": "876"
+    },
+    {
+      "position": 82,
+      "name": "Renata Zarazua",
+      "country": "México",
+      "points": "875"
+    },
+    {
+      "position": 83,
+      "name": "Ajla Tomljanovic",
+      "country": "Austrália",
+      "points": "867"
+    },
+    {
+      "position": 84,
       "name": "Moyuka Uchijima",
       "country": "Japão",
       "points": "863"
     },
     {
-      "position": 82,
+      "position": 85,
       "name": "Ella Seidel",
       "country": "Alemanha",
       "points": "850"
     },
     {
-      "position": 83,
+      "position": 86,
+      "name": "Emiliana Arango",
+      "country": "Colômbia",
+      "points": "843"
+    },
+    {
+      "position": 87,
       "name": "Elena-Gabriela Ruse",
       "country": "Romênia",
       "points": "840"
     },
     {
-      "position": 84,
-      "name": "Dalma Galfi",
-      "country": "Hungria",
-      "points": "837"
-    },
-    {
-      "position": 85,
-      "name": "Renata Zarazua",
-      "country": "México",
-      "points": "835"
-    },
-    {
-      "position": 86,
+      "position": 88,
       "name": "Katie Volynets",
       "country": "EUA",
       "points": "831"
     },
     {
-      "position": 87,
+      "position": 89,
       "name": "Julia Grabher",
       "country": "Áustria",
       "points": "829"
     },
     {
-      "position": 88,
+      "position": 90,
+      "name": "Anna Blinkova",
+      "country": "Rússia",
+      "points": "819"
+    },
+    {
+      "position": 91,
       "name": "Simona Waltert",
       "country": "Suíça",
-      "points": "825"
+      "points": "818"
     },
     {
-      "position": 89,
-      "name": "Yuliia Starodubtseva",
-      "country": "Ucrânia",
-      "points": "816"
-    },
-    {
-      "position": 90,
+      "position": 92,
       "name": "Taylor Townsend",
       "country": "EUA",
       "points": "814"
     },
     {
-      "position": 91,
+      "position": 93,
+      "name": "Alycia Parks",
+      "country": "EUA",
+      "points": "814"
+    },
+    {
+      "position": 94,
+      "name": "Hanne Vandewinkel",
+      "country": "Bélgica",
+      "points": "813"
+    },
+    {
+      "position": 95,
       "name": "Diane Parry",
       "country": "França",
       "points": "806"
     },
     {
-      "position": 92,
-      "name": "Panna Udvardy",
-      "country": "Hungria",
-      "points": "804"
-    },
-    {
-      "position": 93,
+      "position": 96,
       "name": "Daria Snigur",
       "country": "Ucrânia",
       "points": "803"
     },
     {
-      "position": 94,
+      "position": 97,
       "name": "Anastasia Potapova",
       "country": "Áustria",
       "points": "800"
     },
     {
-      "position": 95,
+      "position": 98,
       "name": "Nikola Bartunkova",
       "country": "Rep. Tcheca",
       "points": "800"
     },
     {
-      "position": 96,
-      "name": "Hanne Vandewinkel",
-      "country": "Bélgica",
-      "points": "795"
-    },
-    {
-      "position": 97,
-      "name": "Alycia Parks",
-      "country": "EUA",
-      "points": "794"
-    },
-    {
-      "position": 98,
-      "name": "Darja Semenistaja",
-      "country": "Letônia",
-      "points": "791"
-    },
-    {
       "position": 99,
-      "name": "Anna Blinkova",
-      "country": "Rússia",
-      "points": "790"
-    },
-    {
-      "position": 100,
       "name": "Veronika Erjavec",
       "country": "Eslovênia",
       "points": "786"
+    },
+    {
+      "position": 100,
+      "name": "Francesca Jones",
+      "country": "Reino Unido",
+      "points": "775"
     }
   ],
   "grand_slams": {
@@ -1325,10 +1325,10 @@
     },
     "João Fonseca": {
       "age": 19,
-      "style": "Agressivo",
-      "titles": "US Open Juvenil 2023",
+      "style": "Agressivo, forehand potente",
+      "titles": "Rio Open 2025 (ATP 500), US Open Juvenil 2023, Next Gen Finals 2024",
       "country": "Brasil",
-      "fact": "Futuro top 10."
+      "fact": "Tornou-se o mais jovem brasileiro a vencer um ATP 500, conquistando o Rio Open 2025 com apenas 18 anos. Considerado o futuro do tênis brasileiro."
     },
     "Beatriz Haddad Maia": {
       "age": 29,
@@ -2717,5 +2717,327 @@
       "country": "Reino Unido"
     }
   },
-  "last_updated": "2026-03-30T23:07:32.323134"
+  "grand_slam_details": {
+    "Australian Open": {
+      "location": "Melbourne, Austrália",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 1905,
+      "points": 2000,
+      "prize_money": "~AUD 86,5 milhões (2025)",
+      "greatest_male": {
+        "name": "Novak Djokovic",
+        "titles": 10,
+        "nickname": "Rei de Melbourne"
+      },
+      "greatest_female": {
+        "name": "Margaret Court",
+        "titles": 11,
+        "nickname": "Rainha do Australian Open"
+      },
+      "history": "Fundado em 1905, é o primeiro Grand Slam do calendário anual. Disputado no Melbourne Park desde 1988, é jogado em quadras de piso duro sob o calor intenso do verão australiano. O torneio é conhecido por suas sessões noturnas eletrizantes e pela Rod Laver Arena com teto retrátil."
+    },
+    "Roland Garros": {
+      "location": "Paris, França",
+      "surface": "Saibro (Terra Batida)",
+      "founded": 1891,
+      "points": 2000,
+      "prize_money": "~€53,5 milhões (2025)",
+      "greatest_male": {
+        "name": "Rafael Nadal",
+        "titles": 14,
+        "nickname": "Rei do Saibro"
+      },
+      "greatest_female": {
+        "name": "Chris Evert",
+        "titles": 7,
+        "nickname": "Rainha do Saibro"
+      },
+      "history": "Fundado em 1891, recebeu o nome em homenagem ao aviador francês Roland Garros. É o único Grand Slam disputado em saibro, exigindo resistência e paciência excepcionais. O estádio Philippe-Chatrier foi renovado com teto retrátil em 2020."
+    },
+    "Wimbledon": {
+      "location": "Londres, Inglaterra",
+      "surface": "Grama (Grass Court)",
+      "founded": 1877,
+      "points": 2000,
+      "prize_money": "~£50 milhões (2025)",
+      "greatest_male": {
+        "name": "Roger Federer",
+        "titles": 8,
+        "nickname": "Maestro da Grama"
+      },
+      "greatest_female": {
+        "name": "Martina Navratilova",
+        "titles": 9,
+        "nickname": "Rainha de Wimbledon"
+      },
+      "history": "Fundado em 1877, é o torneio de tênis mais antigo do mundo. Disputado no All England Club, é famoso pela tradição do uniforme branco, morangos com creme e pela quadra central (Centre Court). É o único Grand Slam jogado em grama."
+    },
+    "US Open": {
+      "location": "Nova York, EUA",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 1881,
+      "points": 2000,
+      "prize_money": "~USD 65 milhões (2025)",
+      "greatest_male": {
+        "name": "Jimmy Connors / Pete Sampras / Roger Federer",
+        "titles": 5,
+        "nickname": "Reis de Flushing Meadows"
+      },
+      "greatest_female": {
+        "name": "Serena Williams",
+        "titles": 6,
+        "nickname": "Rainha de Nova York"
+      },
+      "history": "Fundado em 1881, é o último Grand Slam do ano. Disputado no USTA Billie Jean King National Tennis Center em Flushing Meadows, é conhecido pela atmosfera vibrante e barulhenta da cidade de Nova York. O Arthur Ashe Stadium é a maior arena de tênis do mundo."
+    }
+  },
+  "tournament_details": {
+    "Indian Wells": {
+      "category": "Masters 1000",
+      "location": "Indian Wells, EUA",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 1987,
+      "points": 1000,
+      "prize_money": "~USD 9,2 milhões (2025)",
+      "recent_champions": [
+        "2025: Carlos Alcaraz",
+        "2024: Carlos Alcaraz",
+        "2023: Carlos Alcaraz"
+      ],
+      "history": "Conhecido como o \"quinto Grand Slam\" por sua estrutura e prestígio. Disputado no Indian Wells Tennis Garden, na Califórnia, é o maior torneio ATP fora dos Slams."
+    },
+    "Miami Open": {
+      "category": "Masters 1000",
+      "location": "Miami, EUA",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 1985,
+      "points": 1000,
+      "prize_money": "~USD 8,8 milhões (2025)",
+      "recent_champions": [
+        "2025: Jannik Sinner",
+        "2024: Jannik Sinner",
+        "2023: Carlos Alcaraz"
+      ],
+      "history": "Disputado no Hard Rock Stadium em Miami Gardens. Junto com Indian Wells, forma a \"Sunshine Double\", uma das duplas mais cobiçadas do circuito."
+    },
+    "Monte Carlo": {
+      "category": "Masters 1000",
+      "location": "Monte Carlo, Mônaco",
+      "surface": "Saibro (Terra Batida)",
+      "founded": 1897,
+      "points": 1000,
+      "prize_money": "~EUR 5,9 milhões (2025)",
+      "recent_champions": [
+        "2025: Jannik Sinner",
+        "2024: Stefanos Tsitsipas",
+        "2023: Andrey Rublev"
+      ],
+      "history": "Um dos torneios mais tradicionais do saibro europeu. Rafael Nadal dominou com 11 títulos (2005-2012, 2016-2018). Disputado no Monte-Carlo Country Club com vista para o Mediterrâneo."
+    },
+    "Madrid Open": {
+      "category": "Masters 1000",
+      "location": "Madrid, Espanha",
+      "surface": "Saibro (Terra Batida)",
+      "founded": 2002,
+      "points": 1000,
+      "prize_money": "~EUR 7,5 milhões (2025)",
+      "recent_champions": [
+        "2025: Alexander Zverev",
+        "2024: Andrey Rublev",
+        "2023: Carlos Alcaraz"
+      ],
+      "history": "Disputado na Caja Mágica. A altitude de Madrid torna as bolas mais rápidas no saibro, favorecendo jogadores agressivos."
+    },
+    "Roma": {
+      "category": "Masters 1000",
+      "location": "Roma, Itália",
+      "surface": "Saibro (Terra Batida)",
+      "founded": 1930,
+      "points": 1000,
+      "prize_money": "~EUR 7,6 milhões (2025)",
+      "recent_champions": [
+        "2025: Jannik Sinner",
+        "2024: Alexander Zverev",
+        "2023: Daniil Medvedev"
+      ],
+      "history": "Também conhecido como Internazionali d'Italia, é disputado no Foro Italico. Principal preparatório para Roland Garros e um dos torneios de saibro mais prestigiados."
+    },
+    "Masters Canadá": {
+      "category": "Masters 1000",
+      "location": "Montreal/Toronto, Canadá",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 1881,
+      "points": 1000,
+      "prize_money": "~USD 6,6 milhões (2025)",
+      "recent_champions": [
+        "2025: Novak Djokovic",
+        "2024: Alexei Popyrin",
+        "2023: Jannik Sinner"
+      ],
+      "history": "Alterna entre Montreal e Toronto a cada ano. Um dos torneios mais antigos do circuito, servindo como preparação para o US Open."
+    },
+    "Cincinnati": {
+      "category": "Masters 1000",
+      "location": "Cincinnati, EUA",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 1899,
+      "points": 1000,
+      "prize_money": "~USD 6,8 milhões (2025)",
+      "recent_champions": [
+        "2025: Carlos Alcaraz",
+        "2024: Jannik Sinner",
+        "2023: Novak Djokovic"
+      ],
+      "history": "Conhecido como Western & Southern Open, é o último grande preparatório antes do US Open. Novak Djokovic foi o primeiro a completar o Golden Masters vencendo todos os 9 Masters 1000."
+    },
+    "Shanghai": {
+      "category": "Masters 1000",
+      "location": "Shanghai, China",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 2009,
+      "points": 1000,
+      "prize_money": "~USD 8,8 milhões (2025)",
+      "recent_champions": [
+        "2024: Jannik Sinner",
+        "2023: Hubert Hurkacz"
+      ],
+      "history": "Disputado no Qizhong Forest Sports City Arena. É o principal torneio ATP na Ásia e atrai grandes públicos."
+    },
+    "Paris Masters": {
+      "category": "Masters 1000",
+      "location": "Paris, França",
+      "surface": "Piso Duro Indoor",
+      "founded": 1968,
+      "points": 1000,
+      "prize_money": "~EUR 5,9 milhões (2025)",
+      "recent_champions": [
+        "2024: Alexander Zverev",
+        "2023: Novak Djokovic"
+      ],
+      "history": "Conhecido como Rolex Paris Masters, é o último Masters 1000 do ano. Disputado indoor no Accor Arena, é decisivo para a classificação do ATP Finals."
+    },
+    "Rio Open": {
+      "category": "ATP 500",
+      "location": "Rio de Janeiro, Brasil",
+      "surface": "Saibro (Terra Batida)",
+      "founded": 2014,
+      "points": 500,
+      "prize_money": "~USD 2,2 milhões (2025)",
+      "recent_champions": [
+        "2025: João Fonseca",
+        "2024: Sebastián Báez",
+        "2023: Cameron Norrie"
+      ],
+      "history": "O maior torneio de tênis da América do Sul. João Fonseca fez história em 2025 ao se tornar o mais jovem campeão do torneio, levantando a torcida brasileira no Jockey Club."
+    },
+    "Barcelona Open": {
+      "category": "ATP 500",
+      "location": "Barcelona, Espanha",
+      "surface": "Saibro (Terra Batida)",
+      "founded": 1953,
+      "points": 500,
+      "prize_money": "~EUR 2,8 milhões (2025)",
+      "recent_champions": [
+        "2025: Carlos Alcaraz",
+        "2024: Casper Ruud",
+        "2023: Carlos Alcaraz"
+      ],
+      "history": "Conhecido como Barcelona Open Banc Sabadell, é um dos torneios de saibro mais prestigiados. Rafael Nadal conquistou o título 12 vezes."
+    },
+    "Queen's": {
+      "category": "ATP 500",
+      "location": "Londres, Inglaterra",
+      "surface": "Grama (Grass Court)",
+      "founded": 1890,
+      "points": 500,
+      "prize_money": "~GBP 2,5 milhões (2025)",
+      "recent_champions": [
+        "2024: Tommy Paul",
+        "2023: Carlos Alcaraz"
+      ],
+      "history": "O Queen's Club Championships é o principal torneio preparatório para Wimbledon. Disputado em grama, é tradição no calendário britânico."
+    },
+    "Halle": {
+      "category": "ATP 500",
+      "location": "Halle, Alemanha",
+      "surface": "Grama (Grass Court)",
+      "founded": 1993,
+      "points": 500,
+      "prize_money": "~EUR 2,3 milhões (2025)",
+      "recent_champions": [
+        "2024: Jannik Sinner",
+        "2023: Alexander Zverev"
+      ],
+      "history": "Conhecido como Terra Wortmann Open, é o outro grande preparatório para Wimbledon. Roger Federer venceu 10 vezes, sendo o maior campeão da história do torneio."
+    },
+    "Acapulco": {
+      "category": "ATP 500",
+      "location": "Acapulco, México",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 1993,
+      "points": 500,
+      "prize_money": "~USD 2,4 milhões (2025)",
+      "recent_champions": [
+        "2025: Alexander Zverev",
+        "2024: Alex de Minaur",
+        "2023: Holger Rune"
+      ],
+      "history": "O Abierto Mexicano é o principal torneio ATP da América Latina em piso duro. Disputado no GNP Seguros Arena com clima tropical."
+    },
+    "Dubai": {
+      "category": "ATP 500",
+      "location": "Dubai, Emirados Árabes",
+      "surface": "Piso Duro (Hard Court)",
+      "founded": 1993,
+      "points": 500,
+      "prize_money": "~USD 3,1 milhões (2025)",
+      "recent_champions": [
+        "2025: Jannik Sinner",
+        "2024: Ugo Humbert",
+        "2023: Daniil Medvedev"
+      ],
+      "history": "O Dubai Tennis Championships é um dos torneios ATP 500 mais luxuosos. Novak Djokovic e Roger Federer dominaram com múltiplos títulos."
+    },
+    "Basileia": {
+      "category": "ATP 500",
+      "location": "Basileia, Suíça",
+      "surface": "Piso Duro Indoor",
+      "founded": 1970,
+      "points": 500,
+      "prize_money": "~CHF 2,3 milhões (2025)",
+      "recent_champions": [
+        "2024: Giovanni Mpetshi Perricard",
+        "2023: Felix Auger-Aliassime"
+      ],
+      "history": "O Swiss Indoors é o torneio da casa de Roger Federer, que venceu 10 vezes. Disputado no St. Jakobshalle, é um dos eventos indoor mais tradicionais."
+    },
+    "Viena": {
+      "category": "ATP 500",
+      "location": "Viena, Áustria",
+      "surface": "Piso Duro Indoor",
+      "founded": 1974,
+      "points": 500,
+      "prize_money": "~EUR 2,4 milhões (2025)",
+      "recent_champions": [
+        "2024: Alexander Zverev",
+        "2023: Jannik Sinner"
+      ],
+      "history": "O Erste Bank Open é disputado no Wiener Stadthalle. É um dos torneios indoor mais importantes do final da temporada europeia."
+    },
+    "ATP Finals": {
+      "category": "ATP Finals",
+      "location": "Turim, Itália",
+      "surface": "Piso Duro Indoor",
+      "founded": 1970,
+      "points": 1500,
+      "prize_money": "~USD 15 milhões (2025)",
+      "recent_champions": [
+        "2024: Jannik Sinner",
+        "2023: Novak Djokovic",
+        "2022: Novak Djokovic"
+      ],
+      "history": "O torneio dos 8 melhores do ano. Disputado em formato round-robin seguido de semifinais e final. Roger Federer é o maior campeão com 6 títulos. Desde 2021 é realizado no Pala Alpitour em Turim."
+    }
+  },
+  "last_updated": "2026-04-06T19:34:57.447769"
 }

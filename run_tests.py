@@ -1,7 +1,7 @@
 """
 Bateria EXAUSTIVA de testes do chatbot Tennis AI.
-150+ cenários cobrindo: contexto, fuzzy, reações, trivia, torneios, países,
-edge cases, WTA, off-topic, mensagens compostas, typos, fluxos longos.
+245 cenários cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
+ATP 500, último ganhador, países, edge cases, WTA, off-topic, typos, fluxos de 20 turnos.
 """
 import sys, re
 sys.stdout.reconfigure(encoding='utf-8')
@@ -333,6 +333,196 @@ expect('12.17', 'qual a cor da bolinha', 'stress', ['amarelo'], ['Coria'])
 expect('12.18', 'quem é o numero 1 do mundo', 'stress', ['Alcaraz'])
 expect('12.19', 'futebol', 'stress', ['Tênis'])
 expect('12.20', 'obrigado', 'stress', None)
+
+
+# =====================================================================
+# BATERIA 13: Detalhes dos Grand Slams (15 testes)
+# =====================================================================
+print('\n--- BATERIA 13: Detalhes dos Grand Slams ---')
+
+# Queries diretas de detalhes (sem contexto)
+expect('13.01', 'me fala sobre roland garros', 'gs1', ['Roland Garros', 'Paris', 'Saibro', 'Nadal'])
+expect('13.02', 'detalhes do wimbledon', 'gs2', ['Wimbledon', 'Grama', 'Londres'])
+expect('13.03', 'o que é o australian open', 'gs3', ['Australian Open', 'Melbourne', 'Piso Duro'])
+expect('13.04', 'como é o us open', 'gs4', ['US Open', 'Nova York', 'Piso Duro'])
+expect('13.05', 'história do roland garros', 'gs5', ['Roland Garros', 'Fundado', '1891'])
+
+# Queries de campeões continuam funcionando (NÃO mostram detalhes)
+expect('13.06', 'quem ganhou wimbledon', 'gs6', ['Wimbledon'], ['Grama', 'Fundado'])
+expect('13.07', 'campeões de roland garros', 'gs7', ['Roland Garros'], ['Saibro', 'Paris'])
+
+# Torneio bare (sem keywords de detalhe) → campeões
+expect('13.08', 'wimbledon', 'gs8', ['Wimbledon', 'Vencedores'])
+
+# Keywords específicas de detalhe
+expect('13.09', 'qual a premiação do us open', 'gs9', ['US Open', 'milhões'])
+expect('13.10', 'qual o piso do australian open', 'gs10', ['Australian Open', 'Piso Duro'])
+
+# Fluxo contextual: ranking → detalhes de slam
+chat('ranking atp', 'gs11')
+expect('13.11', 'me fala sobre roland garros', 'gs11', ['Roland Garros', 'Saibro', 'Nadal'])
+
+# Fluxo: após detalhes → "quem ganhou" → campeões
+chat('sobre o wimbledon', 'gs12')
+expect('13.12', 'quem ganhou wimbledon', 'gs12', ['Wimbledon'], ['Grama'])
+
+# Fluxo: após detalhes RG → "e wimbledon?" (sem detail keywords) → campeões
+chat('sobre roland garros', 'gs13')
+expect('13.13', 'e wimbledon?', 'gs13', ['Wimbledon'])
+
+# Fluxo: após detalhes RG → "detalhes do wimbledon" → detalhes Wimbledon
+chat('detalhes do roland garros', 'gs14')
+expect('13.14', 'detalhes do wimbledon', 'gs14', ['Wimbledon', 'Grama', 'Londres'])
+
+# Maior campeã aparece nos detalhes
+expect('13.15', 'me fala sobre o australian open', 'gs15', ['Australian Open', 'Margaret Court'])
+
+
+# =====================================================================
+# BATERIA 14: Fluxo de 20 turnos com Grand Slams (20 testes)
+# =====================================================================
+print('\n--- BATERIA 14: Fluxo 20 turnos com Grand Slams ---')
+expect('14.01', 'oi', 'slam20', ['tênis'])
+expect('14.02', 'ranking atp', 'slam20', ['Ranking', 'ATP'])
+expect('14.03', 'Sinner', 'slam20', ['Sinner'])
+expect('14.04', 'o forehand dele é incrível', 'slam20', ['forehand', 'Sinner'])
+expect('14.05', 'me fala sobre roland garros', 'slam20', ['Roland Garros', 'Saibro', 'Nadal'])
+expect('14.06', 'quem ganhou roland garros', 'slam20', ['Roland Garros'])
+expect('14.07', 'e wimbledon?', 'slam20', ['Wimbledon'])
+expect('14.08', 'detalhes do wimbledon', 'slam20', ['Wimbledon', 'Grama', 'Londres'])
+expect('14.09', 'Djokovic', 'slam20', ['Djokovic'])
+expect('14.10', 'qual o país dele', 'slam20', ['Sérvia', 'Djokovic'])
+expect('14.11', 'ranking wta', 'slam20', ['Ranking', 'WTA'])
+expect('14.12', 'Sabalenka', 'slam20', ['Sabalenka'])
+expect('14.13', 'o saque dela é devastador', 'slam20', ['saque', 'Sabalenka'])
+expect('14.14', 'sobre o australian open', 'slam20', ['Australian Open', 'Melbourne', 'Piso Duro'])
+expect('14.15', 'quem ganhou australian open', 'slam20', ['Australian Open'])
+expect('14.16', 'melhor jogador do brasil', 'slam20', ['Brasil'])
+expect('14.17', 'me conta sobre o us open', 'slam20', ['US Open', 'Nova York'])
+expect('14.18', 'quais as regras do tenis', 'slam20', ['15', '30', '40'])
+expect('14.19', 'uma curiosidade', 'slam20', None)
+expect('14.20', 'obrigado', 'slam20', None)
+
+
+# =====================================================================
+# BATERIA 15: Torneios ATP 1000 (15 testes)
+# =====================================================================
+print('\n--- BATERIA 15: Torneios ATP Masters 1000 ---')
+
+# Detecção direta de Masters 1000
+expect('15.01', 'indian wells', 'atp1k_1', ['Indian Wells', 'Masters 1000', 'Califórnia'])
+expect('15.02', 'miami open', 'atp1k_2', ['Miami Open', 'Masters 1000'])
+expect('15.03', 'monte carlo', 'atp1k_3', ['Monte Carlo', 'Saibro', 'Masters 1000'])
+expect('15.04', 'madrid open', 'atp1k_4', ['Madrid Open', 'Masters 1000', 'Saibro'])
+expect('15.05', 'me fala sobre roma', 'atp1k_5', ['Roma', 'Masters 1000', 'Saibro'])
+expect('15.06', 'cincinnati', 'atp1k_6', ['Cincinnati', 'Masters 1000'])
+expect('15.07', 'shanghai', 'atp1k_7', ['Shanghai', 'Masters 1000'])
+expect('15.08', 'paris masters', 'atp1k_8', ['Paris Masters', 'Masters 1000', 'Indoor'])
+expect('15.09', 'atp finals', 'atp1k_9', ['ATP Finals', 'Turim'])
+
+# Masters em contexto (após ranking)
+chat('ranking atp', 'atp1k_10')
+expect('15.10', 'indian wells', 'atp1k_10', ['Indian Wells', 'Masters 1000'])
+
+# Masters após detalhes de slam
+chat('sobre roland garros', 'atp1k_11')
+expect('15.11', 'monte carlo', 'atp1k_11', ['Monte Carlo', 'Masters 1000'])
+
+# Campeões recentes aparecem
+expect('15.12', 'detalhes do miami open', 'atp1k_12', ['Miami Open', 'Sinner'])
+
+# Ranking NÃO é confundido com torneio
+expect('15.13', 'ranking atp', 'atp1k_13', ['Ranking', 'ATP'], ['ATP Finals'])
+
+# Masters Canadá
+expect('15.14', 'masters canadá', 'atp1k_14', ['Masters 1000', 'Montreal'])
+
+# Premiação
+expect('15.15', 'premiação do indian wells', 'atp1k_15', ['Indian Wells', 'milhões'])
+
+
+# =====================================================================
+# BATERIA 16: Torneios ATP 500 + Fonseca (15 testes)
+# =====================================================================
+print('\n--- BATERIA 16: Torneios ATP 500 + João Fonseca ---')
+
+# ATP 500 direto
+expect('16.01', 'rio open', 'atp500_1', ['Rio Open', 'ATP 500', 'Brasil'])
+expect('16.02', 'barcelona open', 'atp500_2', ['Barcelona', 'ATP 500', 'Saibro'])
+expect('16.03', 'halle', 'atp500_3', ['Halle', 'ATP 500', 'Grama'])
+expect('16.04', 'dubai', 'atp500_4', ['Dubai', 'ATP 500'])
+expect('16.05', 'acapulco', 'atp500_5', ['Acapulco', 'ATP 500', 'México'])
+
+# Rio Open com Fonseca nos campeões
+expect('16.06', 'quem ganhou o rio open', 'atp500_6', ['Rio Open', 'Fonseca'])
+
+# Ficha atualizada do Fonseca
+expect('16.07', 'João Fonseca', 'atp500_7', ['Fonseca', 'Rio Open'])
+
+# Fluxo: jogador → torneio ATP 500
+chat('ranking atp', 'atp500_8')
+chat('Fonseca', 'atp500_8')
+expect('16.08', 'rio open', 'atp500_8', ['Rio Open', 'ATP 500'])
+
+# Fluxo: ATP 500 em open_topic
+chat('uma curiosidade', 'atp500_9')
+expect('16.09', 'rio open', 'atp500_9', ['Rio Open', 'ATP 500'])
+
+# Basileia e Viena
+expect('16.10', 'basileia', 'atp500_10', ['Basileia', 'ATP 500', 'Federer'])
+expect('16.11', 'viena', 'atp500_11', ['Viena', 'ATP 500'])
+
+# Queen's
+expect('16.12', "queen's", 'atp500_12', ["Queen's", 'ATP 500', 'Grama'])
+
+# Fluxo de 20 turnos misturando Masters e 500
+expect('16.13', 'oi', 'mix20', ['tênis'])
+expect('16.14', 'indian wells', 'mix20', ['Indian Wells', 'Masters 1000'])
+expect('16.15', 'rio open', 'mix20', ['Rio Open', 'ATP 500', 'Fonseca'])
+
+
+# =====================================================================
+# BATERIA 17: "Quem foi o último ganhador?" com torneio no contexto (10 testes)
+# =====================================================================
+print('\n--- BATERIA 17: Último ganhador via contexto ---')
+
+# Após detalhes de ATP 500 → quem ganhou?
+chat('rio open', 'win1')
+expect('17.01', 'quem foi o último ganhador?', 'win1', ['Rio Open', 'Fonseca'])
+
+# Após detalhes de Masters 1000 → quem ganhou?
+chat('indian wells', 'win2')
+expect('17.02', 'quem foi o último campeão?', 'win2', ['Indian Wells', 'Alcaraz'])
+
+# Após detalhes de Grand Slam → quem ganhou?
+chat('sobre roland garros', 'win3')
+expect('17.03', 'quem ganhou?', 'win3', ['Roland Garros'])
+
+# Após detalhes do Miami Open → quem venceu?
+chat('miami open', 'win4')
+expect('17.04', 'quem venceu?', 'win4', ['Miami', 'Sinner'])
+
+# Após ATP Finals → último ganhador
+chat('atp finals', 'win5')
+expect('17.05', 'quem foi o campeão?', 'win5', ['ATP Finals', 'Sinner'])
+
+# Fluxo: torneio → último ganhador → outro torneio → último ganhador
+chat('monte carlo', 'win6')
+expect('17.06', 'quem ganhou?', 'win6', ['Monte Carlo', 'Sinner'])
+chat('madrid open', 'win6')
+expect('17.07', 'quem foi o último ganhador?', 'win6', ['Madrid', 'Zverev'])
+
+# Após Barcelona Open
+chat('barcelona open', 'win8')
+expect('17.08', 'quem foi o ganhador?', 'win8', ['Barcelona', 'Alcaraz'])
+
+# Variação: "último vencedor"
+chat('dubai', 'win9')
+expect('17.09', 'último vencedor?', 'win9', ['Dubai', 'Sinner'])
+
+# Após Wimbledon (Grand Slam) via detalhes
+chat('detalhes do wimbledon', 'win10')
+expect('17.10', 'quem ganhou?', 'win10', ['Wimbledon'])
 
 
 # =====================================================================

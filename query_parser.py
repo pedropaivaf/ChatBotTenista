@@ -100,7 +100,12 @@ def _detect_country(msg_lower):
     # Copia a mensagem original para uma variável que será "limpa"
     cleaned = msg_lower
     # Itera sobre uma lista de nomes de torneios conhecidos que poderiam causar falsos positivos
-    for tournament in ["australian open", "roland garros", "wimbledon", "us open", "miami open"]:
+    for tournament in ["australian open", "roland garros", "wimbledon", "us open",
+                       "miami open", "indian wells", "monte carlo", "madrid open",
+                       "roma", "masters canadá", "masters canada", "cincinnati",
+                       "shanghai", "paris masters", "rio open", "barcelona open",
+                       "queen's", "queens", "halle", "acapulco", "dubai",
+                       "basileia", "viena", "atp finals"]:
         # Substitui cada nome de torneio por uma string vazia, removendo-o da mensagem
         cleaned = cleaned.replace(tournament, "")
 

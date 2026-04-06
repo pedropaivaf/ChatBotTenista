@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="r" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="b" x1="30%" y1="0%" x2="70%" y2="100%">
+      <stop offset="0%" stop-color="#f0ff6b"/>
+      <stop offset="100%" stop-color="#dfff4f"/>
+    </linearGradient>
+    <filter id="g">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="c">
+      <ellipse cx="28" cy="24" rx="14" ry="17" transform="rotate(-20, 28, 24)"/>
+    </clipPath>
+  </defs>
+
+  <!-- Racket head -->
+  <ellipse cx="28" cy="24" rx="15" ry="18.5" fill="none" stroke="url(#r)" stroke-width="3" transform="rotate(-20, 28, 24)" filter="url(#g)"/>
+
+  <!-- Strings clipped -->
+  <g clip-path="url(#c)">
+    <g stroke="#38bdf8" stroke-width="0.7" opacity="0.4" transform="rotate(-20, 28, 24)">
+      <line x1="20" y1="6" x2="20" y2="42"/><line x1="25" y1="6" x2="25" y2="42"/>
+      <line x1="31" y1="6" x2="31" y2="42"/><line x1="36" y1="6" x2="36" y2="42"/>
+      <line x1="12" y1="15" x2="44" y2="15"/><line x1="12" y1="21" x2="44" y2="21"/>
+      <line x1="12" y1="27" x2="44" y2="27"/><line x1="12" y1="33" x2="44" y2="33"/>
+    </g>
+  </g>
+
+  <!-- Handle -->
+  <rect x="35" y="42" width="4.5" height="16" rx="2.2" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2" transform="rotate(-20, 37, 50)"/>
+
+  <!-- Ball -->
+  <circle cx="50" cy="13" r="7.5" fill="url(#b)" filter="url(#g)"/>
+  <path d="M45.5,8 Q50,13 45.5,18" fill="none" stroke="#b8cc30" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M54.5,8 Q50,13 54.5,18" fill="none" stroke="#b8cc30" stroke-width="0.9" stroke-linecap="round"/>
+  <circle cx="48" cy="11" r="2" fill="white" opacity="0.2"/>
+</svg>

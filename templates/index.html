@@ -4,7 +4,10 @@
     <meta charset="UTF-8"> <!-- Define a codificação de caracteres como UTF-8 (suporta acentos) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Garante que o site seja responsivo em celulares -->
     <title>Tennis AI | Seu Assistente de Tênis</title> <!-- Título que aparece na aba do navegador -->
-    
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+
     <!-- Importa o arquivo CSS de estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -16,7 +19,7 @@
         <header>
             <div class="logo-area">
                 <div class="logo">
-                    <span class="icon">🎾</span> <!-- Ícone de bola de tênis -->
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Tennis AI" class="icon-img"> <!-- Logo SVG -->
                     <h1>Tennis AI</h1> <!-- Nome do projeto em destaque -->
                 </div>
                 <div class="header-actions">

@@ -34,6 +34,10 @@ FOLLOW_UPS = {
     ("tournament", "showed_champions"): [
         "Quer saber sobre algum desses jogadores ou ver outro torneio?",
     ],
+    ("tournament", "showed_slam_details"): [
+        "Quer ver os últimos campeões desse torneio ou saber sobre outro Grand Slam?",
+        "Posso te mostrar quem ganhou recentemente ou detalhar outro torneio!",
+    ],
     # Superfície — abre para jogador ou torneio
     ("surface", "showed_surface_info"): [
         "Quer saber sobre algum jogador ou torneio?",
@@ -51,12 +55,33 @@ STYLE_KEYWORDS = ["estilo", "forehand", "backhand", "saque", "serviço", "voleio
                    "destro", "canhoto", "mão"]
 # Lista de palavras relacionadas a torneios de tênis
 TOURNAMENT_KEYWORDS = ["torneio", "slam", "grand slam", "australian", "roland",
-                        "wimbledon", "us open", "masters", "finals"]
+                        "wimbledon", "us open", "masters", "finals", "atp 500",
+                        "atp 1000", "indian wells", "miami open", "monte carlo",
+                        "madrid open", "roma", "cincinnati", "shanghai",
+                        "paris masters", "rio open", "barcelona", "queens",
+                        "queen's", "halle", "acapulco", "dubai", "basileia",
+                        "viena", "atp finals"]
 # Lista de palavras que indicam que o usuário quer comparar jogadores
 COMPARISON_KEYWORDS = ["comparar", "comparação", "versus", "vs", "contra",
                         "diferença", "melhor que", "pior que"]
 # Lista de palavras relacionadas a país/nacionalidade do jogador
 COUNTRY_KEYWORDS_CTX = ["país", "pais", "nacionalidade", "onde nasceu", "da onde", "de onde"]
+
+# Keywords que indicam que o usuário quer saber o vencedor/campeão (sem citar torneio)
+WINNER_KEYWORDS_CTX = [
+    "ganhou", "ganhador", "ganhadores", "último ganhador", "ultimo ganhador",
+    "campeão", "campeões", "campeao", "campeoes", "vencedor", "vencedores",
+    "venceu", "quem ganhou", "quem venceu", "último campeão", "ultimo campeao",
+    "quem foi o campeão", "quem foi o campeao",
+]
+
+# Keywords que indicam pedido de detalhes/info sobre Grand Slam (não campeões)
+SLAM_DETAIL_KEYWORDS_CTX = [
+    "sobre", "detalhes", "detalhe", "fala sobre", "história", "historia",
+    "onde fica", "onde é", "informações", "informacoes", "superfície",
+    "superficie", "piso", "premiação", "premiacao", "como é", "como e",
+    "o que é", "o que e", "ficha",
+]
 
 # Reações empáticas a atributos técnicos de tênis (apenas tema tênis)
 # Dicionário que mapeia palavras-chave técnicas para listas de reações empáticas com emojis
@@ -376,16 +401,46 @@ class DecisionTree:
                     trace.append({"branch": "Pronome → Jogador", "icon": "👤", "matched": True, "detail": f"Pronome resolve para {focus}"})
                     return (info, "player", "showed_player_info", [focus], trace)
 
+        # --- Branch 0.5: Se pede ranking, devolver ao pipeline normal ---
+        if any(kw in msg_lower for kw in RANKING_KEYWORDS_CTX):
+            trace.append({"branch": "Ranking detectado", "icon": "📊", "matched": True, "detail": "Pedido de ranking → pipeline normal"})
+            return None, trace
+
+        # --- Branch 0.7: "Quem foi o último ganhador?" com torneio no contexto ---
+        # Só dispara se a mensagem NÃO menciona outro torneio explicitamente
+        if any(kw in msg_lower for kw in WINNER_KEYWORDS_CTX):
+            all_tournaments = self.engine.get_all_tournament_names()
+            has_explicit_tournament = any(t.lower() in msg_lower for t in all_tournaments)
+            if not has_explicit_tournament:
+                ctx_tournaments = context.get("mentioned_entities", {}).get("tournaments", [])
+                if ctx_tournaments:
+                    last_tournament = ctx_tournaments[-1]
+                    winner_info = self.engine.get_last_winner(last_tournament)
+                    if winner_info:
+                        trace.append({"branch": "Último Ganhador", "icon": "🏆", "matched": True, "detail": f"Campeão de {last_tournament}"})
+                        add_log(f"[CONTEXTO] Último ganhador de '{last_tournament}' via contexto!", "SUCCESS")
+                        return (winner_info, "tournament", "showed_champions", [], trace)
+
         # --- Branch 1: Torneio ---
         if pending in ("player_from_ranking", "player_from_country_ranking", "player_detail"):
-            tournaments = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
-            target_t = extract_entities(msg_stems, tournaments)
+            grand_slams = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
+            all_tournaments = self.engine.get_all_tournament_names()
+            target_t = extract_entities(msg_stems, all_tournaments)
             if not target_t:
-                for t in tournaments:
+                for t in all_tournaments:
                     if t.lower() in msg_lower:
                         target_t = t
                         break
             if target_t:
+                # Para ATP 1000/500: sempre mostra detalhes (inclui campeões recentes)
+                has_detail = any(kw in msg_lower for kw in SLAM_DETAIL_KEYWORDS_CTX)
+                if has_detail or target_t not in grand_slams:
+                    detail = self.engine.get_grand_slam_details(target_t)
+                    if detail:
+                        trace.append({"branch": "Detalhes Torneio", "icon": "🏟️", "matched": True, "detail": f"Detalhes de {target_t}"})
+                        add_log(f"[CONTEXTO] Detalhes de '{target_t}' via contexto!", "SUCCESS")
+                        return (detail, "tournament", "showed_slam_details", [], trace)
+                # Grand Slams sem detail keywords: campeões
                 trace.append({"branch": "Torneio", "icon": "🏆", "matched": True, "detail": f"{target_t} detectado"})
                 add_log(f"[CONTEXTO] Torneio '{target_t}' detectado no contexto!", "SUCCESS")
                 result = self.engine.get_last_champions(tournament=target_t)
@@ -496,9 +551,27 @@ class DecisionTree:
                     trace.append({"branch": "Troca → Curiosidade", "icon": "💡", "matched": True, "detail": "Pedido de curiosidade durante player_detail"})
                     return (curiosity, "trivia", "showed_trivia", [], trace)
 
-            # Sub-branch: Troca para torneio
+            # Sub-branch: Troca para torneio (com detecção de torneio específico)
             if any(kw in msg_lower for kw in TOURNAMENT_KEYWORDS):
-                trace.append({"branch": "Troca → Torneios", "icon": "🏆", "matched": True, "detail": "Pedido de torneios durante player_detail"})
+                grand_slams = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
+                all_tournaments = self.engine.get_all_tournament_names()
+                target_t = extract_entities(msg_stems, all_tournaments)
+                if not target_t:
+                    for t in all_tournaments:
+                        if t.lower() in msg_lower:
+                            target_t = t
+                            break
+                if target_t:
+                    has_detail = any(kw in msg_lower for kw in SLAM_DETAIL_KEYWORDS_CTX)
+                    if has_detail or target_t not in grand_slams:
+                        detail = self.engine.get_grand_slam_details(target_t)
+                        if detail:
+                            trace.append({"branch": "Troca → Detalhes Torneio", "icon": "🏟️", "matched": True, "detail": f"Detalhes de {target_t}"})
+                            return (detail, "tournament", "showed_slam_details", [], trace)
+                    trace.append({"branch": "Troca → Torneio", "icon": "🏆", "matched": True, "detail": f"Campeões de {target_t}"})
+                    result = self.engine.get_last_champions(tournament=target_t)
+                    return (result, "tournament", "showed_champions", [], trace)
+                trace.append({"branch": "Troca → Torneios", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios durante player_detail"})
                 add_log("[CONTEXTO] Troca de tópico: player_detail → torneios", "SUCCESS")
                 result = self.engine.get_last_champions()
                 return (result, "tournament", "showed_champions", [], trace)
@@ -525,14 +598,22 @@ class DecisionTree:
         # --- Branch 4: Open topic ---
         if pending == "open_topic":
             add_log("[CONTEXTO] Tentando resolver resposta aberta (open_topic)...", "DEBUG")
-            tournaments = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
-            target_tournament = extract_entities(msg_stems, tournaments)
+            grand_slams = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
+            all_tournaments = self.engine.get_all_tournament_names()
+            target_tournament = extract_entities(msg_stems, all_tournaments)
             if not target_tournament:
-                for t in tournaments:
+                for t in all_tournaments:
                     if t.lower() in msg_lower:
                         target_tournament = t
                         break
             if target_tournament:
+                has_detail = any(kw in msg_lower for kw in SLAM_DETAIL_KEYWORDS_CTX)
+                if has_detail or target_tournament not in grand_slams:
+                    detail = self.engine.get_grand_slam_details(target_tournament)
+                    if detail:
+                        trace.append({"branch": "Detalhes Torneio (aberto)", "icon": "🏟️", "matched": True, "detail": f"Detalhes de {target_tournament}"})
+                        add_log(f"[CONTEXTO] Detalhes de '{target_tournament}' via open_topic!", "SUCCESS")
+                        return (detail, "tournament", "showed_slam_details", [], trace)
                 trace.append({"branch": "Torneio (aberto)", "icon": "🏆", "matched": True, "detail": f"{target_tournament}"})
                 add_log(f"[CONTEXTO] Torneio '{target_tournament}' resolvido via open_topic!", "SUCCESS")
                 result = self.engine.get_last_champions(tournament=target_tournament)
@@ -659,8 +740,8 @@ class DecisionTree:
         elif bot_action in ("showed_player_info", "showed_player_from_context",
                             "showed_player_country"):
             pending = "player_detail"
-        # Se mostrou campeões de um torneio, espera que o usuário escolha um jogador
-        elif bot_action in ("showed_champions",):
+        # Se mostrou campeões ou detalhes de um torneio, espera jogador ou outro torneio
+        elif bot_action in ("showed_champions", "showed_slam_details"):
             pending = "player_from_ranking"
         # Se mostrou trivia/curiosidade, espera uma resposta aberta sobre qualquer tema
         elif bot_action in ("showed_trivia",):

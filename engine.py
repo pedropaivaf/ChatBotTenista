@@ -15,7 +15,8 @@ COUNTRY_FLAGS = {
     "França": "🇫🇷", "Argentina": "🇦🇷", "Holanda": "🇳🇱", "Portugal": "🇵🇹",
     "Hungria": "🇭🇺", "Bélgica": "🇧🇪", "Japão": "🇯🇵", "Índia": "🇮🇳",
     "Egito": "🇪🇬", "Colômbia": "🇨🇴", "Eslováquia": "🇸🇰", "México": "🇲🇽",
-    "Finlândia": "🇫🇮", "Áustria": "🇦🇹", "Nova Zelândia": "🇳🇿", "Romênia": "🇷🇴"
+    "Finlândia": "🇫🇮", "Áustria": "🇦🇹", "Nova Zelândia": "🇳🇿", "Romênia": "🇷🇴",
+    "Inglaterra": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
 }
 
 class TennisEngine: # Classe que representa o nosso motor de consulta técnica
@@ -103,6 +104,87 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
             else: result += f"• {tourney}: {info}\n"
         result += "\nAcha que teremos novos dominadores no próximo ano?"
         return result
+
+    def get_last_winner(self, tournament):
+        """Retorna o último campeão de um torneio (Grand Slam ou ATP 1000/500)."""
+        # Para Grand Slams: busca no histórico de campeões (percorre anos do mais recente ao mais antigo)
+        grand_slams = self.data.get("grand_slams", {})
+        if grand_slams:
+            for year in sorted(grand_slams.keys(), reverse=True):
+                slams = grand_slams[year]
+                for t_name, info in slams.items():
+                    if tournament.lower() in t_name.lower():
+                        if isinstance(info, dict):
+                            parts = []
+                            if "Masculino" in info:
+                                parts.append(f"Masc: {info['Masculino']['campeao']}")
+                            if "Feminino" in info:
+                                parts.append(f"Fem: {info['Feminino']['campeao']}")
+                            return f"🏆 <span class='msg-highlight'>Último campeão de {t_name} ({year}):</span>\n\n{'  |  '.join(parts)}"
+        # Para ATP 1000/500/Finals: busca nos recent_champions
+        t_details = self.data.get("tournament_details", {})
+        for t_name, info in t_details.items():
+            if tournament.lower() in t_name.lower() or t_name.lower() in tournament.lower():
+                champions = info.get("recent_champions", [])
+                if champions:
+                    return f"🏆 <span class='msg-highlight'>Último campeão de {t_name}:</span>\n\n• {champions[0]}"
+        return None
+
+    def get_all_tournament_names(self):
+        """Retorna lista de todos os nomes de torneios conhecidos (Grand Slams + Masters + ATP 500 + Finals)."""
+        names = []
+        for source in ("grand_slam_details", "tournament_details"):
+            names.extend(self.data.get(source, {}).keys())
+        return names
+
+    def get_grand_slam_details(self, tournament):
+        """Busca detalhes em grand_slam_details e tournament_details (unificado)."""
+        return self._get_tournament_details(tournament)
+
+    def _get_tournament_details(self, tournament):
+        """Retorna ficha completa de qualquer torneio (Grand Slam, Masters 1000, ATP 500, Finals)."""
+        # Busca em grand_slam_details primeiro (têm estrutura com greatest_male/female)
+        gs_details = self.data.get("grand_slam_details", {})
+        for t_name, info in gs_details.items():
+            if tournament.lower() in t_name.lower():
+                male = info.get("greatest_male", {})
+                female = info.get("greatest_female", {})
+                flag = self._get_flag(info["location"].split(", ")[-1]) if ", " in info["location"] else ""
+                result = (
+                    f"🏟️ <span class='msg-highlight'>{t_name} — Ficha Completa:</span>\n\n"
+                    f"📍 <span class='attr-label'>Local:</span> {flag} {info['location']}\n"
+                    f"🎾 <span class='attr-label'>Superfície:</span> {info['surface']}\n"
+                    f"📅 <span class='attr-label'>Fundado em:</span> {info['founded']}\n"
+                    f"🎯 <span class='attr-label'>Pontos (Campeão):</span> {info['points']} pts\n"
+                    f"💰 <span class='attr-label'>Premiação:</span> {info['prize_money']}\n\n"
+                    f"👑 <span class='msg-highlight'>Maior Campeão:</span> "
+                    f"{male['name']} — {male['titles']}x títulos"
+                    f" ({male.get('nickname', '')})\n"
+                    f"👑 <span class='msg-highlight'>Maior Campeã:</span> "
+                    f"{female['name']} — {female['titles']}x títulos"
+                    f" ({female.get('nickname', '')})\n\n"
+                    f"📖 <span class='attr-label'>História:</span> {info['history']}"
+                )
+                return result
+
+        # Busca em tournament_details (Masters 1000, ATP 500, ATP Finals)
+        t_details = self.data.get("tournament_details", {})
+        for t_name, info in t_details.items():
+            if tournament.lower() in t_name.lower() or t_name.lower() in tournament.lower():
+                flag = self._get_flag(info["location"].split(", ")[-1]) if ", " in info["location"] else ""
+                champions_text = "\n".join(f"  • {c}" for c in info.get("recent_champions", []))
+                result = (
+                    f"🏟️ <span class='msg-highlight'>{t_name} ({info['category']}) — Ficha Completa:</span>\n\n"
+                    f"📍 <span class='attr-label'>Local:</span> {flag} {info['location']}\n"
+                    f"🎾 <span class='attr-label'>Superfície:</span> {info['surface']}\n"
+                    f"📅 <span class='attr-label'>Fundado em:</span> {info['founded']}\n"
+                    f"🎯 <span class='attr-label'>Pontos (Campeão):</span> {info['points']} pts\n"
+                    f"💰 <span class='attr-label'>Premiação:</span> {info['prize_money']}\n\n"
+                    f"🏆 <span class='msg-highlight'>Campeões Recentes:</span>\n{champions_text}\n\n"
+                    f"📖 <span class='attr-label'>História:</span> {info['history']}"
+                )
+                return result
+        return None
 
     # --- Lógica Biográfica de Jogadores ---
     def get_player_info(self, name): 

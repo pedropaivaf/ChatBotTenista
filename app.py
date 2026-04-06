@@ -58,6 +58,15 @@ OFF_TOPIC_KEYWORDS = [
     "religião", "religiao", "igreja",
 ]
 
+# Keywords que indicam que o usuário quer detalhes/informações sobre um Grand Slam (não campeões)
+SLAM_DETAIL_KEYWORDS = [
+    "sobre", "detalhes", "detalhe", "fala sobre", "me fala", "conta sobre",
+    "o que é", "o que e", "como é", "como e", "onde fica", "onde é",
+    "história", "historia", "quando foi criado", "informações", "informacoes",
+    "ficha do torneio", "superfície", "superficie", "piso do",
+    "premiação", "premiacao", "prize money", "quanto vale", "pontos do",
+]
+
 # Stop stems portugueses para filtrar do intent matching (evita falsos positivos)
 PORTUGUESE_STOP_STEMS = {
     "de", "do", "da", "dos", "das", "o", "a", "os", "as",
@@ -217,13 +226,25 @@ def predict(): # Função principal de "predição" ou resposta
     # try_contextual_response retorna (resp, topic, action, players, trace) ou (None, trace)
     if contextual_result is not None and contextual_result[0] is not None:
         resp_text, topic, bot_action, mentioned_players, trace = contextual_result
+        # Para torneios resolvidos pela árvore, extrai o nome do torneio do trace
+        ctx_mentioned_t = None
+        if bot_action in ("showed_slam_details", "showed_champions"):
+            for node in trace:
+                detail = node.get("detail", "")
+                if "Detalhes de " in detail:
+                    ctx_mentioned_t = [detail.replace("Detalhes de ", "")]
+                elif "Campeão de " in detail:
+                    ctx_mentioned_t = [detail.replace("Campeão de ", "")]
+                elif " detectado" in detail:
+                    ctx_mentioned_t = [detail.replace(" detectado", "")]
         add_log(f"[CONTEXTO] Resposta resolvida via árvore de decisão! Ação: {bot_action}", "SUCCESS")
         add_step("Árvore de Decisão", "success",
                  f"Resolvido → {bot_action}",
                  {"pending": pending_ctx, "focus": focus_ctx, "topic": context.get("current_topic"),
                   "turn": context.get("turn_count", 0), "trace": trace})
         return respond(resp_text, topic=topic, bot_action=bot_action,
-                       mentioned_players=mentioned_players)
+                       mentioned_players=mentioned_players,
+                       mentioned_tournaments=ctx_mentioned_t)
 
     # Não resolveu — extrai trace mesmo assim para visualização
     trace = contextual_result[1] if contextual_result is not None else []
@@ -308,71 +329,86 @@ def predict(): # Função principal de "predição" ou resposta
 
     if any(token in winner_stems for token in msg_stems): # Se a frase tiver contexto de vitória
         add_log("Contexto de 'Vencedores' identificado. Verificando especificidade...")
-        tournaments = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"] # Lista de Slams
-        target_tournament = __import__('nltk_utils').extract_entities(msg_stems, tournaments) # Busca o torneio na frase
+        all_tournaments = tennis_engine.get_all_tournament_names()
+        target_tournament = None
+        for t in all_tournaments:
+            if t.lower() in msg_lower:
+                target_tournament = t
+                break
 
         if target_tournament: # Se um torneio específico foi encontrado
             add_log(f"Torneio detectado com NLTK: {target_tournament}", "SUCCESS")
-            result = tennis_engine.get_last_champions(tournament=target_tournament)
-            return respond(result, topic="tournament", bot_action="showed_champions",
-                           mentioned_tournaments=[target_tournament])
+            # Grand Slams têm histórico detalhado de campeões
+            grand_slams = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
+            if target_tournament in grand_slams:
+                result = tennis_engine.get_last_champions(tournament=target_tournament)
+                return respond(result, topic="tournament", bot_action="showed_champions",
+                               mentioned_tournaments=[target_tournament])
+            # ATP 1000/500/Finals: mostra detalhes (inclui campeões recentes)
+            detail = tennis_engine.get_grand_slam_details(target_tournament)
+            if detail:
+                return respond(detail, topic="tournament", bot_action="showed_slam_details",
+                               mentioned_tournaments=[target_tournament])
 
         add_log("Resumo genérico solicitado.") # Caso não cite torneio, mostra o geral
         result = tennis_engine.get_last_champions()
         return respond(result, topic="tournament", bot_action="showed_champions")
 
+    # --- Passo 1.5: Detecção direta de torneio por nome (ANTES de jogadores) ---
+    # Usa match direto por texto (mais confiável que stems para nomes de torneios)
+    all_tournaments = tennis_engine.get_all_tournament_names()
+    grand_slams = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
+    target_tournament = None
+    for t in all_tournaments:
+        if t.lower() in msg_lower:
+            target_tournament = t
+            break
+    if target_tournament:
+        add_log(f"Torneio detectado diretamente: {target_tournament}", "SUCCESS")
+        # Verifica se o usuário quer detalhes/info sobre o torneio (não campeões)
+        has_detail_intent = any(kw in msg_lower for kw in SLAM_DETAIL_KEYWORDS)
+        if has_detail_intent or target_tournament not in grand_slams:
+            detail = tennis_engine.get_grand_slam_details(target_tournament)
+            if detail:
+                add_step("Motor de Dados", "success", f"Detalhes de {target_tournament}")
+                return respond(detail, topic="tournament", bot_action="showed_slam_details",
+                               mentioned_tournaments=[target_tournament])
+        # Grand Slams sem detail keywords: mostra campeões
+        result = tennis_engine.get_last_champions(tournament=target_tournament)
+        return respond(result, topic="tournament", bot_action="showed_champions",
+                       mentioned_tournaments=[target_tournament])
+
     # --- Lógica de Jogadores DINÂMICA (NLTK) ---
-    # Busca a lista de nomes cadastrados no JSON automaticamente
-    players_list = tennis_engine.get_all_player_names() # Lê o banco de dados
-    # Tenta extrair o nome de um jogador da frase do usuário
+    players_list = tennis_engine.get_all_player_names()
     target_player = __import__('nltk_utils').extract_entities(msg_stems, players_list)
-    # Validação: rejeitar matches fracos (1 stem curto como "mai" → Mai Hontama)
     if target_player:
         from nltk_utils import stem as _stem, tokenize as _tok
         _p_stems = [_stem(w) for w in _tok(target_player.lower()) if len(_stem(w)) > 2]
         _matched = [s for s in _p_stems if s in msg_stems]
         if not any(len(s) >= 4 for s in _matched):
             target_player = None
-    # Fuzzy fallback: tolera typos como "Medevedev" → "Medvedev"
     if not target_player:
         target_player = _fuzzy_match_player(msg_lower, players_list, threshold=0.75)
         if target_player:
             add_log(f"Jogador detectado via fuzzy matching: {target_player}", "SUCCESS")
 
-    if target_player: # Se o robô reconheceu o jogador citado
+    if target_player:
         add_log(f"Perfil de jogador detectado com NLTK: {target_player}", "SUCCESS")
         add_step("Motor de Dados", "success", f"Jogador identificado: {target_player}")
 
-        # Verifica se o usuário perguntou sobre a nacionalidade/origem
         country_keywords = ["país", "pais", "nacionalidade", "onde nasceu", "onde é", "da onde", "de onde"]
-        country_stems = [stem(w) for w in country_keywords] # Gera radicais
+        country_stems = [stem(w) for w in country_keywords]
 
-        if any(token in country_stems for token in msg_stems): # Se for sobre país
+        if any(token in country_stems for token in msg_stems):
             add_log(f"Contexto de 'Nacionalidade' para {target_player} detectado.", "INFO")
             result = tennis_engine.get_player_country(target_player)
             return respond(result, topic="player", bot_action="showed_player_country",
                            mentioned_players=[target_player])
 
-        # Caso padrão: Mostra a ficha técnica completa do jogador
         player_info = tennis_engine.get_player_info(target_player)
-        if player_info: # Se houver informações no JSON
+        if player_info:
             return respond(player_info, topic="player", bot_action="showed_player_info",
                            mentioned_players=[target_player])
-
-    # --- Passo 1.5: Detecção direta de torneio por nome ---
-    tournaments_list = ["Australian Open", "Roland Garros", "Wimbledon", "US Open"]
-    target_tournament = __import__('nltk_utils').extract_entities(msg_stems, tournaments_list)
-    if not target_tournament:
-        # Fallback: verifica se o nome do torneio aparece diretamente no texto
-        for t in tournaments_list:
-            if t.lower() in msg_lower:
-                target_tournament = t
-                break
-    if target_tournament:
-        add_log(f"Torneio detectado diretamente: {target_tournament}", "SUCCESS")
-        result = tennis_engine.get_last_champions(tournament=target_tournament)
-        return respond(result, topic="tournament", bot_action="showed_champions",
-                       mentioned_tournaments=[target_tournament])
 
     # --- Passo 2: Lógica Conversacional (Base de Conhecimento JSON) ---
     add_step("Motor de Dados", "skipped", "Nenhum ranking/jogador/torneio detectado")
