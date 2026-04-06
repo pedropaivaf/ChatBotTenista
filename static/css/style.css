@@ -102,6 +102,13 @@ header {
     flex-shrink: 0;
 }
 
+.logo .icon-img {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
+    flex-shrink: 0;
+}
+
 /* Botoes do header */
 .header-actions {
     display: flex;
