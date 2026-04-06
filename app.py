@@ -388,13 +388,21 @@ def predict(): # Função principal de "predição" ou resposta
         if score > 0:
             add_log(f"Testando tag '{intent['tag']}': {score:.1f}% de compatibilidade.", "DEBUG")
 
+    # Tags conversacionais que não devem sobrescrever um contexto ativo
+    CONTEXT_OVERRIDE_TAGS = {"confirmacao_positiva", "confirmacao_negativa", "feedback_positivo"}
+
     # Se a similaridade for convincente (>= 50%)
     if max_match_score >= 50:
-        add_log(f"Match encontrado! Tag: {best_match_tag} ({max_match_score:.1f}%)", "SUCCESS")
-        add_step("Base de Conhecimento", "success", f"Intent: {best_match_tag} ({max_match_score:.0f}%)")
-        matched_intent = next(i for i in kb["intents"] if i["tag"] == best_match_tag)
-        response = random.choice(matched_intent["responses"])
-        return respond(response, topic="trivia", bot_action="showed_trivia")
+        # Se contexto ativo e intent é genérico → não usar, preservar contexto
+        if pending_ctx and best_match_tag in CONTEXT_OVERRIDE_TAGS:
+            add_log(f"[GUARD] Intent '{best_match_tag}' bloqueado — contexto ativo (pending={pending_ctx})", "DEBUG")
+            add_step("Base de Conhecimento", "skipped", f"Intent '{best_match_tag}' bloqueado por contexto ativo")
+        else:
+            add_log(f"Match encontrado! Tag: {best_match_tag} ({max_match_score:.1f}%)", "SUCCESS")
+            add_step("Base de Conhecimento", "success", f"Intent: {best_match_tag} ({max_match_score:.0f}%)")
+            matched_intent = next(i for i in kb["intents"] if i["tag"] == best_match_tag)
+            response = random.choice(matched_intent["responses"])
+            return respond(response, topic="trivia", bot_action="showed_trivia")
 
     # --- Passo 3: Fallback (Quando o robô não entende a pergunta) ---
     add_step("Base de Conhecimento", "skipped", f"Melhor match: {max_match_score:.0f}% (mínimo 50%)")
@@ -403,11 +411,17 @@ def predict(): # Função principal de "predição" ou resposta
     log_unrecognized_query(text)
     add_log("Pergunta enviada para o banco de aprendizado.", "SYSTEM")
 
-    # Resposta padrão de erro/confusão (Mantém o foco no Tênis)
-    fallback_response = "Hmm, parece que esse assunto fugiu da minha quadra de tênis... 🤔\n\nEu fui treinado apenas para falar sobre ATP, WTA, Raquetes e as lendas do esporte. Vamos tentar falar sobre o Ranking?"
+    # Resposta padrão de erro/confusão — preserva contexto quando possível
+    if context.get("focus_player"):
+        fallback_response = f"Não entendi bem essa pergunta... 🤔 Quer que eu continue falando sobre {context['focus_player']} ou prefere mudar de assunto?\n\nPosso mostrar ranking, torneios de Grand Slam ou curiosidades!"
+    elif context.get("current_topic"):
+        fallback_response = "Não entendi bem... 🤔 Pode reformular? Estou aqui para falar sobre ranking, jogadores, torneios e curiosidades do tênis! 🎾"
+    else:
+        fallback_response = "Hmm, parece que esse assunto fugiu da minha quadra de tênis... 🤔\n\nEu fui treinado apenas para falar sobre ATP, WTA, Raquetes e as lendas do esporte. Vamos tentar falar sobre o Ranking?"
     session_mgr.update(session_id, "user", text)
     session_mgr.update(session_id, "bot", fallback_response, bot_action="fallback",
-                       pending_follow_up=None)
+                       pending_follow_up=context.get("pending_follow_up"),
+                       topic=context.get("current_topic"))
     return jsonify({"answer": fallback_response, "logs": current_logs, "pipeline": pipeline_steps})
 
 # Ponto de entrada que inicia o servidor se o arquivo for executado diretamente
