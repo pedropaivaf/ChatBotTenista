@@ -2,7 +2,7 @@
   "intents": [
     {
       "tag": "saudacao",
-      "patterns": ["Olá", "Oi", "Oi tudo bem?", "Tudo bem?", "Ei", "Opa", "Bom dia", "Boa tarde", "Boa noite", "Tem alguém aí?", "Blz", "Fala ai"],
+      "patterns": ["Olá", "Oi", "Oi tudo bem?", "Tudo bem?", "Ei", "Opa", "Bom dia", "Boa tarde", "Boa noite", "Tem alguém aí?", "Blz", "Fala ai", "e aí", "eae", "salve", "fala aí", "beleza"],
       "responses": ["Olá! Sou seu assistente de Tênis. Como posso ajudar você hoje?", "Oi! Vamos falar sobre Tênis? O que você quer saber?"],
       "follow_up": "Você tem algum jogador favorito ou prefere saber sobre os torneios?"
     },
@@ -175,7 +175,7 @@
     },
     {
       "tag": "curiosidades",
-      "patterns": ["me conta uma curiosidade", "voce sabe alguma curiosidade?", "fale algo interessante", "diga uma curiosidade", "curiosidade sobre tenis", "além disso?", "outra curiosidade", "mais fatos"],
+      "patterns": ["me conta uma curiosidade", "voce sabe alguma curiosidade?", "fale algo interessante", "diga uma curiosidade", "curiosidade sobre tenis", "além disso?", "outra curiosidade", "mais fatos", "mais curiosidades", "conta outra", "mais fatos sobre tenis", "me diz outro fato", "tem mais curiosidades?", "outra"],
       "responses": [
         "Você sabia que a partida mais longa da história durou 11 horas e 5 minutos? Foi entre John Isner e Nicolas Mahut em Wimbledon 2010! 😱",
         "A bolinha de tênis amarela só apareceu em 1972. Antes disso, elas eram brancas ou pretas! A mudança foi para melhorar a visão na TV. 📺",
@@ -216,6 +216,15 @@
         "Olha, eu sou um bot focado apenas no mundo das raquetes e bolinhas amarelas. Vamos voltar ao tênis?"
       ],
       "follow_up": "Sabia que uma bolinha de tênis pode atingir mais de 250km/h em um saque profissional? Você acha que conseguiria pelo menos tocar na bola em um saque desses?"
+    },
+    {
+      "tag": "continuar_conversa",
+      "patterns": ["quero saber mais", "conta mais sobre isso", "me fala mais", "aprofunda", "desenvolve mais", "quero mais detalhes", "explica melhor"],
+      "responses": [
+        "Claro! Sobre o que exatamente quer saber mais? Jogadores, torneios, curiosidades ou ranking? 🎾",
+        "Com prazer! Me diz: quer saber sobre algum jogador, ver o ranking ou ouvir uma curiosidade?"
+      ],
+      "follow_up": ""
     }
   ]
 }

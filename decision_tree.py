@@ -91,6 +91,28 @@ GENERIC_PRAISE = [
     "absurdo", "impressionante", "fora de série",
 ]
 
+# Palavras que indicam que o usuário quer continuar no mesmo fluxo
+CONTINUE_KEYWORDS = [
+    "sim", "claro", "quero", "pode ser", "com certeza", "bora",
+    "conta mais", "mais", "continue", "vai", "manda", "fala mais",
+    "quero saber", "quero sim", "pode falar", "manda ver",
+    "outra", "outro", "próximo", "próxima", "seguinte",
+    "por favor", "show", "beleza",
+]
+
+# Palavras que indicam pedido de ranking dentro de contexto
+RANKING_KEYWORDS_CTX = ["ranking", "rank", "top 10", "classificação", "tabela", "posição", "posições"]
+
+# Palavras que indicam pedido de curiosidade/trivia dentro de contexto
+CURIOSITY_KEYWORDS_CTX = ["curiosidade", "curiosidades", "fato curioso", "fatos",
+                          "conta mais curiosidade", "outra curiosidade", "outro fato"]
+
+# Pronomes implícitos que referem ao jogador em foco
+PRONOUN_KEYWORDS = ["sobre ele", "sobre ela", "fala dele", "fala dela",
+                    "e ele", "e ela", "desse jogador", "dessa jogadora",
+                    "desse tenista", "dessa tenista", "conta dele", "conta dela",
+                    "mais dele", "mais dela"]
+
 
 # Função interna que gera uma reação empática sobre um atributo técnico do jogador em foco
 def _build_reaction(msg_lower, focus_player, engine):
@@ -280,6 +302,31 @@ class DecisionTree:
         # Armazena a referência ao engine para acessar dados e funções do chatbot
         self.engine = engine
 
+    def _is_continue(self, msg_lower):
+        """Detecta se o usuário quer continuar no mesmo fluxo sem novo tópico."""
+        msg_clean = msg_lower.strip().rstrip('!?.').strip()
+        # Mensagem é exatamente um continuador
+        if msg_clean in CONTINUE_KEYWORDS:
+            return True
+        # Mensagem curta (até 5 palavras) contendo um continuador
+        words = msg_clean.split()
+        if len(words) <= 5 and any(kw in msg_lower for kw in CONTINUE_KEYWORDS):
+            return True
+        return False
+
+    def _get_random_curiosity(self):
+        """Retorna uma curiosidade aleatória da knowledge_base."""
+        import json
+        try:
+            with open('knowledge_base.json', 'r', encoding='utf-8') as f:
+                kb = json.load(f)
+            for intent in kb["intents"]:
+                if intent["tag"] == "curiosidades":
+                    return random.choice(intent["responses"])
+        except Exception:
+            pass
+        return None
+
     # Método principal que tenta interpretar a mensagem usando o contexto da conversa
     def try_contextual_response(self, msg_lower, msg_stems, context, add_log):
         """
@@ -297,6 +344,34 @@ class DecisionTree:
         last_topic = context.get("current_topic")
         focus = context.get("focus_player")
         add_log(f"[CONTEXTO] Tentando resolver via contexto: pending={pending}, topic={last_topic}", "DEBUG")
+
+        # --- Pré-branch: Resolução de pronome implícito ---
+        if focus:
+            has_pronoun = any(kw in msg_lower for kw in PRONOUN_KEYWORDS)
+            if has_pronoun:
+                # Verificar se é pergunta sobre país
+                has_country_q = any(kw in msg_lower for kw in COUNTRY_KEYWORDS_CTX)
+                if has_country_q:
+                    country_info = self.engine.get_player_country(focus)
+                    if country_info:
+                        reaction = _build_reaction(msg_lower, focus, self.engine)
+                        if reaction:
+                            country_info = f"{reaction}\n\n{country_info}"
+                        trace.append({"branch": "Pronome → País", "icon": "📍", "matched": True, "detail": f"País de {focus}"})
+                        return (country_info, "player", "showed_player_country", [focus], trace)
+                # Verificar se é pergunta sobre estilo/info
+                has_style = any(kw in msg_lower for kw in STYLE_KEYWORDS)
+                has_info_q = any(kw in msg_lower for kw in PLAYER_INFO_KEYWORDS)
+                if has_style or has_info_q:
+                    info = self.engine.get_player_info(focus)
+                    if info:
+                        trace.append({"branch": "Pronome → Info", "icon": "📋", "matched": True, "detail": f"Info de {focus}"})
+                        return (info, "player", "showed_player_info", [focus], trace)
+                # Pronome genérico sem especificidade → mostrar info do jogador
+                info = self.engine.get_player_info(focus)
+                if info:
+                    trace.append({"branch": "Pronome → Jogador", "icon": "👤", "matched": True, "detail": f"Pronome resolve para {focus}"})
+                    return (info, "player", "showed_player_info", [focus], trace)
 
         # --- Branch 1: Torneio ---
         if pending in ("player_from_ranking", "player_from_country_ranking", "player_detail"):
@@ -396,6 +471,36 @@ class DecisionTree:
                 trace.append({"branch": "Elogio genérico", "icon": "👏", "matched": True, "detail": f"Reação a elogio sobre {focus}"})
                 return (praise_text, "player", "showed_player_info", [focus], trace)
 
+            # Sub-branch: Troca para ranking
+            if any(kw in msg_lower for kw in RANKING_KEYWORDS_CTX):
+                trace.append({"branch": "Troca → Ranking", "icon": "📊", "matched": True, "detail": "Pedido de ranking durante player_detail"})
+                add_log(f"[CONTEXTO] Troca de tópico: player_detail → ranking", "SUCCESS")
+                circuit = 'WTA' if any(w in msg_lower for w in ['wta', 'feminino', 'mulheres']) else 'ATP'
+                ranking_text = self.engine.get_ranking_summary(circuit=circuit)
+                ranking_data = self.engine.data.get(f"ranking_{circuit.lower()}", [])
+                top_players = [p['name'] for p in ranking_data[:10]]
+                return (ranking_text, "ranking", "showed_ranking", top_players, trace)
+
+            # Sub-branch: Troca para curiosidade
+            if any(kw in msg_lower for kw in CURIOSITY_KEYWORDS_CTX):
+                curiosity = self._get_random_curiosity()
+                if curiosity:
+                    trace.append({"branch": "Troca → Curiosidade", "icon": "💡", "matched": True, "detail": "Pedido de curiosidade durante player_detail"})
+                    return (curiosity, "trivia", "showed_trivia", [], trace)
+
+            # Sub-branch: Continuação genérica ("sim", "conta mais", "quero saber")
+            if self._is_continue(msg_lower) and focus:
+                info = self.engine.get_player_info(focus)
+                if info:
+                    continue_reactions = [
+                        f"Claro! Aqui vai mais sobre {focus}:",
+                        f"Com certeza! Vamos continuar falando de {focus}:",
+                        f"Bora! Mais sobre {focus}:",
+                    ]
+                    intro = random.choice(continue_reactions)
+                    trace.append({"branch": "Continuação", "icon": "🔄", "matched": True, "detail": f"Continuando sobre {focus}"})
+                    return (f"{intro}\n\n{info}", "player", "showed_player_info", [focus], trace)
+
             # Nenhum sub-branch matched
             if not has_comparison: trace.append({"branch": "Comparação", "icon": "⚔️", "matched": False, "detail": "Não solicitado"})
             if not has_country: trace.append({"branch": "País do jogador", "icon": "📍", "matched": False, "detail": "Não solicitado"})
@@ -437,6 +542,47 @@ class DecisionTree:
                     return (info, "player", "showed_player_from_context", [player], trace)
             else:
                 trace.append({"branch": "Jogador (aberto)", "icon": "👤", "matched": False, "detail": "Nenhum jogador encontrado"})
+
+            # Sub-branch: Ranking pedido em open_topic
+            if any(kw in msg_lower for kw in RANKING_KEYWORDS_CTX):
+                trace.append({"branch": "Ranking (aberto)", "icon": "📊", "matched": True, "detail": "Pedido de ranking"})
+                add_log(f"[CONTEXTO] Ranking solicitado via open_topic", "SUCCESS")
+                circuit = 'WTA' if any(w in msg_lower for w in ['wta', 'feminino', 'mulheres']) else 'ATP'
+                ranking_text = self.engine.get_ranking_summary(circuit=circuit)
+                ranking_data = self.engine.data.get(f"ranking_{circuit.lower()}", [])
+                top_players = [p['name'] for p in ranking_data[:10]]
+                return (ranking_text, "ranking", "showed_ranking", top_players, trace)
+
+            # Sub-branch: Curiosidade pedida em open_topic
+            if any(kw in msg_lower for kw in CURIOSITY_KEYWORDS_CTX):
+                curiosity = self._get_random_curiosity()
+                if curiosity:
+                    trace.append({"branch": "Curiosidade (aberta)", "icon": "💡", "matched": True, "detail": "Nova curiosidade"})
+                    return (curiosity, "trivia", "showed_trivia", [], trace)
+
+            # Sub-branch: Continuação no mesmo tópico
+            if self._is_continue(msg_lower):
+                if last_topic == "trivia":
+                    curiosity = self._get_random_curiosity()
+                    if curiosity:
+                        trace.append({"branch": "Continuar trivia", "icon": "🔄", "matched": True, "detail": "Mais curiosidade"})
+                        return (curiosity, "trivia", "showed_trivia", [], trace)
+                elif last_topic == "ranking":
+                    circuit = context.get("current_circuit", "ATP")
+                    ranking_text = self.engine.get_ranking_summary(circuit=circuit)
+                    ranking_data = self.engine.data.get(f"ranking_{circuit.lower()}", [])
+                    top_players = [p['name'] for p in ranking_data[:10]]
+                    trace.append({"branch": "Continuar ranking", "icon": "🔄", "matched": True, "detail": f"Re-exibindo ranking {circuit}"})
+                    return (ranking_text, "ranking", "showed_ranking", top_players, trace)
+                elif last_topic == "player" and context.get("focus_player"):
+                    fp = context["focus_player"]
+                    info = self.engine.get_player_info(fp)
+                    if info:
+                        trace.append({"branch": "Continuar jogador", "icon": "🔄", "matched": True, "detail": f"Re-exibindo {fp}"})
+                        return (info, "player", "showed_player_info", [fp], trace)
+                # Genérico: oferece opções
+                trace.append({"branch": "Continuar genérico", "icon": "🔄", "matched": True, "detail": "Sem tópico claro"})
+                return ("Claro! Posso te contar sobre ranking ATP/WTA, jogadores, torneios de Grand Slam ou curiosidades do tênis. O que prefere? 🎾", "trivia", "showed_trivia", [], trace)
 
         trace.append({"branch": "Resultado", "icon": "➡️", "matched": False, "detail": "Sem resolução → pipeline normal"})
         return None, trace
