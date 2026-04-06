@@ -1,46 +1,34 @@
-// Aguarda o carregamento completo do HTML (DOM) antes de executar o script
 document.addEventListener('DOMContentLoaded', () => {
-    // Referências aos elementos da interface do Chat (Input, Botão Enviar, Lista de Mensagens)
-    const userInput = document.getElementById('user-input'); // Campo onde o usuário digita
-    const sendBtn = document.getElementById('send-btn'); // Botão com ícone de bolinha para enviar
-    const chatMessages = document.getElementById('chat-messages'); // Área que exibe o histórico de conversa
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const chatMessages = document.getElementById('chat-messages');
 
-    // Gerenciamento de sessão para manter contexto entre mensagens
+    // Gerenciamento de sessao para manter contexto entre mensagens
     let sessionId = sessionStorage.getItem('tennis_session_id');
     if (!sessionId) {
         sessionId = crypto.randomUUID();
         sessionStorage.setItem('tennis_session_id', sessionId);
     }
 
-    // Referências aos elementos do Console/Terminal (Painel técnico lateral)
-    const consoleToggleBtn = document.getElementById('console-toggle-btn'); // Botão que abre o terminal
-    const consolePanel = document.getElementById('console-panel'); // O painel principal do terminal
-    const consoleBody = document.getElementById('console-body'); // Área interna onde os logs aparecem
-    const closeConsole = document.getElementById('close-console'); // Botão de fechar (X)
-    const clearConsole = document.getElementById('clear-console'); // Botão de limpar (lixeira)
+    // Referencias aos elementos do Console/Terminal
+    const consoleToggleBtn = document.getElementById('console-toggle-btn');
+    const consolePanel = document.getElementById('console-panel');
+    const consoleBody = document.getElementById('console-body');
+    const closeConsole = document.getElementById('close-console');
+    const clearConsole = document.getElementById('clear-console');
 
-    /**
-     * Função: addMessage
-     * Objetivo: Adiciona visualmente um novo balão de mensagem na tela do chat.
-     * @param {string} text - O conteúdo da mensagem (pode conter HTML para destaques).
-     * @param {string} sender - Quem enviou ('user' para o usuário azul, 'bot' para o robô escuro).
-     */
+    // Adiciona mensagem ao chat
+    // Nota: innerHTML usado intencionalmente para renderizar destaques HTML do backend (msg-highlight, attr-label, etc.)
+    // O conteudo vem exclusivamente do servidor Flask (nao do usuario), portanto e seguro.
     const addMessage = (text, sender) => {
-        const messageDiv = document.createElement('div'); // Cria o container da mensagem
-        messageDiv.classList.add('message', sender); // Adiciona as classes CSS correspondentes
-        
-        const bubble = document.createElement('div'); // Cria o balão (bubble) interno
-        bubble.classList.add('bubble'); // Adiciona a classe de estilo do balão
-        
-        // Converte as quebras de linha '\n' vindas do Python em tags HTML '<br>'
-        // Isso é necessário porque estamos usando innerHTML para suportar os destaques CSS
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
         const formattedText = text.replace(/\n/g, '<br>');
-        bubble.innerHTML = formattedText; // Define o conteúdo formatado
-        
-        messageDiv.appendChild(bubble); // Coloca o balão dentro do container da mensagem
-        chatMessages.appendChild(messageDiv); // Insere a mensagem completa na lista do chat
-        
-        // Faz o scroll automático para a última mensagem enviada
+        bubble.innerHTML = formattedText;
+        messageDiv.appendChild(bubble);
+        chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
@@ -52,10 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return el;
     };
 
-    /**
-     * Renderiza o pipeline visual de processamento no painel lateral.
-     * Cada step é um card animado com ícone de status, nome, detalhe e dados extras.
-     */
+    // Renderiza o pipeline visual de processamento no painel lateral
     const renderPipeline = (steps) => {
         if (!steps || steps.length === 0) return;
 
@@ -66,17 +51,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const label = createEl('div', 'pb-label', `Processamento #${document.querySelectorAll('.pipeline-block').length + 1}`);
         block.appendChild(label);
 
-        const statusIcons = { success: '✓', skipped: '○', fail: '✗' };
-        // Map step name → type class for colors
+        const statusIcons = { success: '\u2714', skipped: '\u25CB', fail: '\u2718' };
         const typeMap = {
-            'Entrada do Usuário': 'input', 'Tokenização NLTK': 'token',
-            'Filtro Off-Topic': 'filter', 'Árvore de Decisão': 'tree',
+            'Entrada do Usu\u00E1rio': 'input', 'Tokeniza\u00E7\u00E3o NLTK': 'token',
+            'Filtro Off-Topic': 'filter', '\u00C1rvore de Decis\u00E3o': 'tree',
             'Query Parser': 'parser', 'Motor de Dados': 'engine',
             'Base de Conhecimento': 'engine', 'Resposta Final': 'response', 'Fallback': 'fail'
         };
         const typeIcons = {
-            input: '📝', token: '🔤', filter: '🛡️', tree: '🌳',
-            parser: '🔍', engine: '⚡', response: '✅', fail: '❌'
+            input: '\uD83D\uDD0D', token: '\uD83D\uDD24', filter: '\uD83D\uDEE1\uFE0F', tree: '\uD83C\uDF33',
+            parser: '\uD83D\uDD0E', engine: '\u26A1', response: '\u2705', fail: '\u274C'
         };
         const delay = 130;
 
@@ -99,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             body.appendChild(createEl('div', 'ps-name', step.name));
             if (step.detail) body.appendChild(createEl('div', 'ps-detail', step.detail));
 
-            // Token pills para tokenização
+            // Token pills
             if (step.data && step.data.tokens && step.data.stems) {
                 const row = createEl('div', 'token-row');
                 step.data.tokens.forEach((tok, j) => {
@@ -123,41 +107,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.appendChild(wrap);
             };
 
-            // Helper: create tree node with colored dot
-            const addTreeNode = (container, color, label, value) => {
-                const node = createEl('div', 'tree-node');
-                node.appendChild(createEl('span', `tn-dot ${color}`));
-                node.appendChild(createEl('span', 'tn-label', label + ': '));
-                node.appendChild(createEl('span', 'tn-val', value));
-                container.appendChild(node);
-            };
-
-            // Árvore de decisão — fluxograma visual com branches
+            // Arvore de decisao - fluxograma visual com branches
             if (step.data && step.data.turn !== undefined) {
-                // Estado da sessão (badges compactos)
                 const stateBadges = [['Turno', String(step.data.turn)]];
                 if (step.data.pending) stateBadges.push(['Pendente', step.data.pending]);
                 if (step.data.focus) stateBadges.push(['Foco', step.data.focus]);
-                if (step.data.topic) stateBadges.push(['Tópico', step.data.topic]);
+                if (step.data.topic) stateBadges.push(['T\u00F3pico', step.data.topic]);
                 addBadges(body, stateBadges);
 
-                // Fluxograma de decisões (trace do backend)
                 if (step.data.trace && step.data.trace.length > 0) {
                     const flowChart = createEl('div', 'tree-flow');
                     step.data.trace.forEach((node, ni) => {
                         const branch = createEl('div', `tree-branch ${node.matched ? 'tb-matched' : 'tb-missed'}`);
-                        // Ícone + nome
                         const header = createEl('div', 'tb-header');
                         header.appendChild(createEl('span', 'tb-icon', node.icon || ''));
                         header.appendChild(createEl('span', 'tb-name', node.branch));
-                        header.appendChild(createEl('span', `tb-status ${node.matched ? 'tb-yes' : 'tb-no'}`, node.matched ? '✓' : '✗'));
+                        header.appendChild(createEl('span', `tb-status ${node.matched ? 'tb-yes' : 'tb-no'}`, node.matched ? '\u2714' : '\u2718'));
                         branch.appendChild(header);
-                        // Detalhe
                         if (node.detail) {
                             branch.appendChild(createEl('div', 'tb-detail', node.detail));
                         }
                         flowChart.appendChild(branch);
-                        // Connector entre branches
                         if (ni < step.data.trace.length - 1) {
                             flowChart.appendChild(createEl('div', 'tb-connector'));
                         }
@@ -168,15 +138,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (step.name === 'Resposta Final' && step.data) {
                 const badges = [];
-                if (step.data.follow_up) badges.push(['Próximo', step.data.follow_up]);
+                if (step.data.follow_up) badges.push(['Pr\u00F3ximo', step.data.follow_up]);
                 if (step.data.focus) badges.push(['Foco', step.data.focus]);
                 if (badges.length) addBadges(body, badges);
             }
 
             if (step.data && step.data.country) {
-                const badges = [['País', step.data.country]];
-                if (step.data.best) badges.push(['Melhor', '✓']);
-                if (step.data.current) badges.push(['Atual', '✓']);
+                const badges = [['Pa\u00EDs', step.data.country]];
+                if (step.data.best) badges.push(['Melhor', '\u2714']);
+                if (step.data.current) badges.push(['Atual', '\u2714']);
                 if (step.data.circuit) badges.push(['Circuito', step.data.circuit]);
                 addBadges(body, badges);
             }
@@ -200,109 +170,112 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { consoleBody.scrollTop = consoleBody.scrollHeight; }, steps.length * delay + 100);
     };
 
-    /**
-     * Função: handleSend
-     * Objetivo: Processa o envio da mensagem, chama a API e gerencia os estados de carregamento.
-     */
+    // Envia mensagem e processa resposta
     const handleSend = async () => {
-        const message = userInput.value.trim(); // Captura o texto do input sem espaços sobrando
-        if (!message) return; // Se estiver vazio, não faz nada
+        const message = userInput.value.trim();
+        if (!message) return;
 
-        addMessage(message, 'user'); // Exibe a mensagem do usuário imediatamente no chat
-        userInput.value = ''; // Limpa o campo de texto
+        addMessage(message, 'user');
+        userInput.value = '';
 
         try {
-            // Requisição assíncrona para o servidor Flask
             const response = await fetch('/predict', {
-                method: 'POST', // Método de envio de dados
-                headers: { 'Content-Type': 'application/json' }, // Indica que os dados são JSON
-                body: JSON.stringify({ message, session_id: sessionId }) // Envia mensagem + ID da sessão
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message, session_id: sessionId })
             });
 
-            // Converte a resposta bruta do servidor para objeto JS
             const data = await response.json();
-            
-            // Exibe a resposta do robô
             addMessage(data.answer, 'bot');
 
-            // Renderiza o pipeline visual no painel lateral
             if (data.pipeline && data.pipeline.length > 0) {
                 renderPipeline(data.pipeline);
             }
 
         } catch (error) {
-            // Tratamento de erro caso o servidor esteja offline ou ocorra falha na rede
             console.error('Erro:', error);
             addMessage('Ops, algo deu errado no servidor. Tente novamente.', 'bot');
         }
     };
 
-    // --- Controle do Modal de Integrantes (Group Members) ---
-    
-    // Referências aos elementos do modal
-    const groupBtn = document.getElementById('group-btn'); // Botão "Integrantes do Grupo" no footer
-    const groupModal = document.getElementById('group-modal'); // Overlay do modal (fundo escuro)
-    const closeModal = document.getElementById('close-modal'); // Botão X dentro do modal
+    // --- Controle do Modal de Integrantes ---
+    const groupBtn = document.getElementById('group-btn');
+    const groupModal = document.getElementById('group-modal');
+    const closeModal = document.getElementById('close-modal');
 
-    /**
-     * Função: toggleModal
-     * Objetivo: Abre ou fecha a tela de integrantes adicionando a classe 'active'.
-     */
     const toggleModal = () => {
-        groupModal.classList.toggle('active'); // Alterna a visibilidade suave via CSS
-        
-        // Modal aberto/fechado
+        groupModal.classList.toggle('active');
     };
 
-    // Listeners para abrir e fechar o modal
-    groupBtn.addEventListener('click', toggleModal); // Abre ao clicar no botão do footer
-    closeModal.addEventListener('click', toggleModal); // Fecha ao clicar no X
+    groupBtn.addEventListener('click', toggleModal);
+    closeModal.addEventListener('click', toggleModal);
 
-    // Fecha o modal se o usuário clicar fora da caixa central (no fundo escuro)
     window.addEventListener('click', (e) => {
         if (e.target === groupModal) toggleModal();
     });
 
     // --- Controle do Console (Abre/Fecha/Limpa) ---
-    
-    // Função para alternar a visibilidade do painel lateral
     const toggleConsole = () => {
-        consolePanel.classList.toggle('active'); // Adiciona/Remove a classe que anima a abertura
-        document.body.classList.toggle('console-open'); // Classe auxiliar para layouts responsivos
+        consolePanel.classList.toggle('active');
+        document.body.classList.toggle('console-open');
     };
 
-    // Listeners de clique para os botões do terminal
-    consoleToggleBtn.addEventListener('click', toggleConsole); // Abrir pelo botão superior
-    closeConsole.addEventListener('click', toggleConsole); // Fechar pelo X interno
-    
-    // Botão para limpar o pipeline visual
+    consoleToggleBtn.addEventListener('click', toggleConsole);
+    closeConsole.addEventListener('click', toggleConsole);
+
     clearConsole.addEventListener('click', () => {
         consoleBody.textContent = '';
         const welcome = createEl('div', 'pipeline-welcome');
-        const icon = createEl('div', 'pw-icon', '🧠');
-        const text = createEl('div', 'pw-text', 'Pipeline limpo. Envie uma mensagem para começar.');
+        const icon = createEl('div', 'pw-icon', '\uD83E\uDDE0');
+        const text = createEl('div', 'pw-text', 'Pipeline limpo. Envie uma mensagem para come\u00E7ar.');
         welcome.appendChild(icon);
         welcome.appendChild(text);
         consoleBody.appendChild(welcome);
     });
 
-    // --- Monitoramento de Eventos (Teclado e Clique) ---
-    
-    // Dispara o envio ao clicar no ícone da bolinha
+    // --- Eventos de Envio ---
     sendBtn.addEventListener('click', handleSend);
-    
-    // Dispara o envio ao pressionar "Enter" dentro do campo de texto
+
     userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleSend();
     });
 
-    // Atalho de teclado rápido: Ctrl + ` (Crase) para abrir o painel técnico
+    // Atalho: Ctrl + ` para abrir o painel
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && (e.key === '`' || e.key === '\'')) toggleConsole();
     });
 
-    // Foca o cursor no campo de texto assim que o site carrega para facilitar o uso
+    // --- Modo Apresentacao (Fullscreen + Fontes Grandes) ---
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+    const togglePresentation = () => {
+        document.body.classList.toggle('presentation-mode');
+
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+            document.exitFullscreen().catch(() => {});
+        }
+    };
+
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', togglePresentation);
+    }
+
+    // F11 tambem ativa o modo apresentacao
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'F11') {
+            e.preventDefault();
+            togglePresentation();
+        }
+    });
+
+    // Sincroniza quando o usuario sai do fullscreen pelo ESC
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement && document.body.classList.contains('presentation-mode')) {
+            document.body.classList.remove('presentation-mode');
+        }
+    });
+
     userInput.focus();
-    
-    // Pipeline pronto
 });

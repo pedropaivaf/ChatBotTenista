@@ -1,0 +1,22 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+  <!-- Surround azul claro -->
+  <rect width="1200" height="600" fill="#5B9BD5"/>
+  <!-- Superfície azul escuro (proporção real 78x36ft = 2.17:1) -->
+  <rect x="60" y="55" width="1080" height="490" fill="#3D5A80"/>
+  <!-- Retângulo externo (doubles) -->
+  <rect x="60" y="55" width="1080" height="490" fill="none" stroke="white" stroke-width="3"/>
+  <!-- Singles sidelines -->
+  <line x1="60" y1="116" x2="1140" y2="116" stroke="white" stroke-width="2"/>
+  <line x1="60" y1="484" x2="1140" y2="484" stroke="white" stroke-width="2"/>
+  <!-- Service line esquerda -->
+  <line x1="351" y1="116" x2="351" y2="484" stroke="white" stroke-width="2"/>
+  <!-- Service line direita -->
+  <line x1="849" y1="116" x2="849" y2="484" stroke="white" stroke-width="2"/>
+  <!-- Center service line -->
+  <line x1="351" y1="300" x2="849" y2="300" stroke="white" stroke-width="2"/>
+  <!-- Center marks nas baselines -->
+  <line x1="60" y1="300" x2="78" y2="300" stroke="white" stroke-width="2"/>
+  <line x1="1122" y1="300" x2="1140" y2="300" stroke="white" stroke-width="2"/>
+  <!-- Rede vertical no meio -->
+  <line x1="600" y1="35" x2="600" y2="565" stroke="white" stroke-width="1.5" opacity="0.45" stroke-dasharray="6,4"/>
+</svg>

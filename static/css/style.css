@@ -1,80 +1,84 @@
-:root { /* Definição de variáveis globais de cores para fácil manutenção */
-    --court-green: #2d5a27; /* Verde grama da quadra */
-    --court-green-dark: #1a3a17; /* Verde profundo profissional */
-    --court-line: #ffffff; /* Branco das linhas da quadra */
-    --ball-yellow: #dfff4f; /* Amarelo-limão clássico da bolinha de tênis */
-    
-    --bg-color: #0f172a; /* Cor de fundo principal (quase preto) para o chat */
-    --container-bg: rgba(15, 23, 42, 0.75); /* Azul marinho glassmorphism (transparência com desfoque) */
-    --accent-color: #38bdf8; /* Azul claro para destaques e botões interativos */
-    --text-primary: #f8fafc; /* Cor branca para o texto principal de leitura */
-    --text-secondary: #94a3b8; /* Cor cinza para textos secundários e legendas */
-    --glass-border: rgba(255, 255, 255, 0.15); /* Borda branca suave para o efeito de vidro */
-    
-    --bot-bubble: rgba(30, 41, 59, 0.9); /* Bolha do bot em azul escuro sóbrio */
-    --user-bubble: #0284c7; /* Bolha do usuário em azul vibrante para contraste */
+:root {
+    --court-blue: #3D5A80;
+    --court-surround: #5B9BD5;
+    --court-line: #ffffff;
+    --ball-yellow: #dfff4f;
+
+    --bg-color: #0f172a;
+    --container-bg: rgba(15, 23, 42, 0.55);
+    --accent-color: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --glass-border: rgba(255, 255, 255, 0.15);
+
+    --bot-bubble: rgba(30, 41, 59, 0.9);
+    --user-bubble: #0284c7;
 }
 
-* { /* Reset básico para remover margens e preenchimentos padrões do navegador */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif; /* Define a fonte padrão para todo o projeto */
+    font-family: 'Inter', sans-serif;
 }
 
 body {
-    /* Fundo de Quadra de Tênis Premium */
-    background-color: var(--court-green-dark);
-    /* Desenha as linhas da quadra usando gradientes lineares (CSS puro, sem imagens!) */
-    background-image: 
-        linear-gradient(var(--court-line) 2px, transparent 2px),
-        linear-gradient(90deg, var(--court-line) 2px, transparent 2px),
-        linear-gradient(90deg, transparent calc(100% - 2px), var(--court-line) calc(100% - 2px)),
-        linear-gradient(transparent calc(100% - 2px), var(--court-line) calc(100% - 2px)),
-        linear-gradient(90deg, transparent calc(50% - 1px), var(--court-line) calc(50% - 1px), var(--court-line) calc(50% + 1px), transparent calc(50% + 1px));
-    background-size: 95% 95%;
-    background-position: center;
-    background-repeat: no-repeat;
-    
+    background-color: var(--court-surround);
     color: var(--text-primary);
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem 1rem;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Quadra de tenis US Open - SVG com proporcoes reais */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url('../img/court.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    pointer-events: none;
 }
 
 /* Container Principal do Chat (Glassmorphism) */
 .container {
     width: 95%;
-    max-width: 850px;
-    height: 80vh; /* Altura fixa para manter o chat organizado */
+    max-width: 750px;
+    height: calc(100vh - 2rem);
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
     background: var(--container-bg);
-    backdrop-filter: blur(20px); /* O "segredo" do efeito vidro: embaça o que está atrás */
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
-    border-radius: 32px; /* Cantos arredondados premium */
+    border-radius: 32px;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), inset 0 0 2px rgba(255, 255, 255, 0.1);
-    animation: fadeIn 1s cubic-bezier(0.23, 1, 0.32, 1); /* Animação suave ao abrir */
+    animation: fadeIn 1s cubic-bezier(0.23, 1, 0.32, 1);
     overflow: hidden;
     position: relative;
 }
 
-/* Animação de entrada do container */
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.98) translateY(20px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Cabeçalho do App */
+/* Cabecalho do App */
 header {
-    background: rgba(15, 23, 42, 0.4);
+    background: rgba(15, 23, 42, 0.3);
     padding: 1.5rem 2rem;
     border-bottom: 1px solid var(--glass-border);
+    flex-shrink: 0;
 }
 
 .logo-area {
@@ -88,13 +92,20 @@ header {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 5px 0; /* Evita corte vertical */
+    padding: 5px 0;
 }
 
 .logo .icon {
     font-size: 2.2rem;
-    filter: drop-shadow(0 0 12px rgba(223, 255, 79, 0.5)); /* Brilho na bolinha */
+    filter: drop-shadow(0 0 12px rgba(223, 255, 79, 0.5));
     flex-shrink: 0;
+}
+
+/* Grupo de botoes do header (fullscreen + terminal) */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .logo h1 {
@@ -106,9 +117,9 @@ header {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     text-transform: uppercase;
-    font-style: italic; /* Inclinação esportiva */
+    font-style: italic;
     line-height: 1.2;
-    padding-right: 10px; /* Garante que o itálico não corte no final */
+    padding-right: 10px;
     white-space: nowrap;
 }
 
@@ -118,17 +129,18 @@ header p {
     letter-spacing: 0.5px;
     text-align: left;
     margin-top: -5px;
-    padding-left: 50px; /* Alinha com o texto do logo */
+    padding-left: 50px;
 }
 
-/* Área de Mensagens */
+/* Area de Mensagens */
 .chat-container {
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.05);
+    background: transparent;
+    min-height: 0;
 }
 
 .chat-messages {
@@ -138,6 +150,7 @@ header p {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    min-height: 0;
 }
 
 /* Scrollbar Customizada */
@@ -168,7 +181,6 @@ header p {
     animation: messageIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Animação pop-in das mensagens */
 @keyframes messageIn {
     from { opacity: 0; transform: scale(0.9) translateY(10px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
@@ -187,10 +199,10 @@ header p {
     background: linear-gradient(135deg, var(--user-bubble), #0369a1);
 }
 
-/* --- Destaques de Mensagem (Identificação) --- */
+/* Destaques de Mensagem */
 .msg-highlight {
     font-weight: 800;
-    color: var(--ball-yellow); /* Amarelo bolinha para destacar no azul */
+    color: var(--ball-yellow);
     text-shadow: 0 0 8px rgba(223, 255, 79, 0.3);
 }
 
@@ -201,17 +213,18 @@ header p {
     text-decoration-color: var(--accent-color);
 }
 
-/* Área de Entrada de Texto */
+/* Area de Entrada de Texto */
 .chat-input-area {
     display: flex;
     gap: 1rem;
-    background: rgba(2, 6, 23, 0.6);
+    background: rgba(2, 6, 23, 0.4);
     padding: 0.6rem;
     border-radius: 25px;
     border: 1px solid var(--glass-border);
     margin-top: 1rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     align-items: center;
+    flex-shrink: 0;
 }
 
 input[type="text"] {
@@ -228,7 +241,7 @@ input[type="text"]::placeholder {
     color: rgba(148, 163, 184, 0.4);
 }
 
-/* --- Botão Enviar Bolinha de Tênis --- */
+/* Botao Enviar Bolinha de Tenis */
 #send-btn {
     background: var(--ball-yellow);
     border: 2px solid #c9e644;
@@ -241,7 +254,7 @@ input[type="text"]::placeholder {
     color: #1e3a8a;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 
+    box-shadow:
         inset -4px -4px 8px rgba(0,0,0,0.2),
         inset 4px 4px 8px rgba(255,255,255,0.4),
         0 8px 20px rgba(0,0,0,0.4);
@@ -250,7 +263,7 @@ input[type="text"]::placeholder {
     flex-shrink: 0;
 }
 
-/* Costuras da bolinha de tênis via pseudo-elementos */
+/* Costuras da bolinha de tenis via pseudo-elementos */
 #send-btn::before,
 #send-btn::after {
     content: '';
@@ -261,27 +274,28 @@ input[type="text"]::placeholder {
     border-radius: 50%;
 }
 
-#send-btn::before { top: -85%; left: -20%; } /* Posiciona a costura superior */
-#send-btn::after { bottom: -85%; right: -20%; } /* Posiciona a costura inferior */
+#send-btn::before { top: -85%; left: -20%; }
+#send-btn::after { bottom: -85%; right: -20%; }
 
 #send-btn:hover {
-    transform: scale(1.15) rotate(15deg);
-    box-shadow: 0 12px 25px rgba(223, 255, 79, 0.3);
+    transform: scale(1.1) translateY(-3px) rotate(-12deg);
+    box-shadow: 0 14px 25px rgba(223, 255, 79, 0.3);
     filter: brightness(1.1);
 }
 
-#send-btn:active { transform: scale(0.9) rotate(-5deg); }
+#send-btn:active { transform: scale(0.95) translateY(1px); }
 
-/* Rodapé do Chat - Layout flexbox horizontal (Side-by-Side) */
+/* Rodape do Chat */
 footer {
     border-top: 1px solid var(--glass-border);
-    background: rgba(15, 23, 42, 0.4);
+    background: rgba(15, 23, 42, 0.3);
     padding: 0.8rem 1.5rem;
+    flex-shrink: 0;
 }
 
 .footer-content {
     display: flex;
-    justify-content: space-between; /* Distribui texto à esquerda e botão à direita */
+    justify-content: space-between;
     align-items: center;
     width: 100%;
 }
@@ -292,7 +306,7 @@ footer p {
     letter-spacing: 1px;
 }
 
-/* Botão de Créditos */
+/* Botao de Creditos */
 .group-members-btn {
     background: rgba(56, 189, 248, 0.1);
     border: 1px solid var(--accent-color);
@@ -312,28 +326,30 @@ footer p {
     box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
 }
 
-/* --- Tela de Integrantes (Modal) --- */
+/* --- Modal de Integrantes --- */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(2, 6, 23, 0.85); /* Fundo escuro semi-transparente */
-    backdrop-filter: blur(15px); /* Efeito de desfoque profissional */
+    background: rgba(2, 6, 23, 0.85);
+    backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     display: flex;
-    justify-content: center; /* Centralização horizontal robusta */
-    align-items: center;     /* Centralização vertical robusta */
+    justify-content: center;
+    align-items: center;
     z-index: 10000;
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-overlay.active {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
 }
 
 .modal-content {
@@ -384,7 +400,6 @@ footer p {
     border-radius: 2px;
 }
 
-/* Lista de Integrantes com Animação em Cascata */
 .member-list {
     list-style: none;
 }
@@ -409,8 +424,9 @@ footer p {
     transform: translateX(0);
 }
 
-/* --- Painel do Terminal Lateral (RESTAURADO) --- */
-.terminal-btn {
+/* --- Botoes do Header (Terminal + Fullscreen) --- */
+.terminal-btn,
+.fullscreen-btn {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--glass-border);
     color: var(--text-secondary);
@@ -424,7 +440,8 @@ footer p {
     transition: all 0.4s ease;
 }
 
-.terminal-btn:hover {
+.terminal-btn:hover,
+.fullscreen-btn:hover {
     background: rgba(56, 189, 248, 0.1);
     border-color: var(--accent-color);
     color: white;
@@ -439,6 +456,17 @@ footer p {
     box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
 }
 
+.fullscreen-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* --- Painel do Terminal Lateral --- */
 .console-panel {
     position: fixed;
     bottom: 30px;
@@ -456,12 +484,14 @@ footer p {
     overflow: hidden;
     z-index: 2000;
     opacity: 0;
+    pointer-events: none;
     transform: translateY(30px);
 }
 
 .console-panel.active {
     height: 600px;
     opacity: 1;
+    pointer-events: auto;
     transform: translateY(0);
 }
 
@@ -565,7 +595,7 @@ footer p {
     text-transform: uppercase;
 }
 
-/* --- Estilização Dinâmica de Atributos do Jogador --- */
+/* Atributos do Jogador */
 .attr-label {
     font-weight: 700;
     padding: 2px 6px;
@@ -577,41 +607,12 @@ footer p {
     letter-spacing: 0.5px;
 }
 
-.attr-rank {
-    background: rgba(255, 215, 0, 0.1);
-    color: #ffd700;
-    border: 1px solid rgba(255, 215, 0, 0.2);
-}
-
-.attr-country {
-    background: rgba(56, 189, 248, 0.1);
-    color: #38bdf8;
-    border: 1px solid rgba(56, 189, 248, 0.2);
-}
-
-.attr-age {
-    background: rgba(251, 146, 60, 0.1);
-    color: #fb923c;
-    border: 1px solid rgba(251, 146, 60, 0.2);
-}
-
-.attr-style {
-    background: rgba(192, 132, 252, 0.1);
-    color: #c084fc;
-    border: 1px solid rgba(192, 132, 252, 0.2);
-}
-
-.attr-titles {
-    background: rgba(74, 222, 128, 0.1);
-    color: #4ade80;
-    border: 1px solid rgba(74, 222, 128, 0.2);
-}
-
-.attr-fact {
-    background: rgba(244, 114, 182, 0.1);
-    color: #f472b6;
-    border: 1px solid rgba(244, 114, 182, 0.2);
-}
+.attr-rank { background: rgba(255, 215, 0, 0.1); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.2); }
+.attr-country { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); }
+.attr-age { background: rgba(251, 146, 60, 0.1); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.2); }
+.attr-style { background: rgba(192, 132, 252, 0.1); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.2); }
+.attr-titles { background: rgba(74, 222, 128, 0.1); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.2); }
+.attr-fact { background: rgba(244, 114, 182, 0.1); color: #f472b6; border: 1px solid rgba(244, 114, 182, 0.2); }
 
 .player-name {
     font-size: 1.1rem;
@@ -622,7 +623,7 @@ footer p {
     margin-bottom: 8px;
 }
 
-/* --- Estilo para Emojis de Bandeira (Garante renderização correta) --- */
+/* Emojis de Bandeira */
 .flag-emoji {
     font-family: "Segoe UI Emoji", "Apple Color Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Android Emoji", sans-serif !important;
     font-size: 1.4rem !important;
@@ -635,7 +636,7 @@ footer p {
     font-variant-east-asian: normal;
 }
 
-/* --- Pipeline Visual de Processamento (Apresentação) --- */
+/* --- Pipeline Visual de Processamento --- */
 .pipeline-welcome {
     display: flex;
     flex-direction: column;
@@ -679,25 +680,10 @@ footer p {
     transition: all 0.3s ease;
 }
 
-.pipeline-step .ps-icon {
-    font-size: 0.9rem;
-    flex-shrink: 0;
-    margin-top: 1px;
-    width: 18px;
-    text-align: center;
-}
+.pipeline-step .ps-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; width: 18px; text-align: center; }
 .pipeline-step .ps-body { flex: 1; min-width: 0; }
-.pipeline-step .ps-name {
-    font-weight: 700;
-    font-size: 0.8rem;
-    color: #e2e8f0;
-    margin-bottom: 2px;
-}
-.pipeline-step .ps-detail {
-    font-size: 0.72rem;
-    color: #94a3b8;
-    word-break: break-word;
-}
+.pipeline-step .ps-name { font-weight: 700; font-size: 0.8rem; color: #e2e8f0; margin-bottom: 2px; }
+.pipeline-step .ps-detail { font-size: 0.72rem; color: #94a3b8; word-break: break-word; }
 
 /* Status colors */
 .pipeline-step.ps-success { border-left-color: #4ade80; }
@@ -735,106 +721,85 @@ footer p {
 .pipeline-step.ps-type-response .ps-name { color: #bbf7d0; }
 
 /* Decision tree flowchart */
-.tree-flow {
-    margin-top: 6px;
-    padding: 6px 0;
-}
-.tree-branch {
-    padding: 5px 8px;
-    border-radius: 6px;
-    border-left: 3px solid #334155;
-    background: rgba(15, 23, 42, 0.4);
-    transition: all 0.2s;
-}
-.tree-branch.tb-matched {
-    border-left-color: #4ade80;
-    background: rgba(74, 222, 128, 0.06);
-}
-.tree-branch.tb-missed {
-    border-left-color: #334155;
-    opacity: 0.55;
-}
-.tb-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+.tree-flow { margin-top: 6px; padding: 6px 0; }
+.tree-branch { padding: 5px 8px; border-radius: 6px; border-left: 3px solid #334155; background: rgba(15, 23, 42, 0.3); transition: all 0.2s; }
+.tree-branch.tb-matched { border-left-color: #4ade80; background: rgba(74, 222, 128, 0.06); }
+.tree-branch.tb-missed { border-left-color: #334155; opacity: 0.55; }
+.tb-header { display: flex; align-items: center; gap: 6px; }
 .tb-icon { font-size: 0.8rem; flex-shrink: 0; }
-.tb-name {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #e2e8f0;
-    flex: 1;
-}
-.tb-status {
-    font-size: 0.7rem;
-    font-weight: 700;
-    flex-shrink: 0;
-}
+.tb-name { font-size: 0.72rem; font-weight: 700; color: #e2e8f0; flex: 1; }
+.tb-status { font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
 .tb-yes { color: #4ade80; }
 .tb-no { color: #64748b; }
-.tb-detail {
-    font-size: 0.65rem;
-    color: #94a3b8;
-    margin-top: 2px;
-    padding-left: 22px;
-}
+.tb-detail { font-size: 0.65rem; color: #94a3b8; margin-top: 2px; padding-left: 22px; }
 .tree-branch.tb-matched .tb-detail { color: #bbf7d0; }
-.tb-connector {
-    width: 2px;
-    height: 6px;
-    background: #1e293b;
-    margin: 2px 0 2px 14px;
-}
+.tb-connector { width: 2px; height: 6px; background: #1e293b; margin: 2px 0 2px 14px; }
 
 /* Token pills */
-.token-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 5px;
-}
-.token-pill {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    background: rgba(56, 189, 248, 0.08);
-    border: 1px solid rgba(56, 189, 248, 0.2);
-    border-radius: 6px;
-    padding: 3px 7px;
-    font-size: 0.7rem;
-    gap: 1px;
-}
+.token-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+.token-pill { display: inline-flex; flex-direction: column; align-items: center; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 6px; padding: 3px 7px; font-size: 0.7rem; gap: 1px; }
 .token-pill .tp-word { color: #e2e8f0; font-weight: 600; }
 .token-pill .tp-stem { color: #64748b; font-size: 0.6rem; font-style: italic; }
 
 /* Pipeline connector line */
-.pipe-connector {
-    width: 2px;
-    height: 10px;
-    background: #1e293b;
-    margin: 0 auto 0 18px;
-}
+.pipe-connector { width: 2px; height: 10px; background: #1e293b; margin: 0 auto 0 18px; }
 
 /* Session state badge */
-.session-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: rgba(56, 189, 248, 0.08);
-    border: 1px solid rgba(56, 189, 248, 0.15);
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-size: 0.68rem;
-    color: #94a3b8;
-    margin-top: 4px;
-}
+.session-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.15); border-radius: 6px; padding: 4px 8px; font-size: 0.68rem; color: #94a3b8; margin-top: 4px; }
 .session-badge .sb-val { color: #38bdf8; font-weight: 700; }
 
-/* Responsividade para telas menores */
+/* Responsividade */
 @media (max-width: 600px) {
     .container { width: 100%; height: 100vh; border-radius: 0; }
     .console-panel { width: 100%; bottom: 0; right: 0; border-radius: 20px 20px 0 0; }
     header p { padding-left: 0; text-align: center; }
     .footer-content { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+/* === MODO APRESENTACAO (Fullscreen + Fontes Grandes) === */
+body.presentation-mode .container {
+    max-width: 100%;
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+    background: rgba(15, 23, 42, 0.6);
+}
+
+body.presentation-mode header { padding: 1.8rem 3rem; }
+body.presentation-mode .logo h1 { font-size: 3rem; }
+body.presentation-mode .logo .icon { font-size: 3rem; }
+body.presentation-mode header p { font-size: 1.3rem; padding-left: 70px; }
+body.presentation-mode .bubble { font-size: 1.45rem; line-height: 1.8; padding: 1.4rem 2rem; max-width: 85%; }
+body.presentation-mode .chat-messages { gap: 2rem; }
+body.presentation-mode input[type="text"] { font-size: 1.3rem; padding: 1rem 1.5rem; }
+body.presentation-mode input[type="text"]::placeholder { font-size: 1.2rem; }
+body.presentation-mode #send-btn { width: 62px; height: 62px; }
+body.presentation-mode footer p { font-size: 1rem; }
+body.presentation-mode .group-members-btn { font-size: 0.95rem; padding: 8px 18px; }
+body.presentation-mode .attr-label { font-size: 1rem; }
+body.presentation-mode .player-name { font-size: 1.4rem; }
+body.presentation-mode .msg-highlight { font-size: inherit; }
+body.presentation-mode .flag-emoji { font-size: 1.6rem !important; }
+
+/* Terminal no modo apresentacao */
+body.presentation-mode .console-panel { width: 55%; height: 90vh; max-height: 90vh; bottom: 5vh; right: 2%; border-radius: 16px; }
+body.presentation-mode .console-panel.active { height: 90vh; }
+body.presentation-mode .console-header span { font-size: 1rem; letter-spacing: 4px; }
+body.presentation-mode .pipeline-step .ps-name { font-size: 1.05rem; }
+body.presentation-mode .pipeline-step .ps-detail { font-size: 0.92rem; }
+body.presentation-mode .pipeline-step .ps-icon { font-size: 1.2rem; }
+body.presentation-mode .token-pill { font-size: 0.9rem; padding: 4px 10px; }
+body.presentation-mode .token-pill .tp-stem { font-size: 0.78rem; }
+body.presentation-mode .session-badge { font-size: 0.85rem; }
+body.presentation-mode .tree-branch .tb-name { font-size: 0.92rem; }
+body.presentation-mode .tree-branch .tb-detail { font-size: 0.82rem; }
+body.presentation-mode .pb-label { font-size: 0.82rem; }
+
+/* Botao de apresentacao ativo */
+body.presentation-mode .fullscreen-btn {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
 }
