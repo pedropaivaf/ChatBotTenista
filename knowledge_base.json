@@ -127,7 +127,7 @@
     },
     {
       "tag": "grand_slam",
-      "patterns": ["O que é um Grand Slam?", "Quais são os principais torneios?", "Quais torneios formam o Grand Slam?", "Australian Open", "Roland Garros", "Wimbledon", "US Open", "torneios mais importantes"],
+      "patterns": ["O que é um Grand Slam?", "Quais são os principais torneios?", "Quais torneios formam o Grand Slam?", "Australian Open", "Roland Garros", "Wimbledon", "US Open", "torneios mais importantes", "torneios de tenis", "quais torneios existem", "listar torneios", "todos os torneios", "quais os torneios", "fale sobre os torneios", "principais torneios de tenis", "torneios do circuito", "torneios"],
       "responses": [
         "O Grand Slam é o ápice do tênis e consiste nos quatro maiores torneios: Australian Open (janeiro), Roland Garros (maio/junho), Wimbledon (julho) e US Open (agosto/setembro)."
       ],

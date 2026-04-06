@@ -58,6 +58,14 @@ OFF_TOPIC_KEYWORDS = [
     "religião", "religiao", "igreja",
 ]
 
+# Stop stems portugueses para filtrar do intent matching (evita falsos positivos)
+PORTUGUESE_STOP_STEMS = {
+    "de", "do", "da", "dos", "das", "o", "a", "os", "as",
+    "um", "uma", "uns", "e", "ou", "em", "no", "na", "nos", "nas",
+    "por", "para", "com", "se", "ao", "que", "é",
+    "quai", "qual", "como", "?", "!", ".",
+}
+
 # Função que carrega a base de conhecimento (Intents) do arquivo JSON
 def load_knowledge_base(): # Define a função de carregamento
     # Abre o arquivo com encoding utf-8 para suportar acentos e caracteres especiais
@@ -373,12 +381,16 @@ def predict(): # Função principal de "predição" ou resposta
     best_match_tag = None # Variável para guardar a melhor etiqueta (tag)
     max_match_score = 0 # Variável para guardar a maior nota de similaridade
 
+    meaningful_msg = [s for s in msg_stems if s not in PORTUGUESE_STOP_STEMS]
     for intent in kb["intents"]: # Percorre cada intenção cadastrada
         for pattern in intent["patterns"]: # Percorre cada frase de exemplo do padrão
             pattern_tokens = tokenize(pattern.lower()) # Tokeniza o padrão
             pattern_stems = [stem(w) for w in pattern_tokens] # Gera radicais do padrão
-            matches = sum(1 for s in msg_stems if s in pattern_stems) # Conta coincidências
-            score = (matches / len(pattern_stems)) * 100 if pattern_stems else 0 # Calcula % de match
+            meaningful_pattern = [s for s in pattern_stems if s not in PORTUGUESE_STOP_STEMS]
+            if not meaningful_pattern: # Pula patterns sem stems significativos
+                continue
+            matches = sum(1 for s in meaningful_msg if s in meaningful_pattern) # Conta coincidências significativas
+            score = (matches / len(meaningful_pattern)) * 100 # Calcula % de match
 
             if score > max_match_score: # Se este match for o melhor até agora...
                 max_match_score = score # Atualiza a nota máxima
@@ -393,10 +405,15 @@ def predict(): # Função principal de "predição" ou resposta
 
     # Se a similaridade for convincente (>= 50%)
     if max_match_score >= 50:
+        # Limiar adaptativo: com contexto ativo, exige 65% para sobrescrever
+        effective_threshold = 65 if pending_ctx else 50
         # Se contexto ativo e intent é genérico → não usar, preservar contexto
         if pending_ctx and best_match_tag in CONTEXT_OVERRIDE_TAGS:
             add_log(f"[GUARD] Intent '{best_match_tag}' bloqueado — contexto ativo (pending={pending_ctx})", "DEBUG")
             add_step("Base de Conhecimento", "skipped", f"Intent '{best_match_tag}' bloqueado por contexto ativo")
+        elif pending_ctx and max_match_score < effective_threshold:
+            add_log(f"[GUARD] Intent '{best_match_tag}' ({max_match_score:.0f}%) abaixo do limiar contextual (65%)", "DEBUG")
+            add_step("Base de Conhecimento", "skipped", f"Intent '{best_match_tag}' ({max_match_score:.0f}%) abaixo do limiar contextual")
         else:
             add_log(f"Match encontrado! Tag: {best_match_tag} ({max_match_score:.1f}%)", "SUCCESS")
             add_step("Base de Conhecimento", "success", f"Intent: {best_match_tag} ({max_match_score:.0f}%)")
