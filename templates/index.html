@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Garante que o site seja responsivo em celulares -->
     <title>Tennis AI | Seu Assistente de Tênis</title> <!-- Título que aparece na aba do navegador -->
     
-    <!-- Importa o arquivo CSS de estilos que criamos na pasta static/css -->
+    <!-- Importa o arquivo CSS de estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
-    <!-- Importa a fonte 'Inter' do Google Fonts para um visual moderno e profissional -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Fonte Mono para o Terminal -->
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Fontes: Plus Jakarta Sans (body) + JetBrains Mono (terminal) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container"> <!-- Contêiner principal que centraliza todo o conteúdo do chat -->

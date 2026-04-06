@@ -111,7 +111,10 @@ CURIOSITY_KEYWORDS_CTX = ["curiosidade", "curiosidades", "fato curioso", "fatos"
 PRONOUN_KEYWORDS = ["sobre ele", "sobre ela", "fala dele", "fala dela",
                     "e ele", "e ela", "desse jogador", "dessa jogadora",
                     "desse tenista", "dessa tenista", "conta dele", "conta dela",
-                    "mais dele", "mais dela"]
+                    "mais dele", "mais dela",
+                    "pais dele", "pais dela", "país dele", "país dela",
+                    "idade dele", "idade dela",
+                    "estilo dele", "estilo dela"]
 
 
 # Função interna que gera uma reação empática sobre um atributo técnico do jogador em foco
@@ -387,6 +390,11 @@ class DecisionTree:
                 add_log(f"[CONTEXTO] Torneio '{target_t}' detectado no contexto!", "SUCCESS")
                 result = self.engine.get_last_champions(tournament=target_t)
                 return (result, "tournament", "showed_champions", [], trace)
+            elif any(kw in msg_lower for kw in TOURNAMENT_KEYWORDS):
+                trace.append({"branch": "Torneio (genérico)", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios"})
+                add_log("[CONTEXTO] Pedido genérico de torneios detectado!", "SUCCESS")
+                result = self.engine.get_last_champions()
+                return (result, "tournament", "showed_champions", [], trace)
             else:
                 trace.append({"branch": "Torneio", "icon": "🏆", "matched": False, "detail": "Nenhum Grand Slam na mensagem"})
 
@@ -488,6 +496,13 @@ class DecisionTree:
                     trace.append({"branch": "Troca → Curiosidade", "icon": "💡", "matched": True, "detail": "Pedido de curiosidade durante player_detail"})
                     return (curiosity, "trivia", "showed_trivia", [], trace)
 
+            # Sub-branch: Troca para torneio
+            if any(kw in msg_lower for kw in TOURNAMENT_KEYWORDS):
+                trace.append({"branch": "Troca → Torneios", "icon": "🏆", "matched": True, "detail": "Pedido de torneios durante player_detail"})
+                add_log("[CONTEXTO] Troca de tópico: player_detail → torneios", "SUCCESS")
+                result = self.engine.get_last_champions()
+                return (result, "tournament", "showed_champions", [], trace)
+
             # Sub-branch: Continuação genérica ("sim", "conta mais", "quero saber")
             if self._is_continue(msg_lower) and focus:
                 info = self.engine.get_player_info(focus)
@@ -522,6 +537,11 @@ class DecisionTree:
                 add_log(f"[CONTEXTO] Torneio '{target_tournament}' resolvido via open_topic!", "SUCCESS")
                 result = self.engine.get_last_champions(tournament=target_tournament)
                 return (result, "tournament", "showed_champions", [], trace)
+            elif any(kw in msg_lower for kw in TOURNAMENT_KEYWORDS):
+                trace.append({"branch": "Torneios (genérico)", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios em open_topic"})
+                add_log("[CONTEXTO] Pedido genérico de torneios via open_topic!", "SUCCESS")
+                result = self.engine.get_last_champions()
+                return (result, "tournament", "showed_champions", [], trace)
             else:
                 trace.append({"branch": "Torneio (aberto)", "icon": "🏆", "matched": False, "detail": "Nenhum torneio na mensagem"})
 
@@ -542,6 +562,22 @@ class DecisionTree:
                     return (info, "player", "showed_player_from_context", [player], trace)
             else:
                 trace.append({"branch": "Jogador (aberto)", "icon": "👤", "matched": False, "detail": "Nenhum jogador encontrado"})
+
+            # Sub-branch: País/info do focus_player ativo em open_topic
+            if focus:
+                has_country_ot = any(kw in msg_lower for kw in COUNTRY_KEYWORDS_CTX)
+                if has_country_ot:
+                    country_info = self.engine.get_player_country(focus)
+                    if country_info:
+                        trace.append({"branch": "País (open_topic)", "icon": "📍", "matched": True, "detail": f"País de {focus}"})
+                        return (country_info, "player", "showed_player_country", [focus], trace)
+                has_style_ot = any(kw in msg_lower for kw in STYLE_KEYWORDS)
+                has_info_ot = any(kw in msg_lower for kw in PLAYER_INFO_KEYWORDS)
+                if has_style_ot or has_info_ot:
+                    info = self.engine.get_player_info(focus)
+                    if info:
+                        trace.append({"branch": "Info jogador (open_topic)", "icon": "📋", "matched": True, "detail": f"Info de {focus}"})
+                        return (info, "player", "showed_player_info", [focus], trace)
 
             # Sub-branch: Ranking pedido em open_topic
             if any(kw in msg_lower for kw in RANKING_KEYWORDS_CTX):
