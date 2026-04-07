@@ -300,6 +300,18 @@
       ],
       "follow_up": "Para você, o Federer é o maior de todos os tempos ou você prefere o estilo do Nadal?"
     },
+{
+  "tag": "quantidade_grand_slams",
+  "patterns": [
+    "quantos grand slams tem no ano",
+    "quais são os grand slams",
+    "quantos majors existem",
+    "lista de grand slams"
+  ],
+  "responses": [
+    "Existem **4 torneios de Grand Slam** por ano: Australian Open (Austrália), Roland Garros (França), Wimbledon (Inglaterra) e US Open (EUA). Eles são os eventos mais importantes do tênis! 🎾"
+  ]
+},
     {
       "tag": "nadal",
       "patterns": [
@@ -314,7 +326,7 @@
       ],
       "follow_up": "Você acha que alguém algum dia conseguirá superar o recorde de 14 títulos dele em um único Grand Slam?"
     },
-    {
+      {
       "tag": "djokovic",
       "patterns": [
         "Quem é Novak Djokovic?",
@@ -607,6 +619,18 @@
         "A WTA (Women's Tennis Association) é a organização que rege o tênis profissional feminino, fundada em 1973 por Billie Jean King. Assim como a ATP para os homens, a WTA organiza o calendário de torneios, o sistema de ranking e os prêmios.\n\nAtualmente, as maiores estrelas incluem Aryna Sabalenka, Iga Swiatek, Coco Gauff e Jessica Pegula. O circuito feminino tem os mesmos Grand Slams, além de seus próprios Masters (WTA 1000) e WTA Finals."
       ],
       "follow_up": "Quer ver o ranking WTA ou saber sobre alguma jogadora?"
+    },
+    {
+      "tag": "quantidade_masters_1000",
+      "patterns": [
+        "quantos masters tem no ano",
+        "quantidade de masters anual",
+        "quais são os masters que tem no ano",
+        "lista de masters 1000"
+      ],
+      "responses": [
+        "Existem 9 torneios de nível Masters 1000 durante o ano. São eles: Indian Wells (EUA), Miami (EUA), Monte Carlo (Mônaco), Madri (Espanha), Roma (Itália), Canadá (Toronto/Montreal), Cincinnati (EUA), Xangai (China) e Paris (França). 🎾"
+      ]
     },
     {
       "tag": "atp_explicacao",
