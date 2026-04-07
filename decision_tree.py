@@ -130,7 +130,10 @@ PLAYER_INFO_KEYWORDS = ["idade", "quantos anos", "titulo", "títulos", "titulos"
 # Keywords para respostas específicas (retorna só o campo pedido, não a ficha toda)
 HEIGHT_KEYWORDS = ["altura", "alto", "mede", "qual a altura", "quanto mede", "tamanho"]
 AGE_KEYWORDS = ["idade", "quantos anos", "qual a idade"]
-TITLES_COUNT_KEYWORDS = ["quantos titulos", "quantos títulos", "quantos titulo"]
+TITLES_COUNT_KEYWORDS = ["quantos titulos", "quantos títulos", "quantos titulo",
+                         "quais os títulos", "quais os titulos", "quais títulos",
+                         "quais titulos", "títulos dele", "titulos dele",
+                         "títulos dela", "titulos dela", "lista de títulos"]
 
 # Elogios genéricos que devem ser reconhecidos no contexto de player_detail
 GENERIC_PRAISE = [

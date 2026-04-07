@@ -483,7 +483,8 @@ Em `engine.py`:
 ### Altura e Titulos para 200 jogadores (CONCLUIDO)
 - Campo `height` adicionado a todos os 100 ATP + 100 WTA do ranking.
 - Campo `titles_count` com numero de titulos profissionais.
-- Respostas especificas por campo: "qual a altura dele?" retorna so a altura, nao a ficha inteira.
+- Campo `titles` com texto descritivo detalhado (131 jogadores com titulos nomeados).
+- Respostas especificas por campo: "qual a altura dele?", "quais os titulos dele?", "quantos anos?" retorna so o campo pedido.
 - `HEIGHT_KEYWORDS`, `AGE_KEYWORDS`, `TITLES_COUNT_KEYWORDS` em `decision_tree.py`.
 - Metodo `get_player_field(name, field)` em `engine.py`.
 
