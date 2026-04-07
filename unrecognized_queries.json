@@ -70,5 +70,21 @@
     {
         "query": "estatisticas",
         "timestamp": "2026-04-07 11:50:42"
+    },
+    {
+        "query": "lesao",
+        "timestamp": "2026-04-07 14:22:30"
+    },
+    {
+        "query": "jogadores",
+        "timestamp": "2026-04-07 14:39:11"
+    },
+    {
+        "query": "Jogadores",
+        "timestamp": "2026-04-07 14:39:20"
+    },
+    {
+        "query": "me fale de todos",
+        "timestamp": "2026-04-07 14:39:38"
     }
 ]
