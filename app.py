@@ -457,18 +457,50 @@ def predict(): # Função principal de "predição" ou resposta
             add_log(f"Jogador detectado via fuzzy matching: {target_player}", "SUCCESS")
 
     if target_player:
-        add_log(f"Perfil de jogador detectado com NLTK: {target_player}", "SUCCESS")
-        add_step("Motor de Dados", "success", f"Jogador identificado: {target_player}")
+        add_log(f"Jogador detectado: {target_player}", "SUCCESS")
+        
+        # --- 1. TESTA SE QUER O PISO (PRIORIDADE) ---
+        surface_keywords = ["piso", "superfície", "superficie", "quadra", "grama", "saibro", "terra", "rápida", "duro"]
+        if any(w in msg_lower for w in surface_keywords):
+            add_log(f"Requisição de PISO para {target_player}", "INFO")
+            result = tennis_engine.get_player_surface_info(target_player)
+            return respond(result, topic="player", bot_action="showed_player_surface",
+                           mentioned_players=[target_player])
 
-        country_keywords = ["país", "pais", "nacionalidade", "onde nasceu", "onde é", "da onde", "de onde"]
-        country_stems = [stem(w) for w in country_keywords]
-
-        if any(token in country_stems for token in msg_stems):
-            add_log(f"Contexto de 'Nacionalidade' para {target_player} detectado.", "INFO")
+        # --- 2. TESTA SE QUER O PAÍS ---
+        country_keywords = ["país", "pais", "nacionalidade", "onde nasceu"]
+        if any(w in msg_lower for w in country_keywords):
             result = tennis_engine.get_player_country(target_player)
             return respond(result, topic="player", bot_action="showed_player_country",
                            mentioned_players=[target_player])
 
+        # --- 3. SE NÃO FOR NADA ESPECÍFICO, MOSTRA A FICHA COMPLETA ---
+        player_info = tennis_engine.get_player_info(target_player)
+        return respond(player_info, topic="player", bot_action="showed_player_info",
+                       mentioned_players=[target_player])
+
+    if target_player:
+        add_log(f"Perfil de jogador detectado: {target_player}", "SUCCESS")
+        
+        # --- NOVO BLOCO: Verificação de Piso/Superfície ---
+        surface_keywords = ["piso", "superfície", "superficie", "quadra", "grama", "saibro", "terra", "rápida"]
+        surface_stems = [stem(w) for w in surface_keywords]
+        
+        if any(token in surface_stems for token in msg_stems):
+            add_log(f"Contexto de 'Piso Favorito' para {target_player} detectado.", "INFO")
+            # Aqui você deve ter um método no seu engine que retorne essa info específica
+            result = tennis_engine.get_player_surface_preference(target_player) 
+            return respond(result, topic="player", bot_action="showed_player_surface",
+                           mentioned_players=[target_player])
+        # ------------------------------------------------
+        
+        # Se não perguntou sobre piso nem país, aí sim mostra o info geral
+        player_info = tennis_engine.get_player_info(target_player)
+        # ... resto do código
+    
+    
+    
+    
         player_info = tennis_engine.get_player_info(target_player)
         if player_info:
             return respond(player_info, topic="player", bot_action="showed_player_info",
