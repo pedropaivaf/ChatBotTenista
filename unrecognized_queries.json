@@ -50,5 +50,25 @@
     {
         "query": "ol[a",
         "timestamp": "2026-04-07 10:59:47"
+    },
+    {
+        "query": "jogadores",
+        "timestamp": "2026-04-07 11:47:05"
+    },
+    {
+        "query": "quadras",
+        "timestamp": "2026-04-07 11:49:26"
+    },
+    {
+        "query": "quaisa sao as quadras do tenis?",
+        "timestamp": "2026-04-07 11:49:31"
+    },
+    {
+        "query": "quais sao as quadras do tenis?",
+        "timestamp": "2026-04-07 11:49:41"
+    },
+    {
+        "query": "estatisticas",
+        "timestamp": "2026-04-07 11:50:42"
     }
 ]
