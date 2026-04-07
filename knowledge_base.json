@@ -621,6 +621,20 @@
       "follow_up": "Quer ver o ranking WTA ou saber sobre alguma jogadora?"
     },
     {
+      "tag": "quantidade_ATP_ano",
+      "patterns": [
+        "quantos ATP 500 tem no ano",
+        "quantos ATP 500 tem",
+        "quantidade de ATP 500 anual",
+        "lista ATP 500",
+        "quais sao os atp 500"
+      ],
+      "responses": [
+        "Atualmente, o calendário conta com **16 torneios de nível ATP 500**. Os principais são:\n\n🎾 Rio Open (Brasil, Saibro)\n🎾 Rotterdam (Holanda, Hard)\n🎾 Dubai (EAU, Hard)\n🎾 Acapulco (México, Hard)\n🎾 Barcelona (Espanha, Saibro)\n🎾 Munique (Alemanha, Saibro)\n🎾 Queen's Club (Londres, Grama)\n🎾 Halle (Alemanha, Grama)\n🎾 Hamburgo (Alemanha, Saibro)\n🎾 Washington (EUA, Hard)\n🎾 Pequim (China, Hard)\n🎾 Tóquio (Japão, Hard)\n🎾 Basileia (Suíça, Hard)\n🎾 Viena (Áustria, Hard)\n\nEsses torneios são fundamentais para quem busca subir no ranking antes dos Masters!"
+      ]
+    },
+    
+    {
       "tag": "quantidade_masters_1000",
       "patterns": [
         "quantos masters tem no ano",
