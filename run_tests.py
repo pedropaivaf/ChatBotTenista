@@ -1,7 +1,9 @@
 """
 Bateria EXAUSTIVA de testes do chatbot Tennis AI.
-245 cenários cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
-ATP 500, último ganhador, países, edge cases, WTA, off-topic, typos, fluxos de 20 turnos.
+297 cenários em 21 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
+ATP 500, último ganhador, países, edge cases, WTA, off-topic, typos, fluxos de 20 turnos,
+campos específicos (altura/títulos/idade), listagem de torneios, recordes, GOAT, lendas,
+posição no ranking, next gen, regras detalhadas.
 """
 import sys, re
 sys.stdout.reconfigure(encoding='utf-8')
@@ -523,6 +525,161 @@ expect('17.09', 'último vencedor?', 'win9', ['Dubai', 'Sinner'])
 # Após Wimbledon (Grand Slam) via detalhes
 chat('detalhes do wimbledon', 'win10')
 expect('17.10', 'quem ganhou?', 'win10', ['Wimbledon'])
+
+
+# =====================================================================
+# BATERIA 18: Listagem de torneios (8 testes)
+# =====================================================================
+print('\n--- BATERIA 18: Listagem de torneios ---')
+
+# Sem contexto — pipeline direto
+expect('18.01', 'quais são os torneios de tênis?', 'list1', ['Grand Slams', 'Masters 1000', 'ATP 500'])
+expect('18.02', 'listar torneios', 'list2', ['Grand Slams', 'Masters 1000', 'ATP 500'])
+expect('18.03', 'todos os torneios', 'list3', ['Grand Slams', 'Masters 1000'])
+
+# Em contexto player_detail
+chat('João Fonseca', 'list4')
+expect('18.04', 'quais são os torneios?', 'list4', ['Grand Slams', 'Masters 1000'])
+
+# Em contexto open_topic
+chat('uma curiosidade', 'list5')
+expect('18.05', 'quais os campeonatos de tenis?', 'list5', ['Grand Slams', 'Masters 1000'])
+
+# Fluxo: lista → escolher torneio → detalhes
+expect('18.06', 'quais são os torneios?', 'list6', ['Grand Slams', 'Masters 1000'])
+expect('18.07', 'rio open', 'list6', ['Rio Open', 'ATP 500', 'Fonseca'])
+
+# "quem ganhou" NÃO mostra lista (preserva comportamento de campeões)
+expect('18.08', 'quem ganhou os torneios', 'list8', ['Campeões'], ['Calendário'])
+
+
+# =====================================================================
+# BATERIA 19: Respostas específicas por campo (altura, títulos, idade) (12 testes)
+# =====================================================================
+print('\n--- BATERIA 19: Respostas específicas por campo ---')
+
+# Altura no contexto player_detail
+chat('Carlos Alcaraz', 'field1')
+expect('19.01', 'qual a altura dele?', 'field1', ['1,83m', 'Alcaraz'], ['Estilo', 'Curiosidade'])
+
+chat('Sabalenka', 'field2')
+expect('19.02', 'qual a altura dela?', 'field2', ['1,82m', 'Sabalenka'], ['Estilo'])
+
+# Idade específica
+chat('João Fonseca', 'field3')
+expect('19.03', 'quantos anos ele tem?', 'field3', ['19 anos', 'Fonseca'], ['Estilo'])
+
+# Títulos específicos
+chat('Djokovic', 'field4')
+expect('19.04', 'quantos títulos ele tem?', 'field4', ['99', 'Djokovic'], ['Estilo'])
+
+# Altura sem pronome (direto no contexto)
+chat('Sinner', 'field5')
+expect('19.05', 'altura', 'field5', ['1,92m', 'Sinner'], ['Estilo'])
+
+# Ficha completa mostra altura
+expect('19.06', 'Medvedev', 'field6', ['1,98m', 'Medvedev', 'Altura'])
+
+# Fluxo: jogador → altura → títulos → outro jogador
+chat('Alcaraz', 'field7')
+expect('19.07', 'qual a altura?', 'field7', ['1,83m'])
+expect('19.08', 'quantos títulos?', 'field7', ['16'])
+
+# Jogador WTA
+chat('Iga Swiatek', 'field9')
+expect('19.09', 'qual a altura dela?', 'field9', ['1,76m', 'Swiatek'])
+expect('19.10', 'quantos títulos?', 'field9', ['22'])
+
+# Sem contexto: "qual a altura do Federer" NÃO funciona (não está no ranking)
+# Teste com jogador no ranking
+expect('19.11', 'qual a altura do Hubert Hurkacz', 'field11', ['1,96m', 'Hurkacz'])
+
+# Idade via pronome
+chat('Ben Shelton', 'field12')
+expect('19.12', 'idade dele', 'field12', ['Shelton'])
+
+
+# =====================================================================
+# BATERIA 20: Recordes, GOAT, Lendas, Regras, WTA (20 testes)
+# =====================================================================
+print('\n--- BATERIA 20: Cobertura ampliada de conhecimento ---')
+
+# Recordes (usando patterns que não colidem com winner_stems)
+expect('20.01', 'recordes de títulos do tênis', 'kb1', ['Djokovic', 'Navratilova'])
+expect('20.02', 'quem é o recordista de slams', 'kb2', ['Djokovic', '24'])
+expect('20.03', 'recordes do tênis', 'kb3', ['Djokovic', 'Grand Slams'])
+expect('20.04', 'partida mais longa da história', 'kb4', ['Isner', 'Mahut', '11'])
+expect('20.05', 'recorde de velocidade de saque', 'kb5', ['263'])
+
+# GOAT debate
+expect('20.06', 'quem é o goat do tênis', 'kb6', ['Djokovic', 'Nadal', 'Federer'])
+expect('20.07', 'debate goat', 'kb7', ['Djokovic', 'Nadal', 'Federer'])
+expect('20.08', 'quem é o melhor de todos os tempos', 'kb8', ['Djokovic', 'Nadal', 'Federer'])
+
+# Lendas
+expect('20.09', 'Roger Federer', 'kb9', ['Federer', '1,85m'])
+expect('20.10', 'Serena Williams', 'kb10', ['Serena', '23'])
+expect('20.11', 'lendas do tênis', 'kb11', ['Djokovic', 'Nadal', 'Federer', 'Serena'])
+
+# Regras e termos
+expect('20.12', 'o que é tiebreak', 'kb12', ['tiebreak', '7 pontos'])
+expect('20.13', 'termos do tênis', 'kb13', ['Ace', 'Deuce', 'Break'])
+expect('20.14', 'o que é golden slam', 'kb14', ['Steffi Graf', '1988'])
+
+# WTA e ATP
+expect('20.15', 'o que é WTA', 'kb15', ['WTA', 'feminino'])
+expect('20.16', 'como funciona o ranking ATP', 'kb16', ['ATP', 'pontos'])
+
+# Next Gen
+expect('20.17', 'next gen', 'kb17', ['Alcaraz', 'Sinner', 'Fonseca'])
+
+# Superfícies e especialistas
+expect('20.18', 'especialistas por superfície', 'kb18', ['Nadal', 'Saibro'])
+
+# Dicas
+expect('20.19', 'como começar a jogar tênis', 'kb19', ['raquete'])
+
+# Fluxo: recordes → lenda → detalhes
+expect('20.20', 'recordes históricos do tênis', 'kb20', ['Djokovic'])
+
+
+# =====================================================================
+# BATERIA 21: Posição ranking + recordes de títulos (12 testes)
+# =====================================================================
+print('\n--- BATERIA 21: Posição no ranking + recordes ---')
+
+# Posição específica sem contexto
+expect('21.01', 'quem é o número 20 do mundo', 'pos1', ['20º'])
+expect('21.02', 'quem é o top 5 do ranking', 'pos2', ['5º'])
+expect('21.03', 'atual número 1 do mundo', 'pos3', ['1º', 'Alcaraz'])
+
+# Posição WTA
+expect('21.04', 'quem é a número 1 do wta', 'pos4', ['1º', 'WTA', 'Sabalenka'])
+
+# Posição em contexto (após ver jogador)
+chat('João Fonseca', 'pos5')
+expect('21.05', 'quem é o atual 20 do mundo', 'pos5', ['20º'])
+
+# Recordes NÃO caem no bloco de campeões
+expect('21.06', 'quem ganhou mais títulos no tênis', 'pos6', ['Djokovic', 'Navratilova'])
+expect('21.07', 'qual jogador tem mais títulos', 'pos7', ['Djokovic', 'Navratilova'])
+
+# Títulos no contexto de jogador (campo específico preservado)
+chat('Alcaraz', 'pos8')
+expect('21.08', 'quantos títulos ele tem', 'pos8', ['16', 'Alcaraz'])
+
+# Posição em contexto player_detail NÃO responde sobre o foco
+chat('Sinner', 'pos9')
+expect('21.09', 'quem é o número 50 do ranking', 'pos9', ['50º'])
+
+# Top com circuit
+expect('21.10', 'número 3 do ranking wta', 'pos10', ['3º', 'WTA'])
+
+# Recorde "mais grand slams" não cai em campeões
+expect('21.11', 'quem tem mais grand slams', 'pos11', ['Djokovic', '24'])
+
+# Posição alta
+expect('21.12', 'quem é o número 100 do ranking atp', 'pos12', ['100º'])
 
 
 # =====================================================================

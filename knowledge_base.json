@@ -2,19 +2,62 @@
   "intents": [
     {
       "tag": "saudacao",
-      "patterns": ["Olá", "Oi", "Oi tudo bem?", "Tudo bem?", "Ei", "Opa", "Bom dia", "Boa tarde", "Boa noite", "Tem alguém aí?", "Blz", "Fala ai", "e aí", "eae", "salve", "fala aí", "beleza"],
-      "responses": ["Olá! Sou seu assistente de Tênis. Como posso ajudar você hoje?", "Oi! Vamos falar sobre Tênis? O que você quer saber?"],
+      "patterns": [
+        "Olá",
+        "Oi",
+        "Oi tudo bem?",
+        "Tudo bem?",
+        "Ei",
+        "Opa",
+        "Bom dia",
+        "Boa tarde",
+        "Boa noite",
+        "Tem alguém aí?",
+        "Blz",
+        "Fala ai",
+        "e aí",
+        "eae",
+        "salve",
+        "fala aí",
+        "beleza"
+      ],
+      "responses": [
+        "Olá! Sou seu assistente de Tênis. Como posso ajudar você hoje?",
+        "Oi! Vamos falar sobre Tênis? O que você quer saber?"
+      ],
       "follow_up": "Você tem algum jogador favorito ou prefere saber sobre os torneios?"
     },
     {
       "tag": "despedida",
-      "patterns": ["Tchau", "Até logo", "Adeus", "Obrigado", "Valeu", "Fui", "Encerrar"],
-      "responses": ["Até mais! Espero ter ajudado você a conhecer mais sobre Tênis.", "Tchau! Volte sempre que tiver dúvidas sobre o circuito."],
+      "patterns": [
+        "Tchau",
+        "Até logo",
+        "Adeus",
+        "Obrigado",
+        "Valeu",
+        "Fui",
+        "Encerrar"
+      ],
+      "responses": [
+        "Até mais! Espero ter ajudado você a conhecer mais sobre Tênis.",
+        "Tchau! Volte sempre que tiver dúvidas sobre o circuito."
+      ],
       "follow_up": ""
     },
     {
       "tag": "feedback_positivo",
-      "patterns": ["que legal", "muito bom", "interessante", "incrivel", "show", "bacana", "gostei", "top", "verdade", "entendi"],
+      "patterns": [
+        "que legal",
+        "muito bom",
+        "interessante",
+        "incrivel",
+        "show",
+        "bacana",
+        "gostei",
+        "top",
+        "verdade",
+        "entendi"
+      ],
       "responses": [
         "Que bom que você gostou! Fico muito feliz em compartilhar isso com você! ✨",
         "Fico empolgado quando encontro alguém que curte esses detalhes do esporte! 🎾",
@@ -24,7 +67,15 @@
     },
     {
       "tag": "confirmacao_positiva",
-      "patterns": ["Sim", "Claro", "Com certeza", "Sim eu sabia", "Quero saber", "Pode ser", "Concordo"],
+      "patterns": [
+        "Sim",
+        "Claro",
+        "Com certeza",
+        "Sim eu sabia",
+        "Quero saber",
+        "Pode ser",
+        "Concordo"
+      ],
       "responses": [
         "Sensacional! É isso aí! 🎯",
         "Perfeito! Você entende muito do assunto! 👏",
@@ -34,7 +85,15 @@
     },
     {
       "tag": "confirmacao_negativa",
-      "patterns": ["Não", "Nanani nanão", "Não sabia", "Nunca vi", "Não concordo", "Discordo", "Não quero"],
+      "patterns": [
+        "Não",
+        "Nanani nanão",
+        "Não sabia",
+        "Nunca vi",
+        "Não concordo",
+        "Discordo",
+        "Não quero"
+      ],
       "responses": [
         "Sem problemas! Relaxa, o mundo do tênis tem muitos segredos guardados. 😉",
         "Entendo perfeitamente, é muita informação para decorar de uma vez!",
@@ -44,7 +103,12 @@
     },
     {
       "tag": "cor_bolinha",
-      "patterns": ["Qual a cor da bolinha?", "cor da bola de tenis", "por que a bola é amarela?", "bola de tenis amarela"],
+      "patterns": [
+        "Qual a cor da bolinha?",
+        "cor da bola de tenis",
+        "por que a bola é amarela?",
+        "bola de tenis amarela"
+      ],
       "responses": [
         "A cor oficial das bolas de tênis em torneios é o 'amarelo óptico'. Essa cor foi adotada em 1972 porque pesquisas mostraram que ela era mais visível para os telespectadores na TV colorida."
       ],
@@ -52,7 +116,14 @@
     },
     {
       "tag": "regras_basicas",
-      "patterns": ["Quais as regras do tenis?", "como funciona a pontuação?", "o que é um ace?", "o que é um let?", "regras basicas", "como ganha um set?"],
+      "patterns": [
+        "Quais as regras do tenis?",
+        "como funciona a pontuação?",
+        "o que é um ace?",
+        "o que é um let?",
+        "regras basicas",
+        "como ganha um set?"
+      ],
       "responses": [
         "No tênis, a pontuação segue a lógica: 15, 30, 40 e Game. Se empatar em 40-40, temos o 'Deuce' (Iguais). Um set é vencido por quem chegar a 6 games primeiro (com 2 de vantagem). Se empatar em 6-6, temos o Tie-break!"
       ],
@@ -60,7 +131,14 @@
     },
     {
       "tag": "superficies",
-      "patterns": ["Quais os tipos de quadra?", "saibro vs grama", "piso duro", "tipos de piso no tenis", "quadra de terra", "grama de wimbledon"],
+      "patterns": [
+        "Quais os tipos de quadra?",
+        "saibro vs grama",
+        "piso duro",
+        "tipos de piso no tenis",
+        "quadra de terra",
+        "grama de wimbledon"
+      ],
       "responses": [
         "Existem três superfícies principais: o Saibro (terra batida, mais lenta), a Grama (mais rápida e baixa) e o Piso Duro (asfáltico ou acrílico, mais equilibrado). Cada jogador costuma ter preferência por um estilo diferente."
       ],
@@ -68,7 +146,14 @@
     },
     {
       "tag": "reacao_saibro",
-      "patterns": ["saibro", "prefiro saibro", "gosto de saibro", "terra batida", "curto saibro", "saibro é melhor"],
+      "patterns": [
+        "saibro",
+        "prefiro saibro",
+        "gosto de saibro",
+        "terra batida",
+        "curto saibro",
+        "saibro é melhor"
+      ],
       "responses": [
         "O saibro é fantástico! Exige muita resistência física e estratégia. É o reino de jogadores como Rafael Nadal e Gustavo Kuerten.",
         "Escolha clássica! No saibro a bola quica mais alto e o jogo é mais demorado, o que permite ralis inacreditáveis."
@@ -77,7 +162,14 @@
     },
     {
       "tag": "reacao_grama",
-      "patterns": ["grama", "prefiro grama", "gosto de grama", "velocidade da grama", "curto grama", "grama é melhor"],
+      "patterns": [
+        "grama",
+        "prefiro grama",
+        "gosto de grama",
+        "velocidade da grama",
+        "curto grama",
+        "grama é melhor"
+      ],
       "responses": [
         "A grama é pura tradição e velocidade! O jogo fica muito mais dinâmico e o saque ganha uma importância absurda.",
         "Sensacional! Wimbledon na grama sagrada é um dos espetáculos mais bonitos do esporte. O jogo é rápido e elegante."
@@ -86,7 +178,14 @@
     },
     {
       "tag": "reacao_piso_duro",
-      "patterns": ["piso duro", "prefiro piso duro", "quadra rapida", "asfaltico", "acrilico", "hard court"],
+      "patterns": [
+        "piso duro",
+        "prefiro piso duro",
+        "quadra rapida",
+        "asfaltico",
+        "acrilico",
+        "hard court"
+      ],
       "responses": [
         "O piso duro é o mais democrático! É a superfície oficial do Australian Open e do US Open, equilibrando bem velocidade e controle.",
         "Boa escolha! Como é o piso mais comum, a maioria dos jogadores modernos treina e se sente à vontade nessas quadras."
@@ -95,7 +194,14 @@
     },
     {
       "tag": "equipamento",
-      "patterns": ["Qual raquete usar?", "tamanho da raquete", "encordoamento", "peso da raquete de tenis", "melhores marcas de raquete", "qual a melhor raquete?"],
+      "patterns": [
+        "Qual raquete usar?",
+        "tamanho da raquete",
+        "encordoamento",
+        "peso da raquete de tenis",
+        "melhores marcas de raquete",
+        "qual a melhor raquete?"
+      ],
       "responses": [
         "A escolha da raquete depende do seu nível. Iniciantes geralmente usam raquetes mais leves e com cabeça maior para facilitar o acerto. Marcas famosas incluem Wilson, Babolat, Head e Yonex."
       ],
@@ -103,7 +209,16 @@
     },
     {
       "tag": "brasil_tenis",
-      "patterns": ["tênis no brasil", "tenistas brasileiros", "legado do Guga", "Gustavo Kuerten no saibro", "Beatriz Haddad Maia biografia", "Bia Haddad resultados", "João Fonseca promessa", "novo Guga brasileiro"],
+      "patterns": [
+        "tênis no brasil",
+        "tenistas brasileiros",
+        "legado do Guga",
+        "Gustavo Kuerten no saibro",
+        "Beatriz Haddad Maia biografia",
+        "Bia Haddad resultados",
+        "João Fonseca promessa",
+        "novo Guga brasileiro"
+      ],
       "responses": [
         "O Brasil vive um momento épico! 🇧🇷 Além do legado do Guga (tricampeão de Roland Garros), temos a Bia Haddad Maia consolidada no Top 20 da WTA e a ascensão meteórica de João Fonseca, que em 2024 e 2025 se tornou uma das maiores promessas do tênis mundial!"
       ],
@@ -111,7 +226,18 @@
     },
     {
       "tag": "players_tenis",
-      "patterns": ["quem é o jogador?", "fale sobre o tenista", "quem são os top 100?", "me fale sobre esse atleta", "quem é esse jogador?", "quais os melhores jogadores?", "quem é ele?", "quem é ela?", "perfil do jogador", "biografia de tenista"],
+      "patterns": [
+        "quem é o jogador?",
+        "fale sobre o tenista",
+        "quem são os top 100?",
+        "me fale sobre esse atleta",
+        "quem é esse jogador?",
+        "quais os melhores jogadores?",
+        "quem é ele?",
+        "quem é ela?",
+        "perfil do jogador",
+        "biografia de tenista"
+      ],
       "responses": [
         "Estou pronto para falar sobre as maiores estrelas do tênis! 🎾 Posso te contar sobre estilo de jogo, títulos e curiosidades de quase qualquer jogador do Top 100."
       ],
@@ -119,7 +245,16 @@
     },
     {
       "tag": "vencedores_torneio",
-      "patterns": ["quem venceu o US Open?", "vencedor de Wimbledon", "quem ganhou Roland Garros?", "campeões do Australian Open", "quem é o campeão?", "quem foi o vencedor?", "quem ganhou o torneio?", "vencedores dos slams"],
+      "patterns": [
+        "quem venceu o US Open?",
+        "vencedor de Wimbledon",
+        "quem ganhou Roland Garros?",
+        "campeões do Australian Open",
+        "quem é o campeão?",
+        "quem foi o vencedor?",
+        "quem ganhou o torneio?",
+        "vencedores dos slams"
+      ],
       "responses": [
         "Para responder isso com precisão, eu acesso minha base técnica em tempo real! 🎾"
       ],
@@ -127,7 +262,25 @@
     },
     {
       "tag": "grand_slam",
-      "patterns": ["O que é um Grand Slam?", "Quais são os principais torneios?", "Quais torneios formam o Grand Slam?", "Australian Open", "Roland Garros", "Wimbledon", "US Open", "torneios mais importantes", "torneios de tenis", "quais torneios existem", "listar torneios", "todos os torneios", "quais os torneios", "fale sobre os torneios", "principais torneios de tenis", "torneios do circuito", "torneios"],
+      "patterns": [
+        "O que é um Grand Slam?",
+        "Quais são os principais torneios?",
+        "Quais torneios formam o Grand Slam?",
+        "Australian Open",
+        "Roland Garros",
+        "Wimbledon",
+        "US Open",
+        "torneios mais importantes",
+        "torneios de tenis",
+        "quais torneios existem",
+        "listar torneios",
+        "todos os torneios",
+        "quais os torneios",
+        "fale sobre os torneios",
+        "principais torneios de tenis",
+        "torneios do circuito",
+        "torneios"
+      ],
       "responses": [
         "O Grand Slam é o ápice do tênis e consiste nos quatro maiores torneios: Australian Open (janeiro), Roland Garros (maio/junho), Wimbledon (julho) e US Open (agosto/setembro)."
       ],
@@ -135,7 +288,13 @@
     },
     {
       "tag": "federer",
-      "patterns": ["Quem é Roger Federer?", "Fale sobre o Federer", "Quantos Grand Slams o Federer tem?", "Roger Federer aposentou?", "Maestro"],
+      "patterns": [
+        "Quem é Roger Federer?",
+        "Fale sobre o Federer",
+        "Quantos Grand Slams o Federer tem?",
+        "Roger Federer aposentou?",
+        "Maestro"
+      ],
       "responses": [
         "Roger Federer é uma lenda do tênis suíço, conhecido por sua elegância e estilo de jogo clássico. Ele conquistou 20 títulos de Grand Slam e se aposentou oficialmente em 2022 na Laver Cup."
       ],
@@ -143,7 +302,13 @@
     },
     {
       "tag": "nadal",
-      "patterns": ["Quem é Rafael Nadal?", "Fale sobre o Nadal", "Quantos Roland Garros o Nadal tem?", "Nadal é o rei do saibro?", "Touro Miura"],
+      "patterns": [
+        "Quem é Rafael Nadal?",
+        "Fale sobre o Nadal",
+        "Quantos Roland Garros o Nadal tem?",
+        "Nadal é o rei do saibro?",
+        "Touro Miura"
+      ],
       "responses": [
         "Rafael Nadal, o 'Rei do Saibro', é um tenista espanhol famoso por sua garra e domínio em quadras de terra batida. Ele possui 22 títulos de Grand Slam, sendo 14 deles conquistados em Roland Garros."
       ],
@@ -151,7 +316,13 @@
     },
     {
       "tag": "djokovic",
-      "patterns": ["Quem é Novak Djokovic?", "Fale sobre o Djokovic", "Quantos Grand Slams o Djokovic tem?", "Quem é o maior vencedor de Grand Slams?", "Nole"],
+      "patterns": [
+        "Quem é Novak Djokovic?",
+        "Fale sobre o Djokovic",
+        "Quantos Grand Slams o Djokovic tem?",
+        "Quem é o maior vencedor de Grand Slams?",
+        "Nole"
+      ],
       "responses": [
         "Novak Djokovic é o maior vencedor de Grand Slams da história do tênis masculino (atualmente com 24 títulos). O tenista sérvio é conhecido por sua elasticidade, defesa impecável e força mental."
       ],
@@ -159,7 +330,12 @@
     },
     {
       "tag": "alcaraz",
-      "patterns": ["Quem é Carlos Alcaraz?", "Fale sobre o Alcaraz", "Quantos Grand Slams o Alcaraz tem?", "Carlitos Alcaraz"],
+      "patterns": [
+        "Quem é Carlos Alcaraz?",
+        "Fale sobre o Alcaraz",
+        "Quantos Grand Slams o Alcaraz tem?",
+        "Carlitos Alcaraz"
+      ],
       "responses": [
         "Carlos Alcaraz é a nova superestrela do tênis espanhol. Ele já conquistou múltiplos Grand Slams (US Open, Wimbledon e Roland Garros) e foi o número 1 do mundo mais jovem da história."
       ],
@@ -167,7 +343,12 @@
     },
     {
       "tag": "sinner",
-      "patterns": ["Quem é Jannik Sinner?", "Fale sobre o Sinner", "Sinner ganhou o Australian Open?", "Jannik Sinner número 1"],
+      "patterns": [
+        "Quem é Jannik Sinner?",
+        "Fale sobre o Sinner",
+        "Sinner ganhou o Australian Open?",
+        "Jannik Sinner número 1"
+      ],
       "responses": [
         "Jannik Sinner é o atual grande nome do tênis italiano. Em 2024, ele conquistou o Australian Open e o US Open, tornando-se o primeiro italiano a alcançar o posto de número 1 do ranking ATP."
       ],
@@ -175,7 +356,22 @@
     },
     {
       "tag": "curiosidades",
-      "patterns": ["me conta uma curiosidade", "voce sabe alguma curiosidade?", "fale algo interessante", "diga uma curiosidade", "curiosidade sobre tenis", "além disso?", "outra curiosidade", "mais fatos", "mais curiosidades", "conta outra", "mais fatos sobre tenis", "me diz outro fato", "tem mais curiosidades?", "outra"],
+      "patterns": [
+        "me conta uma curiosidade",
+        "voce sabe alguma curiosidade?",
+        "fale algo interessante",
+        "diga uma curiosidade",
+        "curiosidade sobre tenis",
+        "além disso?",
+        "outra curiosidade",
+        "mais fatos",
+        "mais curiosidades",
+        "conta outra",
+        "mais fatos sobre tenis",
+        "me diz outro fato",
+        "tem mais curiosidades?",
+        "outra"
+      ],
       "responses": [
         "Você sabia que a partida mais longa da história durou 11 horas e 5 minutos? Foi entre John Isner e Nicolas Mahut em Wimbledon 2010! 😱",
         "A bolinha de tênis amarela só apareceu em 1972. Antes disso, elas eram brancas ou pretas! A mudança foi para melhorar a visão na TV. 📺",
@@ -188,7 +384,15 @@
     },
     {
       "tag": "ranking",
-      "patterns": ["Como funciona o ranking da ATP?", "O que é a ATP?", "Como são calculados os pontos?", "explicar ranking", "história da ATP", "quem fundou a ATP", "qual a origem da ATP"],
+      "patterns": [
+        "Como funciona o ranking da ATP?",
+        "O que é a ATP?",
+        "Como são calculados os pontos?",
+        "explicar ranking",
+        "história da ATP",
+        "quem fundou a ATP",
+        "qual a origem da ATP"
+      ],
       "responses": [
         "A Association of Tennis Professionals (ATP) foi fundada em 1972 para proteger os interesses dos jogadores profissionais. O sistema de ranking por computador foi lançado em 1973, revolucionando o esporte! Os pontos são calculados com base no desempenho das últimas 52 semanas."
       ],
@@ -196,7 +400,12 @@
     },
     {
       "tag": "historia_tenis",
-      "patterns": ["como o tenis surgiu?", "origem do tenis", "quem inventou o tenis?", "historia do tenis"],
+      "patterns": [
+        "como o tenis surgiu?",
+        "origem do tenis",
+        "quem inventou o tenis?",
+        "historia do tenis"
+      ],
       "responses": [
         "O tênis moderno surgiu na Inglaterra no final do século 19, mas suas raízes vêm de um jogo francês antigo chamado 'Jeu de Paume', onde se usava a mão para bater na bola!"
       ],
@@ -204,13 +413,33 @@
     },
     {
       "tag": "nacionalidade_jogador",
-      "patterns": ["De qual país é o jogador?", "Qual a nacionalidade dele?", "Onde ele nasceu?", "De qual país é o Sinner?", "Qual o país do Alcaraz?", "De onde é o Djokovic?"],
-      "responses": ["Vou verificar a nacionalidade dele na minha base técnica agora mesmo! 🌍"],
+      "patterns": [
+        "De qual país é o jogador?",
+        "Qual a nacionalidade dele?",
+        "Onde ele nasceu?",
+        "De qual país é o Sinner?",
+        "Qual o país do Alcaraz?",
+        "De onde é o Djokovic?"
+      ],
+      "responses": [
+        "Vou verificar a nacionalidade dele na minha base técnica agora mesmo! 🌍"
+      ],
       "follow_up": ""
     },
     {
       "tag": "fora_de_contexto",
-      "patterns": ["futebol", "politica", "comida", "receita", "filme", "musica", "carro", "dinheiro", "quem é o presidente?", "clima hoje"],
+      "patterns": [
+        "futebol",
+        "politica",
+        "comida",
+        "receita",
+        "filme",
+        "musica",
+        "carro",
+        "dinheiro",
+        "quem é o presidente?",
+        "clima hoje"
+      ],
       "responses": [
         "Hum, eu adoraria conversar sobre isso, mas minha especialidade é 100% tênis! 🎾",
         "Olha, eu sou um bot focado apenas no mundo das raquetes e bolinhas amarelas. Vamos voltar ao tênis?"
@@ -219,12 +448,311 @@
     },
     {
       "tag": "continuar_conversa",
-      "patterns": ["quero saber mais", "conta mais sobre isso", "me fala mais", "aprofunda", "desenvolve mais", "quero mais detalhes", "explica melhor"],
+      "patterns": [
+        "quero saber mais",
+        "conta mais sobre isso",
+        "me fala mais",
+        "aprofunda",
+        "desenvolve mais",
+        "quero mais detalhes",
+        "explica melhor"
+      ],
       "responses": [
         "Claro! Sobre o que exatamente quer saber mais? Jogadores, torneios, curiosidades ou ranking? 🎾",
         "Com prazer! Me diz: quer saber sobre algum jogador, ver o ranking ou ouvir uma curiosidade?"
       ],
       "follow_up": ""
+    },
+    {
+      "tag": "recordes_titulos",
+      "patterns": [
+        "quem tem mais títulos",
+        "quem tem mais titulos",
+        "quem mais ganhou",
+        "maior número de títulos",
+        "recorde de títulos",
+        "mais títulos na história",
+        "mais títulos na carreira",
+        "quem ganhou mais",
+        "jogador com mais títulos",
+        "jogadora com mais títulos",
+        "quem tem mais títulos na história do tênis",
+        "recorde de títulos ATP",
+        "recorde de títulos WTA"
+      ],
+      "responses": [
+        "🏆 No masculino, Novak Djokovic lidera com 99 títulos ATP, o recorde absoluto. No feminino, Martina Navratilova é a maior vencedora da história com 167 títulos WTA!"
+      ],
+      "follow_up": "Quer saber sobre recordes de Grand Slams ou outros recordes?"
+    },
+    {
+      "tag": "recordes_grand_slams",
+      "patterns": [
+        "quem tem mais grand slams",
+        "quem ganhou mais grand slams",
+        "maior número de grand slams",
+        "recorde de grand slams",
+        "mais slams",
+        "quem é o maior campeão de grand slam",
+        "recordes de grand slam",
+        "recorde de grand slams no tênis",
+        "recorde de grand slams no tenis",
+        "maior recorde de grand slam",
+        "quem é o recordista de slams"
+      ],
+      "responses": [
+        "🏆 No masculino, Novak Djokovic lidera com 24 Grand Slams (recorde absoluto). No feminino, Margaret Court tem 24 Grand Slams no total, mas na era aberta Serena Williams lidera com 23.\n\nOs Big Three: Djokovic (24), Nadal (22) e Federer (20) — juntos conquistaram 66 Grand Slams!"
+      ],
+      "follow_up": "Quer saber mais sobre alguma dessas lendas?"
+    },
+    {
+      "tag": "recordes_gerais",
+      "patterns": [
+        "recordes do tênis",
+        "recordes do tenis",
+        "quais são os recordes",
+        "recordes históricos",
+        "maiores recordes",
+        "estatísticas históricas",
+        "números do tênis",
+        "records do tenis"
+      ],
+      "responses": [
+        "🏆 Principais Recordes do Tênis:\n\n📊 Mais Grand Slams (M): Djokovic (24)\n📊 Mais Grand Slams (F): Margaret Court (24) / Serena Williams (23 na era aberta)\n📊 Mais títulos ATP: Djokovic (99)\n📊 Mais títulos WTA: Navratilova (167)\n📊 Mais semanas #1 (M): Djokovic (428)\n📊 Mais semanas #1 (F): Steffi Graf (377)\n📊 Partida mais longa: Isner vs Mahut — 11h05 (Wimbledon 2010)\n📊 Saque mais rápido: 263 km/h (Sam Groth)\n📊 Golden Slam: Steffi Graf (1988) — única na história"
+      ],
+      "follow_up": "Quer saber mais detalhes sobre algum desses recordes?"
+    },
+    {
+      "tag": "goat_debate",
+      "patterns": [
+        "quem é o goat",
+        "quem é o melhor de todos os tempos",
+        "melhor jogador da história",
+        "melhor jogador de todos os tempos",
+        "goat do tênis",
+        "goat do tenis",
+        "greatest of all time",
+        "quem é o maior de todos",
+        "federer nadal ou djokovic",
+        "big three",
+        "big 3",
+        "quem é o melhor da história",
+        "debate goat",
+        "quem é melhor federer ou nadal",
+        "djokovic ou federer",
+        "nadal ou djokovic"
+      ],
+      "responses": [
+        "O debate do GOAT é um dos mais acalorados do esporte! 🐐\n\n🇷🇸 Novak Djokovic — 24 Grand Slams, 99 títulos, 428 semanas como #1. Líder absoluto em números.\n\n🇪🇸 Rafael Nadal — 22 Grand Slams, 14x Roland Garros (recorde em um único Slam). O Rei do Saibro.\n\n🇨🇭 Roger Federer — 20 Grand Slams, 8x Wimbledon. O mais elegante e revolucionário.\n\nJuntos formam os Big Three e conquistaram 66 dos 80 Grand Slams entre 2003-2023. Cada um dominou uma era e tem argumentos válidos!"
+      ],
+      "follow_up": "Qual dos três é o seu favorito?"
+    },
+    {
+      "tag": "tiebreak",
+      "patterns": [
+        "o que é tiebreak",
+        "como funciona o tiebreak",
+        "tiebreak",
+        "tie break",
+        "o que é tie-break",
+        "regras do tiebreak",
+        "quando acontece tiebreak",
+        "tiebreak no tênis"
+      ],
+      "responses": [
+        "O tiebreak é um jogo decisivo que acontece quando o set chega a 6-6. Funciona assim:\n\n• O jogador que recebeu no game anterior começa sacando 1 ponto\n• Depois alterna a cada 2 pontos de saque\n• Troca-se de lado a cada 6 pontos\n• Vence quem fizer 7 pontos com pelo menos 2 de vantagem\n• Se chegar em 6-6 no tiebreak, continua até alguém abrir 2 pontos\n\nEm alguns Grand Slams, o set final tem regras especiais: no Australian Open e Roland Garros, o tiebreak no set final é a 10 pontos (super tiebreak)!"
+      ],
+      "follow_up": "Quer saber sobre outras regras do tênis?"
+    },
+    {
+      "tag": "termos_tecnicos",
+      "patterns": [
+        "o que é ace",
+        "o que é um ace",
+        "o que é let",
+        "o que é um let",
+        "o que é break",
+        "o que é break point",
+        "o que é double fault",
+        "dupla falta",
+        "o que é deuce",
+        "o que é vantagem",
+        "o que é match point",
+        "o que é set point",
+        "o que é game point",
+        "termos do tênis",
+        "glossário do tênis",
+        "vocabulário do tênis"
+      ],
+      "responses": [
+        "📖 Principais termos do tênis:\n\n🎾 Ace — Saque direto que o adversário não toca\n🎾 Double Fault (Dupla Falta) — Dois saques errados seguidos, ponto pro adversário\n🎾 Deuce (Iguais) — Empate em 40-40\n🎾 Vantagem — Ponto após o deuce, um ponto do game\n🎾 Break — Quando o jogador que está devolvendo vence o game do sacador\n🎾 Break Point — Chance de fazer o break\n🎾 Let — Saque que toca a rede mas cai na área correta (repete o saque)\n🎾 Match Point — Ponto para vencer a partida\n🎾 Rally — Troca de bolas durante o ponto"
+      ],
+      "follow_up": "Quer saber sobre tiebreak ou mais regras?"
+    },
+    {
+      "tag": "wta_explicacao",
+      "patterns": [
+        "o que é WTA",
+        "o que é a WTA",
+        "WTA",
+        "tênis feminino",
+        "tenis feminino",
+        "circuito feminino",
+        "diferença ATP WTA",
+        "ATP vs WTA",
+        "o que significa WTA",
+        "como funciona o WTA"
+      ],
+      "responses": [
+        "A WTA (Women's Tennis Association) é a organização que rege o tênis profissional feminino, fundada em 1973 por Billie Jean King. Assim como a ATP para os homens, a WTA organiza o calendário de torneios, o sistema de ranking e os prêmios.\n\nAtualmente, as maiores estrelas incluem Aryna Sabalenka, Iga Swiatek, Coco Gauff e Jessica Pegula. O circuito feminino tem os mesmos Grand Slams, além de seus próprios Masters (WTA 1000) e WTA Finals."
+      ],
+      "follow_up": "Quer ver o ranking WTA ou saber sobre alguma jogadora?"
+    },
+    {
+      "tag": "atp_explicacao",
+      "patterns": [
+        "o que é ATP",
+        "o que é a ATP",
+        "o que significa ATP",
+        "como funciona o ATP",
+        "como funciona o ranking ATP",
+        "sistema de pontos ATP",
+        "pontuação ATP",
+        "como o ranking funciona",
+        "como funciona a classificação"
+      ],
+      "responses": [
+        "A ATP (Association of Tennis Professionals) é a organização que rege o tênis profissional masculino, fundada em 1972. O ranking ATP funciona assim:\n\n🎯 Grand Slams: 2000 pts (campeão)\n⭐ Masters 1000: 1000 pts\n🎯 ATP 500: 500 pts\n🏅 ATP 250: 250 pts\n🏆 ATP Finals: até 1500 pts\n\nO ranking é calculado com base nos 19 melhores resultados do jogador nos últimos 52 semanas (1 ano). Os pontos vão caindo conforme os torneios passam."
+      ],
+      "follow_up": "Quer ver o ranking atual ou saber sobre algum torneio?"
+    },
+    {
+      "tag": "next_gen",
+      "patterns": [
+        "novos talentos",
+        "próxima geração",
+        "next gen",
+        "jovens promessas",
+        "jovens tenistas",
+        "futuro do tênis",
+        "futuro do tenis",
+        "quem são os jovens",
+        "promessas do tênis",
+        "novos jogadores",
+        "nova geração",
+        "next generation"
+      ],
+      "responses": [
+        "🌟 A nova geração do tênis está brilhando!\n\n🇪🇸 Carlos Alcaraz (22) — Já é #1 do mundo com múltiplos Grand Slams\n🇮🇹 Jannik Sinner (23) — Atual #2, domínio em piso duro\n🇺🇸 Ben Shelton (22) — Saque destruidor, promessa americana\n🇬🇧 Jack Draper (23) — Canhoto talentoso, em ascensão\n🇨🇿 Jakub Mensik (19) — Prodígio tcheco\n🇧🇷 João Fonseca (19) — Campeão do Rio Open 2025, orgulho brasileiro\n🇺🇸 Learner Tien (19) — Revelação americana\n\nNo feminino: Mirra Andreeva (17), Coco Gauff (21) e Linda Noskova (20) lideram a nova onda!"
+      ],
+      "follow_up": "Quer saber mais sobre algum desses jovens talentos?"
+    },
+    {
+      "tag": "lendas_tenis",
+      "patterns": [
+        "lendas do tênis",
+        "lendas do tenis",
+        "maiores tenistas",
+        "maiores jogadores da história",
+        "hall da fama",
+        "jogadores aposentados",
+        "jogadoras aposentadas",
+        "quem já se aposentou",
+        "ídolos do tênis",
+        "ícones do tênis",
+        "melhores jogadores de todos os tempos",
+        "top jogadores históricos"
+      ],
+      "responses": [
+        "👑 Lendas Imortais do Tênis:\n\n🇷🇸 Novak Djokovic — 24 Grand Slams, GOAT em números\n🇪🇸 Rafael Nadal — 22 Grand Slams, Rei do Saibro (aposentado 2024)\n🇨🇭 Roger Federer — 20 Grand Slams, o mais elegante (aposentado 2022)\n🇺🇸 Serena Williams — 23 Grand Slams (era aberta), rainha do feminino\n🇩🇪 Steffi Graf — 22 Grand Slams, Golden Slam 1988\n🇸🇪 Björn Borg — 11 Grand Slams, pioneiro do topspin\n🇺🇸 Pete Sampras — 14 Grand Slams, rei dos anos 90\n🇺🇸 Andre Agassi — 8 Grand Slams, Career Golden Slam\n🇺🇸 Martina Navratilova — 167 títulos, recorde absoluto"
+      ],
+      "follow_up": "Quer saber mais sobre alguma dessas lendas?"
+    },
+    {
+      "tag": "superficie_especialistas",
+      "patterns": [
+        "melhor jogador na grama",
+        "quem é o melhor no saibro",
+        "especialista em saibro",
+        "especialista em grama",
+        "melhor jogador em piso duro",
+        "quem domina no saibro",
+        "rei da grama",
+        "rei do saibro",
+        "melhor em cada superfície",
+        "quem joga melhor na grama",
+        "quem joga melhor no saibro",
+        "quem são os especialistas por superfície",
+        "especialistas por superfície",
+        "quem é bom em cada superfície"
+      ],
+      "responses": [
+        "🎾 Especialistas por Superfície:\n\n🟤 Saibro (Terra Batida):\n• Rafael Nadal — O Rei absoluto (14x Roland Garros)\n• Carlos Alcaraz — Novo dominador\n• Casper Ruud — Consistente no barro\n\n🟢 Grama:\n• Roger Federer — 8x Wimbledon (recorde)\n• Novak Djokovic — 7x Wimbledon\n• Carlos Alcaraz — Atual campeão\n\n🔵 Piso Duro:\n• Novak Djokovic — 10x Australian Open\n• Jannik Sinner — Domínio atual em HardCourt\n• Daniil Medvedev — Especialista indoor"
+      ],
+      "follow_up": "Qual superfície você acha mais interessante?"
+    },
+    {
+      "tag": "partida_mais_longa",
+      "patterns": [
+        "partida mais longa",
+        "jogo mais longo",
+        "match mais longo",
+        "quanto tempo durou a maior partida",
+        "isner mahut",
+        "recorde de duração",
+        "jogo mais demorado"
+      ],
+      "responses": [
+        "A partida mais longa da história do tênis foi entre John Isner (🇺🇸) e Nicolas Mahut (🇫🇷) em Wimbledon 2010, 1ª rodada.\n\n⏱️ Duração: 11 horas e 5 minutos (ao longo de 3 dias!)\n📊 Placar: 6-4, 3-6, 6-7(7), 7-6(3), 70-68\n🎾 O 5º set sozinho durou 8 horas e 11 minutos\n🔢 Isner fez 113 aces e Mahut fez 103\n\nFoi tão absurdo que levou os Grand Slams a adotarem tiebreaks no set final!"
+      ],
+      "follow_up": "Quer saber sobre outros recordes?"
+    },
+    {
+      "tag": "saque_mais_rapido",
+      "patterns": [
+        "saque mais rápido",
+        "saque mais rapido",
+        "saque mais forte",
+        "recorde de velocidade de saque",
+        "qual o saque mais rápido",
+        "velocidade de saque",
+        "quem saca mais forte"
+      ],
+      "responses": [
+        "⚡ Recordes de Velocidade de Saque:\n\n🏆 Recorde não-oficial: Sam Groth — 263 km/h (Challenger de Busan, 2012)\n🏆 Recorde oficial ATP: John Isner — 253 km/h\n🏆 Recorde feminino: Georgina García Pérez — 220 km/h (2018)\n\nAtualmente, jogadores como Reilly Opelka (2,11m!), Giovanni Mpetshi Perricard e Ben Shelton são os sacadores mais temidos do circuito."
+      ],
+      "follow_up": "Quer saber sobre outros recordes ou sobre algum desses jogadores?"
+    },
+    {
+      "tag": "golden_slam",
+      "patterns": [
+        "golden slam",
+        "o que é golden slam",
+        "quem fez golden slam",
+        "golden slam tênis",
+        "career golden slam"
+      ],
+      "responses": [
+        "O Golden Slam é conquistar os 4 Grand Slams + a medalha de ouro olímpica no mesmo ano. É a proeza mais rara do tênis!\n\n🏆 Único Golden Slam da história: Steffi Graf (🇩🇪) em 1988\nEla venceu Australian Open, Roland Garros, Wimbledon, US Open E o ouro olímpico em Seul.\n\nJá o Career Golden Slam (ganhar todos ao longo da carreira, não no mesmo ano) foi alcançado por:\n• Andre Agassi 🇺🇸\n• Rafael Nadal 🇪🇸\n• Novak Djokovic 🇷🇸\n• Serena Williams 🇺🇸\n• Steffi Graf 🇩🇪"
+      ],
+      "follow_up": "Impressionante, não? Quer saber sobre outros recordes?"
+    },
+    {
+      "tag": "como_comecar_tenis",
+      "patterns": [
+        "como começar a jogar tênis",
+        "como jogar tênis",
+        "quero aprender tênis",
+        "dicas para iniciantes",
+        "como aprender tenis",
+        "sou iniciante no tênis",
+        "quero começar no tênis",
+        "o que preciso para jogar tênis"
+      ],
+      "responses": [
+        "🎾 Quer começar no tênis? Aqui vão dicas!\n\n1️⃣ Equipamento básico: uma raquete intermediária, bolas e tênis confortável\n2️⃣ Aulas: procure um professor ou escola de tênis na sua cidade\n3️⃣ Técnica: comece pelo forehand e backhand, depois saque\n4️⃣ Prática: bata contra a parede para melhorar a consistência\n5️⃣ Condicionamento: tênis exige pernas fortes e resistência\n\n💡 Dica de ouro: assista jogos profissionais para entender posicionamento e estratégia. Os melhores para assistir são Federer (técnica) e Djokovic (tática)!"
+      ],
+      "follow_up": "Quer saber sobre equipamentos ou regras básicas?"
     }
   ]
 }

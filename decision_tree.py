@@ -38,6 +38,10 @@ FOLLOW_UPS = {
         "Quer ver os últimos campeões desse torneio ou saber sobre outro Grand Slam?",
         "Posso te mostrar quem ganhou recentemente ou detalhar outro torneio!",
     ],
+    ("tournament", "showed_tournament_list"): [
+        "Quer saber detalhes sobre algum desses torneios?",
+        "Posso te contar mais sobre qualquer um desses!",
+    ],
     # Superfície — abre para jogador ou torneio
     ("surface", "showed_surface_info"): [
         "Quer saber sobre algum jogador ou torneio?",
@@ -75,6 +79,21 @@ WINNER_KEYWORDS_CTX = [
     "quem foi o campeão", "quem foi o campeao",
 ]
 
+# Keywords que indicam pedido de recordes/estatísticas históricas
+RECORDS_KEYWORDS = [
+    "recorde", "recordes", "mais títulos", "mais titulos", "mais grand slams",
+    "mais slams", "maior número", "mais semanas", "mais vitorias",
+    "mais vitórias", "partida mais longa", "saque mais rápido",
+    "saque mais rapido", "golden slam",
+]
+
+# Keywords que indicam pedido de listar torneios (não detalhes de um específico)
+TOURNAMENT_LIST_KEYWORDS = [
+    "quais são", "quais sao", "quais os", "listar", "lista de",
+    "todos os torneios", "todos os campeonatos", "quais torneios",
+    "quais campeonatos", "campeonatos", "campeonato",
+]
+
 # Keywords que indicam pedido de detalhes/info sobre Grand Slam (não campeões)
 SLAM_DETAIL_KEYWORDS_CTX = [
     "sobre", "detalhes", "detalhe", "fala sobre", "história", "historia",
@@ -105,7 +124,13 @@ REACTION_KEYWORDS = {
 }
 PLAYER_INFO_KEYWORDS = ["idade", "quantos anos", "titulo", "títulos", "titulos", "curiosidade",
                          "fato", "carreira", "biografia", "ficha",
-                         "informação", "informacao", "perfil", "detalhes", "mais sobre"]
+                         "informação", "informacao", "perfil", "detalhes", "mais sobre",
+                         "altura", "quantos titulos", "quantos títulos", "alto", "mede"]
+
+# Keywords para respostas específicas (retorna só o campo pedido, não a ficha toda)
+HEIGHT_KEYWORDS = ["altura", "alto", "mede", "qual a altura", "quanto mede", "tamanho"]
+AGE_KEYWORDS = ["idade", "quantos anos", "qual a idade"]
+TITLES_COUNT_KEYWORDS = ["quantos titulos", "quantos títulos", "quantos titulo"]
 
 # Elogios genéricos que devem ser reconhecidos no contexto de player_detail
 GENERIC_PRAISE = [
@@ -387,6 +412,19 @@ class DecisionTree:
                             country_info = f"{reaction}\n\n{country_info}"
                         trace.append({"branch": "Pronome → País", "icon": "📍", "matched": True, "detail": f"País de {focus}"})
                         return (country_info, "player", "showed_player_country", [focus], trace)
+                # Verificar se é campo específico (altura, idade, títulos)
+                specific_field = None
+                if any(kw in msg_lower for kw in HEIGHT_KEYWORDS):
+                    specific_field = "height"
+                elif any(kw in msg_lower for kw in AGE_KEYWORDS):
+                    specific_field = "age"
+                elif any(kw in msg_lower for kw in TITLES_COUNT_KEYWORDS):
+                    specific_field = "titles_count"
+                if specific_field:
+                    field_result = self.engine.get_player_field(focus, specific_field)
+                    if field_result:
+                        trace.append({"branch": f"Pronome → {specific_field}", "icon": "🔍", "matched": True, "detail": f"{specific_field} de {focus}"})
+                        return (field_result, "player", "showed_player_info", [focus], trace)
                 # Verificar se é pergunta sobre estilo/info
                 has_style = any(kw in msg_lower for kw in STYLE_KEYWORDS)
                 has_info_q = any(kw in msg_lower for kw in PLAYER_INFO_KEYWORDS)
@@ -446,6 +484,11 @@ class DecisionTree:
                 result = self.engine.get_last_champions(tournament=target_t)
                 return (result, "tournament", "showed_champions", [], trace)
             elif any(kw in msg_lower for kw in TOURNAMENT_KEYWORDS):
+                # Verifica se quer listar torneios ou ver campeões
+                if any(kw in msg_lower for kw in TOURNAMENT_LIST_KEYWORDS):
+                    trace.append({"branch": "Lista Torneios", "icon": "📋", "matched": True, "detail": "Listagem de torneios"})
+                    result = self.engine.get_tournaments_list()
+                    return (result, "tournament", "showed_tournament_list", [], trace)
                 trace.append({"branch": "Torneio (genérico)", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios"})
                 add_log("[CONTEXTO] Pedido genérico de torneios detectado!", "SUCCESS")
                 result = self.engine.get_last_champions()
@@ -498,6 +541,27 @@ class DecisionTree:
                         country_info = f"{reaction}\n\n{country_info}"
                     trace.append({"branch": "País do jogador", "icon": "📍", "matched": True, "detail": f"País de {focus}"})
                     return (country_info, "player", "showed_player_country", [focus], trace)
+
+            # Sub-branch: Posição específica no ranking → devolver ao pipeline
+            import re as _re
+            if _re.search(r'(?:número|numero|n[°º]|top|posição|posicao|atual)\s*\d{1,3}', msg_lower) or _re.search(r'\d{1,3}\s*(?:º|°|do mundo|do ranking)', msg_lower):
+                trace.append({"branch": "Posição ranking", "icon": "📊", "matched": True, "detail": "Posição específica → pipeline normal"})
+                return None, trace
+
+            # Sub-branch: Campo específico (altura, idade, títulos) → resposta curta
+            if focus:
+                specific_field = None
+                if any(kw in msg_lower for kw in HEIGHT_KEYWORDS):
+                    specific_field = "height"
+                elif any(kw in msg_lower for kw in AGE_KEYWORDS):
+                    specific_field = "age"
+                elif any(kw in msg_lower for kw in TITLES_COUNT_KEYWORDS):
+                    specific_field = "titles_count"
+                if specific_field:
+                    field_result = self.engine.get_player_field(focus, specific_field)
+                    if field_result:
+                        trace.append({"branch": "Campo específico", "icon": "🔍", "matched": True, "detail": f"{specific_field} de {focus}"})
+                        return (field_result, "player", "showed_player_info", [focus], trace)
 
             # Sub-branch: Estilo / Info pessoal
             has_style = any(kw in msg_lower for kw in STYLE_KEYWORDS)
@@ -571,6 +635,10 @@ class DecisionTree:
                     trace.append({"branch": "Troca → Torneio", "icon": "🏆", "matched": True, "detail": f"Campeões de {target_t}"})
                     result = self.engine.get_last_champions(tournament=target_t)
                     return (result, "tournament", "showed_champions", [], trace)
+                if any(kw in msg_lower for kw in TOURNAMENT_LIST_KEYWORDS):
+                    trace.append({"branch": "Troca → Lista Torneios", "icon": "📋", "matched": True, "detail": "Listagem de torneios durante player_detail"})
+                    result = self.engine.get_tournaments_list()
+                    return (result, "tournament", "showed_tournament_list", [], trace)
                 trace.append({"branch": "Troca → Torneios", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios durante player_detail"})
                 add_log("[CONTEXTO] Troca de tópico: player_detail → torneios", "SUCCESS")
                 result = self.engine.get_last_champions()
@@ -619,6 +687,10 @@ class DecisionTree:
                 result = self.engine.get_last_champions(tournament=target_tournament)
                 return (result, "tournament", "showed_champions", [], trace)
             elif any(kw in msg_lower for kw in TOURNAMENT_KEYWORDS):
+                if any(kw in msg_lower for kw in TOURNAMENT_LIST_KEYWORDS):
+                    trace.append({"branch": "Lista Torneios (aberto)", "icon": "📋", "matched": True, "detail": "Listagem de torneios em open_topic"})
+                    result = self.engine.get_tournaments_list()
+                    return (result, "tournament", "showed_tournament_list", [], trace)
                 trace.append({"branch": "Torneios (genérico)", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios em open_topic"})
                 add_log("[CONTEXTO] Pedido genérico de torneios via open_topic!", "SUCCESS")
                 result = self.engine.get_last_champions()
@@ -741,7 +813,7 @@ class DecisionTree:
                             "showed_player_country"):
             pending = "player_detail"
         # Se mostrou campeões ou detalhes de um torneio, espera jogador ou outro torneio
-        elif bot_action in ("showed_champions", "showed_slam_details"):
+        elif bot_action in ("showed_champions", "showed_slam_details", "showed_tournament_list"):
             pending = "player_from_ranking"
         # Se mostrou trivia/curiosidade, espera uma resposta aberta sobre qualquer tema
         elif bot_action in ("showed_trivia",):
