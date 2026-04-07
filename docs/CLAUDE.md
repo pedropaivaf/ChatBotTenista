@@ -5,7 +5,7 @@ o ChatBot de Tenis. Ele descreve **todos os comportamentos esperados**, as regra
 de decisao, o sistema de reacoes empaticas, o pipeline de processamento e como adicionar
 novas funcionalidades sem quebrar o que ja funciona.
 
-**Antes de qualquer mudanca, rode `python run_tests.py` e garanta 245/245.**
+**Antes de qualquer mudanca, rode `python run_tests.py` e garanta 297/297.**
 
 ---
 
@@ -346,7 +346,7 @@ Em `engine.py`:
 
 ## 12. Checklist de Testes Antes de Qualquer Commit
 
-1. `python run_tests.py` → **245/245 ZERO FALHAS**
+1. `python run_tests.py` → **297/297 ZERO FALHAS**
 2. Testar manualmente no navegador:
    - Fluxo de 20 turnos sem perder contexto
    - Typo de jogador (ex: "Medevedev")
@@ -445,7 +445,7 @@ Em `engine.py`:
 | `query_parser.py` | 52-70 | TEMPORAL/SUPERLATIVE/ATP/WTA markers |
 | `engine.py` | 10-40 | COUNTRY_FLAGS |
 | `session_manager.py` | 10-20 | SESSION_TTL, MAX_TURNS |
-| `run_tests.py` | 1-500+ | 245 testes em 17 baterias |
+| `run_tests.py` | 1-700+ | 297 testes em 21 baterias |
 
 ---
 
@@ -480,6 +480,34 @@ Em `engine.py`:
 ### Atualizacao do Joao Fonseca
 - Ficha atualizada: Rio Open 2025 (ATP 500), Next Gen Finals 2024, US Open Juvenil 2023.
 
+### Altura e Titulos para 200 jogadores (CONCLUIDO)
+- Campo `height` adicionado a todos os 100 ATP + 100 WTA do ranking.
+- Campo `titles_count` com numero de titulos profissionais.
+- Respostas especificas por campo: "qual a altura dele?" retorna so a altura, nao a ficha inteira.
+- `HEIGHT_KEYWORDS`, `AGE_KEYWORDS`, `TITLES_COUNT_KEYWORDS` em `decision_tree.py`.
+- Metodo `get_player_field(name, field)` em `engine.py`.
+
+### Listagem de Torneios (CONCLUIDO)
+- "quais sao os torneios?" retorna lista por categoria (Grand Slams, Masters 1000, ATP 500, Finals).
+- `TOURNAMENT_LIST_KEYWORDS` em `decision_tree.py`.
+- Metodo `get_tournaments_list()` em `engine.py`.
+- 3 fallbacks genericos (Branches 1, 3, 4) agora diferenciam lista vs campeoes.
+
+### Recordes Historicos e Lendas (CONCLUIDO)
+- 16 recordes em `records` no `tennis_data.json`: mais titulos, mais Grand Slams, partida mais longa, saque mais rapido, Golden Slam, etc.
+- 8 lendas completas: Federer, Nadal, Serena, Sampras, Agassi, Graf, Borg, Navratilova.
+- Deteccao de recordes no pipeline ANTES do bloco de campeoes (evita colisao "mais titulos" → campeoes).
+- `has_records` guard no `app.py` com matching dedicado de intents de recordes.
+
+### Knowledge Base Expandida (42 intents)
+- 15 novos intents: recordes_titulos, recordes_grand_slams, recordes_gerais, goat_debate, tiebreak, termos_tecnicos, wta_explicacao, atp_explicacao, next_gen, lendas_tenis, superficie_especialistas, partida_mais_longa, saque_mais_rapido, golden_slam, como_comecar_tenis.
+
+### Posicao Especifica no Ranking (CONCLUIDO)
+- "quem e o numero 20 do mundo?" retorna ficha do #20.
+- Regex detecta "numero X", "top X", "posicao X", "Xo do mundo".
+- Metodo `get_player_by_position(position, circuit)` em `engine.py`.
+- Guarda: posicao > 1 nao ativa superlativo, e posicao em contexto player_detail devolve ao pipeline.
+
 ---
 
 ## 17. Proximos Passos Sugeridos
@@ -487,6 +515,4 @@ Em `engine.py`:
 1. **Head-to-Head**: Confrontos diretos entre jogadores.
 2. **Estatisticas**: Aces, % primeiro servico, duplas faltas.
 3. **Mais reacoes**: Adicionar reacoes para "servico", "slice", "drop shot", "lob".
-4. **Mais paises**: Expandir COUNTRY_MAP e DEMONYM_MAP para paises menos comuns.
-7. **Mais jogadores**: Expandir player_details com jogadores fora do Top 50.
-8. **Noticias**: Scraping de sites de noticias de tenis em tempo real.
+4. **Noticias**: Scraping de sites de noticias de tenis em tempo real.

@@ -37,7 +37,7 @@ UNRECOGNIZED_FILE = 'unrecognized_queries.json' # Define o nome do arquivo de lo
 # Lista de termos que remetem a outros esportes e devem ser barrados (Filtro de Contexto)
 OFF_TOPIC_KEYWORDS = [
     # Esportes
-    "copa", "futebol", "gol", "basquete", "nba", "baseball", "beisebol",
+    "copa", "futebol", " gol ", "basquete", "nba", "baseball", "beisebol",
     "formula 1", "f1", "hamilton", "verstappen", "nascar", "motogp",
     "golf", "golfe", "boxe", "mma", "ufc", "luta", "wrestling",
     "natação", "natacao", "surf", "skate", "skateboard", "ciclismo",
@@ -266,7 +266,11 @@ def predict(): # Função principal de "predição" ou resposta
     # "quem é o numero 1 do mundo" → sem país, com superlativo + contexto de jogador → mostra #1
     player_context_words = ["jogador", "jogadora", "tenista", "numero 1", "número 1", "mundo", "ranking"]
     feminine_words = ["jogadora", "tenista feminina", "mulher", "feminino"]
-    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words):
+    # Verifica se a mensagem tem um número específico > 1 (ex: "número 100") → não é superlativo
+    import re as _re_check
+    _specific_num = _re_check.search(r'(?:número|numero|n[°º]|top|posição|posicao|atual)\s*(\d{1,3})', msg_lower)
+    _has_specific_position = _specific_num and int(_specific_num.group(1)) > 1
+    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words) and not _has_specific_position:
         # Detecta se é feminino → WTA
         circuit = parsed["circuit"] or ('WTA' if any(w in msg_lower for w in feminine_words) else 'ATP')
         ranking_data = tennis_engine.data.get(f"ranking_{circuit.lower()}", [])
@@ -304,8 +308,26 @@ def predict(): # Função principal de "predição" ou resposta
                                mentioned_players=[p['name'] for p in filtered],
                                mentioned_countries=[parsed["country_filter"]])
 
+    # --- Passo 0.9: Detecção de posição específica no ranking ("número 20", "top 20", "posição 20") ---
+    import re as _re
+    pos_match = _re.search(r'(?:número|numero|n[°º]|top|posição|posicao|atual)\s*(\d{1,3})', msg_lower)
+    if not pos_match:
+        pos_match = _re.search(r'(\d{1,3})\s*(?:º|°|do mundo|do ranking)', msg_lower)
+    if pos_match:
+        position = int(pos_match.group(1))
+        if 1 <= position <= 100:
+            circuit = parsed["circuit"] or ('WTA' if any(w in msg_lower for w in ['wta', 'feminino', 'mulheres']) else 'ATP')
+            info, player_name = tennis_engine.get_player_by_position(position, circuit)
+            if info:
+                add_log(f"Posição {position} do ranking {circuit} detectada: {player_name}", "SUCCESS")
+                add_step("Motor de Dados", "success", f"#{position} {circuit}: {player_name}")
+                pronoun = "dela" if circuit == "WTA" else "dele"
+                suffix = f"\n\nQuer saber mais sobre algum jogador ou ver o ranking {'WTA' if circuit == 'ATP' else 'ATP'}?"
+                return respond(info + suffix, topic="player", bot_action="showed_player_info",
+                               mentioned_players=[player_name])
+
     # --- Passo 1: Lógica Técnica (Ranking, Estatísticas e Dados Dinâmicos) ---
-    add_log("Consultando base de dados técnica (TennisDB - Março 2026)...") # Registra início da consulta
+    add_log("Consultando base de dados técnica (TennisDB - Março 2026)...")
 
     # Palavras que indicam desejo de ver dados (números/rankings)
     rank_keywords = ["ranking", "top 10", "melhores do mundo", "rank", "posição", "posições", "tabela", "estatística", "estatiscia", "números", "dados"]
@@ -324,10 +346,42 @@ def predict(): # Função principal de "predição" ou resposta
                        mentioned_players=top_players)
 
     # Verifica se o usuário quer saber sobre campeões ou vencedores
+    # (Pula se a mensagem contém "recordes" — deixa cair no intent matching)
     winner_keywords = ["campeão", "vencedor", "ganhador", "ganhou", "venceu", "título", "campeões", "vencedores"]
-    winner_stems = [stem(w) for w in winner_keywords] # Gera radicais das palavras de vitória
+    winner_stems = [stem(w) for w in winner_keywords]
+    records_kw = ["recorde", "recordes", "record", "records"]
+    # "mais títulos" + contexto de pergunta genérica (sem torneio específico) = recorde
+    records_phrases = ["mais títulos", "mais titulos", "mais grand slams", "mais slams",
+                       "mais semanas", "mais vitórias", "mais vitorias"]
+    has_records = any(kw in msg_lower for kw in records_kw) or any(kw in msg_lower for kw in records_phrases)
 
-    if any(token in winner_stems for token in msg_stems): # Se a frase tiver contexto de vitória
+    # Se detectou recordes, buscar o melhor intent de recordes na knowledge_base
+    if has_records:
+        add_log("Contexto de 'Recordes' detectado — buscando intent de recordes")
+        kb = load_knowledge_base()
+        record_tags = ["recordes_grand_slams", "recordes_titulos", "recordes_gerais",
+                        "partida_mais_longa", "saque_mais_rapido", "golden_slam"]
+        best_tag, best_score, best_intent = None, 0, None
+        for intent in kb["intents"]:
+            if intent["tag"] in record_tags:
+                for pattern in intent["patterns"]:
+                    pattern_tokens = tokenize(pattern.lower())
+                    pattern_stems = [stem(w) for w in pattern_tokens]
+                    meaningful = [s for s in pattern_stems if s not in PORTUGUESE_STOP_STEMS]
+                    msg_meaningful = [s for s in msg_stems if s not in PORTUGUESE_STOP_STEMS]
+                    if meaningful and msg_meaningful:
+                        matches = sum(1 for s in meaningful if s in msg_meaningful)
+                        score = matches / max(len(meaningful), len(msg_meaningful)) * 100
+                        if score > best_score:
+                            best_score = score
+                            best_tag = intent["tag"]
+                            best_intent = intent
+        if best_intent and best_score >= 40:
+            response = __import__('random').choice(best_intent["responses"])
+            add_step("Motor de Dados", "success", f"Recorde: {best_tag} ({best_score:.0f}%)")
+            return respond(response, topic="trivia", bot_action="showed_trivia")
+
+    if any(token in winner_stems for token in msg_stems) and not has_records: # Se a frase tiver contexto de vitória
         add_log("Contexto de 'Vencedores' identificado. Verificando especificidade...")
         all_tournaments = tennis_engine.get_all_tournament_names()
         target_tournament = None
@@ -377,6 +431,17 @@ def predict(): # Função principal de "predição" ou resposta
         result = tennis_engine.get_last_champions(tournament=target_tournament)
         return respond(result, topic="tournament", bot_action="showed_champions",
                        mentioned_tournaments=[target_tournament])
+
+    # --- Passo 1.6: Listagem genérica de torneios ---
+    if not target_tournament:
+        tournament_generic_kw = ["torneio", "torneios", "campeonato", "campeonatos"]
+        list_intent_kw = ["quais", "listar", "lista", "todos", "quais são", "quais sao"]
+        has_tournament_kw = any(kw in msg_lower for kw in tournament_generic_kw)
+        has_list_intent = any(kw in msg_lower for kw in list_intent_kw)
+        if has_tournament_kw and has_list_intent:
+            add_step("Motor de Dados", "success", "Listagem de torneios")
+            result = tennis_engine.get_tournaments_list()
+            return respond(result, topic="tournament", bot_action="showed_tournament_list")
 
     # --- Lógica de Jogadores DINÂMICA (NLTK) ---
     players_list = tennis_engine.get_all_player_names()

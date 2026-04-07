@@ -1307,84 +1307,108 @@
       "style": "Destro",
       "titles": "AO 2024/2025, US Open 2024",
       "country": "Itália",
-      "fact": "Primeiro italiano #1."
+      "fact": "Primeiro italiano #1.",
+      "height": "1,92m",
+      "titles_count": 19
     },
     "Carlos Alcaraz": {
       "age": 22,
       "style": "Agressivo",
       "titles": "RG 2025, US Open 2025, Wim 2024",
       "country": "Espanha",
-      "fact": "#1 mais jovem."
+      "fact": "#1 mais jovem.",
+      "height": "1,83m",
+      "titles_count": 16
     },
     "Novak Djokovic": {
       "age": 38,
       "style": "Completo",
       "titles": "24 Grand Slams",
       "country": "Sérvia",
-      "fact": "GOAT (estatístico)."
+      "fact": "GOAT (estatístico).",
+      "height": "1,88m",
+      "titles_count": 99
     },
     "João Fonseca": {
       "age": 19,
       "style": "Agressivo, forehand potente",
       "titles": "Rio Open 2025 (ATP 500), US Open Juvenil 2023, Next Gen Finals 2024",
       "country": "Brasil",
-      "fact": "Tornou-se o mais jovem brasileiro a vencer um ATP 500, conquistando o Rio Open 2025 com apenas 18 anos. Considerado o futuro do tênis brasileiro."
+      "fact": "Tornou-se o mais jovem brasileiro a vencer um ATP 500, conquistando o Rio Open 2025 com apenas 18 anos. Considerado o futuro do tênis brasileiro.",
+      "height": "1,83m",
+      "titles_count": 1
     },
     "Beatriz Haddad Maia": {
       "age": 29,
       "style": "Canhota (potente)",
       "titles": "Elite Trophy 2023, SF Roland Garros",
       "country": "Brasil",
-      "fact": "Maior brasileira pós-Maria Esther Bueno."
+      "fact": "Maior brasileira pós-Maria Esther Bueno.",
+      "height": "1,85m",
+      "titles_count": 3
     },
     "Iga Swiatek": {
       "age": 24,
       "style": "Agitadora (saibro)",
       "titles": "4x Roland Garros, 1x US Open",
       "country": "Polônia",
-      "fact": "Dominante no saibro moderno."
+      "fact": "Dominante no saibro moderno.",
+      "height": "1,76m",
+      "titles_count": 22
     },
     "Aryna Sabalenka": {
       "age": 27,
       "style": "Potência pura",
       "titles": "2x Australian Open",
       "country": "Bielorrússia",
-      "fact": "Conhecida como a Tigresa da Bielorrússia."
+      "fact": "Conhecida como a Tigresa da Bielorrússia.",
+      "height": "1,82m",
+      "titles_count": 15
     },
     "Roger Federer": {
-      "age": 44,
-      "style": "Maestro (Elegante)",
-      "titles": "20 Grand Slams",
+      "age": "Aposentado (43 anos)",
       "country": "Suíça",
-      "fact": "O maior ícone de elegância do tênis."
+      "style": "Completo, elegante, saque-e-voleio",
+      "titles": "103 títulos ATP, 20 Grand Slams (6x Australian Open, 1x Roland Garros, 8x Wimbledon, 5x US Open)",
+      "fact": "Considerado o jogador mais elegante da história. Aposentou-se em 2022 na Laver Cup. Deteve o recorde de semanas como #1 (310) antes de Djokovic ultrapassá-lo.",
+      "height": "1,85m",
+      "titles_count": 103
     },
     "Rafael Nadal": {
-      "age": 39,
-      "style": "Touro (Saibro)",
-      "titles": "22 Grand Slams",
+      "age": "Aposentado (39 anos)",
       "country": "Espanha",
-      "fact": "Rei de Roland Garros (14 títulos)."
+      "style": "Agressivo de fundo, left-handed, topspin extremo",
+      "titles": "92 títulos ATP, 22 Grand Slams (2x Australian Open, 14x Roland Garros, 2x Wimbledon, 4x US Open)",
+      "fact": "O Rei do Saibro com 14 títulos em Roland Garros, recorde absoluto em um único torneio. Aposentou-se em 2024.",
+      "height": "1,85m",
+      "titles_count": 92
     },
     "Serena Williams": {
-      "age": 44,
-      "style": "Dominante",
-      "titles": "23 Grand Slams",
+      "age": "Aposentada (44 anos)",
       "country": "EUA",
-      "fact": "Maior tenista da Era Aberta."
+      "style": "Potência pura, saque devastador",
+      "titles": "73 títulos WTA, 23 Grand Slams (7x Australian Open, 3x Roland Garros, 7x Wimbledon, 6x US Open)",
+      "fact": "Maior vencedora de Grand Slams da era aberta. Dominou o tênis feminino por mais de duas décadas. Aposentou-se em 2022.",
+      "height": "1,75m",
+      "titles_count": 73
     },
     "Pete Sampras": {
-      "age": 54,
-      "style": "Saque e Voleio",
-      "titles": "14 Grand Slams",
+      "age": "Aposentado (53 anos)",
       "country": "EUA",
-      "fact": "Pistol Pete, dominou os anos 90."
+      "style": "Saque-e-voleio, agressivo",
+      "titles": "64 títulos ATP, 14 Grand Slams (2x Australian Open, 7x Wimbledon, 5x US Open)",
+      "fact": "Dominou os anos 90 e deteve o recorde de Grand Slams (14) até Federer ultrapassá-lo em 2009.",
+      "height": "1,85m",
+      "titles_count": 64
     },
     "Andre Agassi": {
-      "age": 55,
-      "style": "Devolvedor",
-      "titles": "8 Grand Slams",
+      "age": "Aposentado (55 anos)",
       "country": "EUA",
-      "fact": "Primeiro a ganhar o Golden Slam na carreira."
+      "style": "Devolução agressiva, fundo de quadra",
+      "titles": "60 títulos ATP, 8 Grand Slams, Career Golden Slam",
+      "fact": "Único homem a conquistar o Career Golden Slam (todos os 4 Grand Slams + ouro olímpico). Casado com Steffi Graf.",
+      "height": "1,80m",
+      "titles_count": 60
     },
     "Maria Sharapova": {
       "age": 38,
@@ -1412,21 +1436,27 @@
       "style": "Saque e Forehand",
       "titles": "Finalista US Open 2024",
       "country": "EUA",
-      "fact": "Destaque americano com um dos saques mais potentes do circuito."
+      "fact": "Destaque americano com um dos saques mais potentes do circuito.",
+      "height": "1,93m",
+      "titles_count": 9
     },
     "Alexander Zverev": {
       "age": 28,
       "style": "Base Sólida",
       "titles": "Ouro Olímpico Tóquio",
       "country": "Alemanha",
-      "fact": "Teve grande recuperação após lesão grave."
+      "fact": "Teve grande recuperação após lesão grave.",
+      "height": "1,98m",
+      "titles_count": 25
     },
     "Daniil Medvedev": {
       "age": 29,
       "style": "Contragolpeador",
       "titles": "US Open 2021",
       "country": "Rússia",
-      "fact": "Especialista em quadras rápidas."
+      "fact": "Especialista em quadras rápidas.",
+      "height": "1,98m",
+      "titles_count": 21
     },
     "Ons Jabeur": {
       "age": 31,
@@ -1440,21 +1470,27 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Rússia"
+      "country": "Rússia",
+      "height": "1,88m",
+      "titles_count": 17
     },
     "Casper Ruud": {
       "age": 28,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Noruega"
+      "country": "Noruega",
+      "height": "1,83m",
+      "titles_count": 10
     },
     "Hubert Hurkacz": {
       "age": 29,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Polônia"
+      "country": "Polônia",
+      "height": "1,96m",
+      "titles_count": 8
     },
     "Alex de Minaur": {
       "age": 27,
@@ -1468,49 +1504,63 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Grécia"
+      "country": "Grécia",
+      "height": "1,93m",
+      "titles_count": 12
     },
     "Grigor Dimitrov": {
       "age": 35,
       "style": "Destro (backhand de uma mão)",
       "titles": "9 ATP",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Bulgária"
+      "country": "Bulgária",
+      "height": "1,91m",
+      "titles_count": 9
     },
     "Tommy Paul": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "EUA",
-      "fact": "Tenista de alto rendimento da(o) EUA."
+      "fact": "Tenista de alto rendimento da(o) EUA.",
+      "height": "1,85m",
+      "titles_count": 4
     },
     "Ben Shelton": {
       "age": 24,
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,93m",
+      "titles_count": 2
     },
     "Holger Rune": {
       "age": 23,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Dinamarca"
+      "country": "Dinamarca",
+      "height": "1,88m",
+      "titles_count": 6
     },
     "Sebastian Korda": {
       "age": 26,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,96m",
+      "titles_count": 3
     },
     "Lorenzo Musetti": {
       "age": 24,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Itália"
+      "country": "Itália",
+      "height": "1,85m",
+      "titles_count": 2
     },
     "Felix Auger-Aliassime": {
       "age": "25 anos (Est.)",
@@ -1531,56 +1581,72 @@
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,88m",
+      "titles_count": 5
     },
     "Arthur Fils": {
       "age": 22,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,88m",
+      "titles_count": 3
     },
     "Jack Draper": {
       "age": 25,
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Reino Unido"
+      "country": "Reino Unido",
+      "height": "1,93m",
+      "titles_count": 2
     },
     "Frances Tiafoe": {
       "age": 28,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,88m",
+      "titles_count": 2
     },
     "Alejandro Tabilo": {
       "age": 29,
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Chile"
+      "country": "Chile",
+      "height": "1,88m",
+      "titles_count": 2
     },
     "Karen Khachanov": {
       "age": 30,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Rússia"
+      "country": "Rússia",
+      "height": "1,98m",
+      "titles_count": 8
     },
     "Alexander Bublik": {
       "age": 29,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Cazaquistão"
+      "country": "Cazaquistão",
+      "height": "1,96m",
+      "titles_count": 5
     },
     "Brandon Nakashima": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,83m",
+      "titles_count": 1
     },
     "Tomas Martin Etcheverry": {
       "age": "25 anos (Est.)",
@@ -1594,7 +1660,9 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Argentina",
-      "fact": "Tenista de alto rendimento da(o) Argentina."
+      "fact": "Tenista de alto rendimento da(o) Argentina.",
+      "height": "1,87m",
+      "titles_count": 2
     },
     "Jordan Thompson": {
       "age": "25 anos (Est.)",
@@ -1608,14 +1676,18 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Holanda"
+      "country": "Holanda",
+      "height": "1,98m",
+      "titles_count": 3
     },
     "Flavio Cobolli": {
       "age": 24,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Itália"
+      "country": "Itália",
+      "height": "1,83m",
+      "titles_count": 2
     },
     "Jiri Lehecka": {
       "age": "25 anos (Est.)",
@@ -1629,21 +1701,27 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Rep. Tcheca",
-      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca."
+      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
+      "height": "1,88m",
+      "titles_count": 1
     },
     "Nuno Borges": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Portugal",
-      "fact": "Tenista de alto rendimento da(o) Portugal."
+      "fact": "Tenista de alto rendimento da(o) Portugal.",
+      "height": "1,83m",
+      "titles_count": 2
     },
     "Jan-Lennard Struff": {
       "age": 36,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Alemanha"
+      "country": "Alemanha",
+      "height": "1,96m",
+      "titles_count": 2
     },
     "Matteo Arnaldi": {
       "age": 25,
@@ -1657,63 +1735,81 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Itália"
+      "country": "Itália",
+      "height": "1,85m",
+      "titles_count": 2
     },
     "Fabian Marozsan": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Hungria",
-      "fact": "Tenista de alto rendimento da(o) Hungria."
+      "fact": "Tenista de alto rendimento da(o) Hungria.",
+      "height": "1,91m",
+      "titles_count": 1
     },
     "Alexei Popyrin": {
       "age": 27,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Austrália"
+      "country": "Austrália",
+      "height": "1,96m",
+      "titles_count": 2
     },
     "Giovanni Mpetshi Perricard": {
       "age": 23,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "2,03m",
+      "titles_count": 1
     },
     "Jakub Mensik": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Rep. Tcheca",
-      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca."
+      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
+      "height": "1,93m",
+      "titles_count": 1
     },
     "Mariano Navone": {
       "age": 25,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Argentina"
+      "country": "Argentina",
+      "height": "1,80m",
+      "titles_count": 2
     },
     "Matteo Berrettini": {
       "age": 30,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Itália"
+      "country": "Itália",
+      "height": "1,96m",
+      "titles_count": 10
     },
     "Cameron Norrie": {
       "age": 31,
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Reino Unido"
+      "country": "Reino Unido",
+      "height": "1,88m",
+      "titles_count": 6
     },
     "Miomir Kecmanovic": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Sérvia",
-      "fact": "Tenista de alto rendimento da(o) Sérvia."
+      "fact": "Tenista de alto rendimento da(o) Sérvia.",
+      "height": "1,91m",
+      "titles_count": 1
     },
     "Dusan Lajovic": {
       "age": "25 anos (Est.)",
@@ -1734,21 +1830,27 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,80m",
+      "titles_count": 1
     },
     "Adrian Mannarino": {
       "age": 38,
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,80m",
+      "titles_count": 3
     },
     "Lorenzo Sonego": {
       "age": 31,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Itália"
+      "country": "Itália",
+      "height": "1,91m",
+      "titles_count": 3
     },
     "Roberto Carballes Baena": {
       "age": "25 anos (Est.)",
@@ -1783,7 +1885,9 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Cazaquistão",
-      "fact": "Tenista de alto rendimento da(o) Cazaquistão."
+      "fact": "Tenista de alto rendimento da(o) Cazaquistão.",
+      "height": "1,88m",
+      "titles_count": 1
     },
     "Hugo Gaston": {
       "age": 26,
@@ -1797,7 +1901,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Alemanha"
+      "country": "Alemanha",
+      "height": "1,80m",
+      "titles_count": 0
     },
     "Feliciano Lopez (Simulado)": {
       "age": "25 anos (Est.)",
@@ -1818,7 +1924,9 @@
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,75m",
+      "titles_count": 1
     },
     "Sumit Nagal": {
       "age": 29,
@@ -1832,14 +1940,18 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Bélgica"
+      "country": "Bélgica",
+      "height": "1,96m",
+      "titles_count": 0
     },
     "Aleksandar Vukic": {
       "age": 30,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Austrália"
+      "country": "Austrália",
+      "height": "1,85m",
+      "titles_count": 0
     },
     "Thiago Seyboth Wild": {
       "age": 26,
@@ -1888,14 +2000,18 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Austrália",
-      "fact": "Tenista de alto rendimento da(o) Austrália."
+      "fact": "Tenista de alto rendimento da(o) Austrália.",
+      "height": "1,83m",
+      "titles_count": 0
     },
     "Marton Fucsovics": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Hungria",
-      "fact": "Tenista de alto rendimento da(o) Hungria."
+      "fact": "Tenista de alto rendimento da(o) Hungria.",
+      "height": "1,83m",
+      "titles_count": 2
     },
     "Botic van de Zandschulp": {
       "age": 31,
@@ -1923,7 +2039,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Austrália"
+      "country": "Austrália",
+      "height": "1,80m",
+      "titles_count": 1
     },
     "Stan Wawrinka": {
       "age": 41,
@@ -1944,7 +2062,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,90m",
+      "titles_count": 2
     },
     "Borna Gojo": {
       "age": 28,
@@ -1965,7 +2085,9 @@
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Canadá"
+      "country": "Canadá",
+      "height": "1,85m",
+      "titles_count": 3
     },
     "Kei Nishikori": {
       "age": 37,
@@ -1979,7 +2101,9 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "França",
-      "fact": "Tenista de alto rendimento da(o) França."
+      "fact": "Tenista de alto rendimento da(o) França.",
+      "height": "1,85m",
+      "titles_count": 1
     },
     "Constant Lestienne": {
       "age": 34,
@@ -1993,7 +2117,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,85m",
+      "titles_count": 0
     },
     "Federico Coria": {
       "age": 34,
@@ -2014,7 +2140,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Argentina"
+      "country": "Argentina",
+      "height": "1,85m",
+      "titles_count": 0
     },
     "Albert Ramos-Vinolas": {
       "age": "25 anos (Est.)",
@@ -2035,7 +2163,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Espanha"
+      "country": "Espanha",
+      "height": "1,78m",
+      "titles_count": 1
     },
     "Pedro Martinez": {
       "age": "25 anos (Est.)",
@@ -2063,14 +2193,18 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,85m",
+      "titles_count": 0
     },
     "Hamad Medjedovic": {
       "age": 23,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Sérvia"
+      "country": "Sérvia",
+      "height": "1,91m",
+      "titles_count": 0
     },
     "Richard Gasquet": {
       "age": 40,
@@ -2091,21 +2225,27 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,75m",
+      "titles_count": 8
     },
     "Elena Rybakina": {
       "age": 27,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Cazaquistão"
+      "country": "Cazaquistão",
+      "height": "1,84m",
+      "titles_count": 8
     },
     "Jasmine Paolini": {
       "age": 30,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Itália"
+      "country": "Itália",
+      "height": "1,63m",
+      "titles_count": 3
     },
     "Zheng Qinwen": {
       "age": 24,
@@ -2119,14 +2259,18 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,70m",
+      "titles_count": 5
     },
     "Emma Navarro": {
       "age": 25,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,68m",
+      "titles_count": 1
     },
     "Danielle Collins": {
       "age": 33,
@@ -2140,42 +2284,54 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Rússia"
+      "country": "Rússia",
+      "height": "1,70m",
+      "titles_count": 7
     },
     "Barbora Krejcikova": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Rep. Tcheca",
-      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca."
+      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
+      "height": "1,80m",
+      "titles_count": 8
     },
     "Anna Kalinskaya": {
       "age": 28,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Rússia"
+      "country": "Rússia",
+      "height": "1,78m",
+      "titles_count": 3
     },
     "Mirra Andreeva": {
       "age": 19,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Rússia"
+      "country": "Rússia",
+      "height": "1,74m",
+      "titles_count": 1
     },
     "Madison Keys": {
       "age": 31,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,78m",
+      "titles_count": 10
     },
     "Marta Kostyuk": {
       "age": 24,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Ucrânia"
+      "country": "Ucrânia",
+      "height": "1,74m",
+      "titles_count": 2
     },
     "Donna Vekic": {
       "age": "25 anos (Est.)",
@@ -2196,7 +2352,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,80m",
+      "titles_count": 3
     },
     "Victoria Azarenka": {
       "age": 37,
@@ -2217,35 +2375,45 @@
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Rússia"
+      "country": "Rússia",
+      "height": "1,76m",
+      "titles_count": 3
     },
     "Katie Boulter": {
       "age": 30,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Reino Unido"
+      "country": "Reino Unido",
+      "height": "1,83m",
+      "titles_count": 3
     },
     "Karolina Muchova": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Rep. Tcheca",
-      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca."
+      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
+      "height": "1,80m",
+      "titles_count": 3
     },
     "Linda Noskova": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Rep. Tcheca",
-      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca."
+      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
+      "height": "1,80m",
+      "titles_count": 1
     },
     "Maria Sakkari": {
       "age": 31,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Grécia"
+      "country": "Grécia",
+      "height": "1,72m",
+      "titles_count": 4
     },
     "Caroline Garcia": {
       "age": 33,
@@ -2259,14 +2427,18 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Cazaquistão"
+      "country": "Cazaquistão",
+      "height": "1,63m",
+      "titles_count": 3
     },
     "Elina Svitolina": {
       "age": 32,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Ucrânia"
+      "country": "Ucrânia",
+      "height": "1,74m",
+      "titles_count": 17
     },
     "Anastasia Pavlyuchenkova": {
       "age": 35,
@@ -2280,35 +2452,45 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Rep. Tcheca",
-      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca."
+      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
+      "height": "1,77m",
+      "titles_count": 2
     },
     "Leylah Fernandez": {
       "age": 24,
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Canadá"
+      "country": "Canadá",
+      "height": "1,68m",
+      "titles_count": 3
     },
     "Elise Mertens": {
       "age": 31,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Bélgica"
+      "country": "Bélgica",
+      "height": "1,78m",
+      "titles_count": 7
     },
     "Clara Tauson": {
       "age": 24,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Dinamarca"
+      "country": "Dinamarca",
+      "height": "1,79m",
+      "titles_count": 2
     },
     "Magda Linette": {
       "age": 34,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Polônia"
+      "country": "Polônia",
+      "height": "1,74m",
+      "titles_count": 3
     },
     "Yue Yuan": {
       "age": 39,
@@ -2322,21 +2504,27 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "China",
-      "fact": "Tenista de alto rendimento da(o) China."
+      "fact": "Tenista de alto rendimento da(o) China.",
+      "height": "1,82m",
+      "titles_count": 3
     },
     "Marie Bouzkova": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Rep. Tcheca",
-      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca."
+      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
+      "height": "1,72m",
+      "titles_count": 2
     },
     "Diane Parry": {
       "age": 24,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,76m",
+      "titles_count": 1
     },
     "Clara Burel": {
       "age": 25,
@@ -2357,7 +2545,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,70m",
+      "titles_count": 4
     },
     "Sloane Stephens": {
       "age": "25 anos (Est.)",
@@ -2378,7 +2568,9 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Romênia",
-      "fact": "Tenista de alto rendimento da(o) Romênia."
+      "fact": "Tenista de alto rendimento da(o) Romênia.",
+      "height": "1,76m",
+      "titles_count": 3
     },
     "Anhelina Kalinina": {
       "age": 29,
@@ -2406,14 +2598,18 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Austrália",
-      "fact": "Tenista de alto rendimento da(o) Austrália."
+      "fact": "Tenista de alto rendimento da(o) Austrália.",
+      "height": "1,80m",
+      "titles_count": 1
     },
     "Tatjana Maria": {
       "age": 39,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Alemanha"
+      "country": "Alemanha",
+      "height": "1,70m",
+      "titles_count": 1
     },
     "Mayar Sherif": {
       "age": 30,
@@ -2427,14 +2623,18 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Colômbia"
+      "country": "Colômbia",
+      "height": "1,70m",
+      "titles_count": 2
     },
     "Elisabetta Cocciaretto": {
       "age": 25,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Itália"
+      "country": "Itália",
+      "height": "1,80m",
+      "titles_count": 1
     },
     "Lucia Bronzetti": {
       "age": 28,
@@ -2462,21 +2662,27 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "França"
+      "country": "França",
+      "height": "1,76m",
+      "titles_count": 1
     },
     "Peyton Stearns": {
       "age": 25,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,78m",
+      "titles_count": 1
     },
     "Taylor Townsend": {
       "age": 30,
       "style": "Canhoto",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,78m",
+      "titles_count": 0
     },
     "Caroline Wozniacki": {
       "age": 36,
@@ -2504,7 +2710,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Alemanha"
+      "country": "Alemanha",
+      "height": "1,70m",
+      "titles_count": 2
     },
     "Anna-Lena Friedsam": {
       "age": 32,
@@ -2546,21 +2754,27 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Espanha",
-      "fact": "Tenista de alto rendimento da(o) Espanha."
+      "fact": "Tenista de alto rendimento da(o) Espanha.",
+      "height": "1,73m",
+      "titles_count": 0
     },
     "Jessica Bouzas Maneiro": {
       "age": "25 anos (Est.)",
       "style": "Destro",
       "titles": "Top 100",
       "country": "Espanha",
-      "fact": "Tenista de alto rendimento da(o) Espanha."
+      "fact": "Tenista de alto rendimento da(o) Espanha.",
+      "height": "1,80m",
+      "titles_count": 1
     },
     "Kamilla Rakhimova": {
       "age": 25,
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Rússia"
+      "country": "Rússia",
+      "height": "1,73m",
+      "titles_count": 0
     },
     "Erika Andreeva": {
       "age": 22,
@@ -2588,7 +2802,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Suíça"
+      "country": "Suíça",
+      "height": "1,72m",
+      "titles_count": 2
     },
     "Lulu Sun": {
       "age": 25,
@@ -2602,7 +2818,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Japão"
+      "country": "Japão",
+      "height": "1,65m",
+      "titles_count": 1
     },
     "Mai Hontama": {
       "age": 27,
@@ -2623,7 +2841,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Reino Unido"
+      "country": "Reino Unido",
+      "height": "1,72m",
+      "titles_count": 0
     },
     "Olivia Gadecki": {
       "age": 24,
@@ -2658,7 +2878,9 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "México",
-      "fact": "Tenista de alto rendimento da(o) México."
+      "fact": "Tenista de alto rendimento da(o) México.",
+      "height": "1,68m",
+      "titles_count": 0
     },
     "Laura Pigossi": {
       "age": 32,
@@ -2672,7 +2894,9 @@
       "style": "Destro",
       "titles": "Top 100",
       "country": "Hungria",
-      "fact": "Tenista de alto rendimento da(o) Hungria."
+      "fact": "Tenista de alto rendimento da(o) Hungria.",
+      "height": "1,72m",
+      "titles_count": 2
     },
     "McCartney Kessler": {
       "age": 27,
@@ -2700,7 +2924,9 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "country": "EUA",
+      "height": "1,83m",
+      "titles_count": 1
     },
     "Anna Karolina Schmiedlova": {
       "age": "25 anos (Est.)",
@@ -2714,7 +2940,855 @@
       "style": "Destro",
       "titles": "Buscando o 1º título principal",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Reino Unido"
+      "country": "Reino Unido",
+      "height": "1,75m",
+      "titles_count": 1
+    },
+    "Alex De Minaur": {
+      "age": "N/A",
+      "country": "Austrália",
+      "style": "N/A",
+      "titles": "8 título(s) ATP",
+      "fact": "Atualmente na posição 6 do ranking ATP.",
+      "height": "1,83m",
+      "titles_count": 8
+    },
+    "Félix Auger-Aliassime": {
+      "age": "N/A",
+      "country": "Canadá",
+      "style": "N/A",
+      "titles": "4 título(s) ATP",
+      "fact": "Atualmente na posição 7 do ranking ATP.",
+      "height": "1,93m",
+      "titles_count": 4
+    },
+    "Jiří Lehečka": {
+      "age": "N/A",
+      "country": "Rep. Tcheca",
+      "style": "N/A",
+      "titles": "2 título(s) ATP",
+      "fact": "Atualmente na posição 13 do ranking ATP.",
+      "height": "1,86m",
+      "titles_count": 2
+    },
+    "Alejandro Davidovich Fokina": {
+      "age": "N/A",
+      "country": "Espanha",
+      "style": "N/A",
+      "titles": "2 título(s) ATP",
+      "fact": "Atualmente na posição 17 do ranking ATP.",
+      "height": "1,83m",
+      "titles_count": 2
+    },
+    "Learner Tien": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "1 título(s) ATP",
+      "fact": "Atualmente na posição 22 do ranking ATP.",
+      "height": "1,80m",
+      "titles_count": 1
+    },
+    "Valentin Vacherot": {
+      "age": "N/A",
+      "country": "Mônaco",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 23 do ranking ATP.",
+      "height": "1,85m",
+      "titles_count": 0
+    },
+    "Tomás Martin Etcheverry": {
+      "age": "N/A",
+      "country": "Argentina",
+      "style": "N/A",
+      "titles": "2 título(s) ATP",
+      "fact": "Atualmente na posição 30 do ranking ATP.",
+      "height": "1,91m",
+      "titles_count": 2
+    },
+    "Alex Michelsen": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "1 título(s) ATP",
+      "fact": "Atualmente na posição 35 do ranking ATP.",
+      "height": "1,93m",
+      "titles_count": 1
+    },
+    "Gabriel Diallo": {
+      "age": "N/A",
+      "country": "Canadá",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 36 do ranking ATP.",
+      "height": "1,98m",
+      "titles_count": 0
+    },
+    "Terence Atmane": {
+      "age": "N/A",
+      "country": "França",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 45 do ranking ATP.",
+      "height": "1,85m",
+      "titles_count": 0
+    },
+    "Marin Cilic": {
+      "age": "N/A",
+      "country": "Croácia",
+      "style": "N/A",
+      "titles": "21 título(s) ATP",
+      "fact": "Atualmente na posição 51 do ranking ATP.",
+      "height": "1,98m",
+      "titles_count": 21
+    },
+    "Botic Van De Zandschulp": {
+      "age": "N/A",
+      "country": "Holanda",
+      "style": "N/A",
+      "titles": "1 título(s) ATP",
+      "fact": "Atualmente na posição 52 do ranking ATP.",
+      "height": "1,88m",
+      "titles_count": 1
+    },
+    "Ethan Quinn": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 54 do ranking ATP.",
+      "height": "1,88m",
+      "titles_count": 0
+    },
+    "Yannick Hanfmann": {
+      "age": "N/A",
+      "country": "Alemanha",
+      "style": "N/A",
+      "titles": "1 título(s) ATP",
+      "fact": "Atualmente na posição 55 do ranking ATP.",
+      "height": "1,93m",
+      "titles_count": 1
+    },
+    "Rafael Jodar": {
+      "age": "N/A",
+      "country": "Espanha",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 57 do ranking ATP.",
+      "height": "1,78m",
+      "titles_count": 0
+    },
+    "Kamil Majchrzak": {
+      "age": "N/A",
+      "country": "Polônia",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 60 do ranking ATP.",
+      "height": "1,80m",
+      "titles_count": 0
+    },
+    "Ignacio Buse": {
+      "age": "N/A",
+      "country": "Peru",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 61 do ranking ATP.",
+      "height": "1,78m",
+      "titles_count": 0
+    },
+    "Roman Andrés Burruchaga": {
+      "age": "N/A",
+      "country": "Argentina",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 62 do ranking ATP.",
+      "height": "1,88m",
+      "titles_count": 0
+    },
+    "Jenson Brooksby": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 64 do ranking ATP.",
+      "height": "1,93m",
+      "titles_count": 0
+    },
+    "Sebastian Baez": {
+      "age": "N/A",
+      "country": "Argentina",
+      "style": "N/A",
+      "titles": "5 título(s) ATP",
+      "fact": "Atualmente na posição 65 do ranking ATP.",
+      "height": "1,70m",
+      "titles_count": 5
+    },
+    "Reilly Opelka": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "4 título(s) ATP",
+      "fact": "Atualmente na posição 67 do ranking ATP.",
+      "height": "2,11m",
+      "titles_count": 4
+    },
+    "Raphael Collignon": {
+      "age": "N/A",
+      "country": "Bélgica",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 68 do ranking ATP.",
+      "height": "1,85m",
+      "titles_count": 0
+    },
+    "Juan Manuel Cerundolo": {
+      "age": "N/A",
+      "country": "Argentina",
+      "style": "N/A",
+      "titles": "2 título(s) ATP",
+      "fact": "Atualmente na posição 71 do ranking ATP.",
+      "height": "1,80m",
+      "titles_count": 2
+    },
+    "Thiago Agustín Tirante": {
+      "age": "N/A",
+      "country": "Argentina",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 72 do ranking ATP.",
+      "height": "1,85m",
+      "titles_count": 0
+    },
+    "Valentin Royer": {
+      "age": "N/A",
+      "country": "França",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 73 do ranking ATP.",
+      "height": "1,88m",
+      "titles_count": 0
+    },
+    "Vit Kopriva": {
+      "age": "N/A",
+      "country": "Rep. Tcheca",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 75 do ranking ATP.",
+      "height": "1,88m",
+      "titles_count": 0
+    },
+    "Marco Trungelliti": {
+      "age": "N/A",
+      "country": "Argentina",
+      "style": "N/A",
+      "titles": "1 título(s) ATP",
+      "fact": "Atualmente na posição 76 do ranking ATP.",
+      "height": "1,80m",
+      "titles_count": 1
+    },
+    "Mattia Bellucci": {
+      "age": "N/A",
+      "country": "Itália",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 79 do ranking ATP.",
+      "height": "1,88m",
+      "titles_count": 0
+    },
+    "Eliot Spizzirri": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 80 do ranking ATP.",
+      "height": "1,85m",
+      "titles_count": 0
+    },
+    "Damir Dzumhur": {
+      "age": "N/A",
+      "country": "Bósnia",
+      "style": "N/A",
+      "titles": "3 título(s) ATP",
+      "fact": "Atualmente na posição 81 do ranking ATP.",
+      "height": "1,72m",
+      "titles_count": 3
+    },
+    "Sebastian Ofner": {
+      "age": "N/A",
+      "country": "Áustria",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 82 do ranking ATP.",
+      "height": "1,91m",
+      "titles_count": 0
+    },
+    "Zachary Svajda": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 84 do ranking ATP.",
+      "height": "1,85m",
+      "titles_count": 0
+    },
+    "Roberto Bautista-Agut": {
+      "age": "N/A",
+      "country": "Espanha",
+      "style": "N/A",
+      "titles": "11 título(s) ATP",
+      "fact": "Atualmente na posição 85 do ranking ATP.",
+      "height": "1,83m",
+      "titles_count": 11
+    },
+    "Quentin Halys": {
+      "age": "N/A",
+      "country": "França",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 89 do ranking ATP.",
+      "height": "1,93m",
+      "titles_count": 0
+    },
+    "Alexander Blockx": {
+      "age": "N/A",
+      "country": "Bélgica",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 91 do ranking ATP.",
+      "height": "1,85m",
+      "titles_count": 0
+    },
+    "Pablo Carreno-Busta": {
+      "age": "N/A",
+      "country": "Espanha",
+      "style": "N/A",
+      "titles": "7 título(s) ATP",
+      "fact": "Atualmente na posição 92 do ranking ATP.",
+      "height": "1,85m",
+      "titles_count": 7
+    },
+    "Patrick Kypson": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 95 do ranking ATP.",
+      "height": "1,83m",
+      "titles_count": 0
+    },
+    "Daniel Vallejo Adolfo": {
+      "age": "N/A",
+      "country": "Paraguai",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 96 do ranking ATP.",
+      "height": "1,80m",
+      "titles_count": 0
+    },
+    "Jacob Fearnley": {
+      "age": "N/A",
+      "country": "Reino Unido",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 97 do ranking ATP.",
+      "height": "1,88m",
+      "titles_count": 0
+    },
+    "Aleksandar Kovacevic": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos ATP",
+      "fact": "Atualmente na posição 98 do ranking ATP.",
+      "height": "1,93m",
+      "titles_count": 0
+    },
+    "Francisco Comesana": {
+      "age": "N/A",
+      "country": "Argentina",
+      "style": "N/A",
+      "titles": "1 título(s) ATP",
+      "fact": "Atualmente na posição 99 do ranking ATP.",
+      "height": "1,83m",
+      "titles_count": 1
+    },
+    "Victoria Mboko": {
+      "age": "N/A",
+      "country": "Canadá",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 9 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 0
+    },
+    "Belinda Bencic": {
+      "age": "N/A",
+      "country": "Suíça",
+      "style": "N/A",
+      "titles": "8 título(s) WTA",
+      "fact": "Atualmente na posição 11 do ranking WTA.",
+      "height": "1,75m",
+      "titles_count": 8
+    },
+    "Ekaterina Alexandrova": {
+      "age": "N/A",
+      "country": "Rússia",
+      "style": "N/A",
+      "titles": "4 título(s) WTA",
+      "fact": "Atualmente na posição 13 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 4
+    },
+    "Naomi Osaka": {
+      "age": "N/A",
+      "country": "Japão",
+      "style": "N/A",
+      "titles": "7 título(s) WTA",
+      "fact": "Atualmente na posição 15 do ranking WTA.",
+      "height": "1,80m",
+      "titles_count": 7
+    },
+    "Iva Jovic": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 16 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 0
+    },
+    "Liudmila Samsonova": {
+      "age": "N/A",
+      "country": "Rússia",
+      "style": "N/A",
+      "titles": "5 título(s) WTA",
+      "fact": "Atualmente na posição 21 do ranking WTA.",
+      "height": "1,80m",
+      "titles_count": 5
+    },
+    "Jelena Ostapenko": {
+      "age": "N/A",
+      "country": "Letônia",
+      "style": "N/A",
+      "titles": "7 título(s) WTA",
+      "fact": "Atualmente na posição 23 do ranking WTA.",
+      "height": "1,77m",
+      "titles_count": 7
+    },
+    "Maya Joint": {
+      "age": "N/A",
+      "country": "Austrália",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 30 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 0
+    },
+    "Jaqueline Cristian": {
+      "age": "N/A",
+      "country": "Romênia",
+      "style": "N/A",
+      "titles": "1 título(s) WTA",
+      "fact": "Atualmente na posição 33 do ranking WTA.",
+      "height": "1,80m",
+      "titles_count": 1
+    },
+    "Sara Bejlek": {
+      "age": "N/A",
+      "country": "Rep. Tcheca",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 34 do ranking WTA.",
+      "height": "1,72m",
+      "titles_count": 0
+    },
+    "Hailey Baptiste": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 35 do ranking WTA.",
+      "height": "1,70m",
+      "titles_count": 0
+    },
+    "Ann Li": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 36 do ranking WTA.",
+      "height": "1,70m",
+      "titles_count": 0
+    },
+    "Qinwen Zheng": {
+      "age": "N/A",
+      "country": "China",
+      "style": "N/A",
+      "titles": "4 título(s) WTA",
+      "fact": "Atualmente na posição 37 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 4
+    },
+    "Magdalena Frech": {
+      "age": "N/A",
+      "country": "Polônia",
+      "style": "N/A",
+      "titles": "1 título(s) WTA",
+      "fact": "Atualmente na posição 39 do ranking WTA.",
+      "height": "1,72m",
+      "titles_count": 1
+    },
+    "Lois Boisson": {
+      "age": "N/A",
+      "country": "França",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 40 do ranking WTA.",
+      "height": "1,75m",
+      "titles_count": 0
+    },
+    "Janice Tjen": {
+      "age": "N/A",
+      "country": "Indonésia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 41 do ranking WTA.",
+      "height": "1,70m",
+      "titles_count": 0
+    },
+    "Marketa Vondrousova": {
+      "age": "N/A",
+      "country": "Rep. Tcheca",
+      "style": "N/A",
+      "titles": "4 título(s) WTA",
+      "fact": "Atualmente na posição 45 do ranking WTA.",
+      "height": "1,80m",
+      "titles_count": 4
+    },
+    "Alexandra Eala": {
+      "age": "N/A",
+      "country": "Filipinas",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 46 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 0
+    },
+    "Mccartney Kessler": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 48 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 0
+    },
+    "Dayana Yastremska": {
+      "age": "N/A",
+      "country": "Ucrânia",
+      "style": "N/A",
+      "titles": "4 título(s) WTA",
+      "fact": "Atualmente na posição 49 do ranking WTA.",
+      "height": "1,80m",
+      "titles_count": 4
+    },
+    "Tereza Valentova": {
+      "age": "N/A",
+      "country": "Rep. Tcheca",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 50 do ranking WTA.",
+      "height": "1,75m",
+      "titles_count": 0
+    },
+    "Yuliia Starodubtseva": {
+      "age": "N/A",
+      "country": "Ucrânia",
+      "style": "N/A",
+      "titles": "1 título(s) WTA",
+      "fact": "Atualmente na posição 53 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 1
+    },
+    "Talia Gibson": {
+      "age": "N/A",
+      "country": "Austrália",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 56 do ranking WTA.",
+      "height": "1,75m",
+      "titles_count": 0
+    },
+    "Antonia Ruzic": {
+      "age": "N/A",
+      "country": "Croácia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 57 do ranking WTA.",
+      "height": "1,76m",
+      "titles_count": 0
+    },
+    "Elsa Jacquemot": {
+      "age": "N/A",
+      "country": "França",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 59 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 0
+    },
+    "Veronika Kudermetova": {
+      "age": "N/A",
+      "country": "Rússia",
+      "style": "N/A",
+      "titles": "6 título(s) WTA",
+      "fact": "Atualmente na posição 60 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 6
+    },
+    "Shuai Zhang": {
+      "age": "N/A",
+      "country": "China",
+      "style": "N/A",
+      "titles": "3 título(s) WTA",
+      "fact": "Atualmente na posição 64 do ranking WTA.",
+      "height": "1,77m",
+      "titles_count": 3
+    },
+    "Anastasia Zakharova": {
+      "age": "N/A",
+      "country": "Rússia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 65 do ranking WTA.",
+      "height": "1,74m",
+      "titles_count": 0
+    },
+    "Oleksandra Oliynykova": {
+      "age": "N/A",
+      "country": "Ucrânia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 68 do ranking WTA.",
+      "height": "1,80m",
+      "titles_count": 0
+    },
+    "Caty Mcnally": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 69 do ranking WTA.",
+      "height": "1,85m",
+      "titles_count": 0
+    },
+    "Panna Udvardy": {
+      "age": "N/A",
+      "country": "Hungria",
+      "style": "N/A",
+      "titles": "1 título(s) WTA",
+      "fact": "Atualmente na posição 71 do ranking WTA.",
+      "height": "1,75m",
+      "titles_count": 1
+    },
+    "Oksana Selekhmeteva": {
+      "age": "N/A",
+      "country": "Rússia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 73 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 0
+    },
+    "Eva Lys": {
+      "age": "N/A",
+      "country": "Alemanha",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 75 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 0
+    },
+    "Zeynep Sonmez": {
+      "age": "N/A",
+      "country": "Turquia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 76 do ranking WTA.",
+      "height": "1,70m",
+      "titles_count": 0
+    },
+    "Petra Marcinko": {
+      "age": "N/A",
+      "country": "Croácia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 77 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 0
+    },
+    "Solana Sierra": {
+      "age": "N/A",
+      "country": "Argentina",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 78 do ranking WTA.",
+      "height": "1,70m",
+      "titles_count": 0
+    },
+    "Kimberly Birrell": {
+      "age": "N/A",
+      "country": "Austrália",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 80 do ranking WTA.",
+      "height": "1,70m",
+      "titles_count": 0
+    },
+    "Ella Seidel": {
+      "age": "N/A",
+      "country": "Alemanha",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 85 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 0
+    },
+    "Emiliana Arango": {
+      "age": "N/A",
+      "country": "Colômbia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 86 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 0
+    },
+    "Elena-Gabriela Ruse": {
+      "age": "N/A",
+      "country": "Romênia",
+      "style": "N/A",
+      "titles": "2 título(s) WTA",
+      "fact": "Atualmente na posição 87 do ranking WTA.",
+      "height": "1,72m",
+      "titles_count": 2
+    },
+    "Katie Volynets": {
+      "age": "N/A",
+      "country": "EUA",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 88 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 0
+    },
+    "Julia Grabher": {
+      "age": "N/A",
+      "country": "Áustria",
+      "style": "N/A",
+      "titles": "1 título(s) WTA",
+      "fact": "Atualmente na posição 89 do ranking WTA.",
+      "height": "1,68m",
+      "titles_count": 1
+    },
+    "Anna Blinkova": {
+      "age": "N/A",
+      "country": "Rússia",
+      "style": "N/A",
+      "titles": "1 título(s) WTA",
+      "fact": "Atualmente na posição 90 do ranking WTA.",
+      "height": "1,75m",
+      "titles_count": 1
+    },
+    "Simona Waltert": {
+      "age": "N/A",
+      "country": "Suíça",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 91 do ranking WTA.",
+      "height": "1,73m",
+      "titles_count": 0
+    },
+    "Hanne Vandewinkel": {
+      "age": "N/A",
+      "country": "Bélgica",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 94 do ranking WTA.",
+      "height": "1,78m",
+      "titles_count": 0
+    },
+    "Daria Snigur": {
+      "age": "N/A",
+      "country": "Ucrânia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 96 do ranking WTA.",
+      "height": "1,70m",
+      "titles_count": 0
+    },
+    "Anastasia Potapova": {
+      "age": "N/A",
+      "country": "Áustria",
+      "style": "N/A",
+      "titles": "2 título(s) WTA",
+      "fact": "Atualmente na posição 97 do ranking WTA.",
+      "height": "1,80m",
+      "titles_count": 2
+    },
+    "Nikola Bartunkova": {
+      "age": "N/A",
+      "country": "Rep. Tcheca",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 98 do ranking WTA.",
+      "height": "1,75m",
+      "titles_count": 0
+    },
+    "Veronika Erjavec": {
+      "age": "N/A",
+      "country": "Eslovênia",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 99 do ranking WTA.",
+      "height": "1,72m",
+      "titles_count": 0
+    },
+    "Francesca Jones": {
+      "age": "N/A",
+      "country": "Reino Unido",
+      "style": "N/A",
+      "titles": "Sem títulos WTA",
+      "fact": "Atualmente na posição 100 do ranking WTA.",
+      "height": "1,70m",
+      "titles_count": 0
+    },
+    "Steffi Graf": {
+      "age": "Aposentada (55 anos)",
+      "country": "Alemanha",
+      "style": "Forehand devastador, versátil",
+      "titles": "107 títulos WTA, 22 Grand Slams",
+      "fact": "Única jogadora a conquistar o Golden Slam (4 Slams + ouro olímpico em 1988). Detém o recorde de 377 semanas como #1.",
+      "height": "1,76m",
+      "titles_count": 107
+    },
+    "Björn Borg": {
+      "age": "Aposentado (68 anos)",
+      "country": "Suécia",
+      "style": "Baseline, topspin pioneiro",
+      "titles": "66 títulos ATP, 11 Grand Slams (6x Roland Garros, 5x Wimbledon)",
+      "fact": "Pioneiro do jogo de fundo com topspin. Aposentou-se aos 26 anos no auge da carreira.",
+      "height": "1,80m",
+      "titles_count": 66
+    },
+    "Martina Navratilova": {
+      "age": "Aposentada (68 anos)",
+      "country": "EUA/Tchéquia",
+      "style": "Saque-e-voleio, agressiva na rede",
+      "titles": "167 títulos WTA (recorde absoluto), 18 Grand Slams em simples",
+      "fact": "Maior vencedora de títulos da história do tênis (167). Dominadora de Wimbledon com 9 títulos.",
+      "height": "1,73m",
+      "titles_count": 167
     }
   },
   "grand_slam_details": {
@@ -3038,6 +4112,79 @@
       ],
       "history": "O torneio dos 8 melhores do ano. Disputado em formato round-robin seguido de semifinais e final. Roger Federer é o maior campeão com 6 títulos. Desde 2021 é realizado no Pala Alpitour em Turim."
     }
+  },
+  "records": {
+    "most_titles_male": {
+      "name": "Novak Djokovic",
+      "count": 99,
+      "detail": "99 títulos ATP (recorde histórico masculino)"
+    },
+    "most_titles_female": {
+      "name": "Martina Navratilova",
+      "count": 167,
+      "detail": "167 títulos WTA (recorde histórico feminino)"
+    },
+    "most_grand_slams_male": {
+      "name": "Novak Djokovic",
+      "count": 24,
+      "detail": "24 Grand Slams (recorde absoluto masculino)"
+    },
+    "most_grand_slams_female": {
+      "name": "Margaret Court",
+      "count": 24,
+      "detail": "24 Grand Slams (recorde absoluto feminino). Na era aberta, Serena Williams lidera com 23."
+    },
+    "youngest_number_one_male": {
+      "name": "Carlos Alcaraz",
+      "age": "19 anos e 4 meses",
+      "detail": "Tornou-se o #1 mais jovem da história em setembro de 2022"
+    },
+    "youngest_number_one_female": {
+      "name": "Martina Hingis",
+      "age": "16 anos e 6 meses",
+      "detail": "Tornou-se a #1 mais jovem da história em março de 1997"
+    },
+    "longest_match": {
+      "players": "John Isner vs Nicolas Mahut",
+      "duration": "11 horas e 5 minutos",
+      "detail": "Wimbledon 2010, 1ª rodada. Placar final: 6-4, 3-6, 6-7, 7-6, 70-68. O set final durou 8 horas."
+    },
+    "most_weeks_number_one_male": {
+      "name": "Novak Djokovic",
+      "weeks": "428 semanas",
+      "detail": "Recorde absoluto de semanas como #1 do mundo (ATP)"
+    },
+    "most_weeks_number_one_female": {
+      "name": "Steffi Graf",
+      "weeks": "377 semanas",
+      "detail": "Recorde absoluto de semanas como #1 do mundo (WTA)"
+    },
+    "most_consecutive_wins": {
+      "name": "Guillermo Vilas",
+      "count": 46,
+      "detail": "46 vitórias consecutivas em 1977 (recorde masculino). No feminino, Martina Navratilova teve 74 consecutivas."
+    },
+    "fastest_serve_male": {
+      "name": "Sam Groth",
+      "speed": "263 km/h",
+      "detail": "Registrado em 2012 no Challenger de Busan (não oficial pela ATP). O recorde oficial ATP é de John Isner com 253 km/h."
+    },
+    "fastest_serve_female": {
+      "name": "Georgina García Pérez",
+      "speed": "220 km/h",
+      "detail": "Registrado em 2018"
+    },
+    "golden_slam": {
+      "name": "Steffi Graf (1988)",
+      "detail": "Única jogadora na história a conquistar o Golden Slam (4 Grand Slams + ouro olímpico no mesmo ano). No masculino, ninguém conseguiu."
+    },
+    "most_masters_1000": {
+      "name": "Novak Djokovic",
+      "count": 40,
+      "detail": "40 títulos de Masters 1000 (recorde absoluto)"
+    },
+    "goat_debate": "O debate do GOAT (Greatest Of All Time) é um dos mais acalorados do esporte. Os principais candidatos são:\n\n🇷🇸 Novak Djokovic — 24 Grand Slams, 99 títulos, 428 semanas como #1. Domínio absoluto em números.\n\n🇪🇸 Rafael Nadal — 22 Grand Slams, 14x Roland Garros (recorde em um único Slam). Rei indiscutível do saibro.\n\n🇨🇭 Roger Federer — 20 Grand Slams, 8x Wimbledon. Considerado o mais elegante e revolucionário.\n\nCada um dominou uma era e possui argumentos válidos. Djokovic lidera em estatísticas brutas, Nadal no saibro e Federer no estilo e longevidade competitiva.",
+    "big_three": "Os Big Three (Federer, Nadal e Djokovic) dominaram o tênis por quase duas décadas (2003-2023), conquistando juntos 66 dos 80 Grand Slams disputados nesse período. É considerada a maior rivalidade esportiva da história moderna."
   },
   "last_updated": "2026-04-06T19:34:57.447769"
 }
