@@ -1,8 +1,10 @@
 <!DOCTYPE html> <!-- Define que este documento é um arquivo HTML5 -->
 <html lang="pt-br"> <!-- Define o idioma da página como Português do Brasil -->
+
 <head>
     <meta charset="UTF-8"> <!-- Define a codificação de caracteres como UTF-8 (suporta acentos) -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Garante que o site seja responsivo em celulares -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Garante que o site seja responsivo em celulares -->
     <title>Tennis AI | Seu Assistente de Tênis</title> <!-- Título que aparece na aba do navegador -->
 
     <!-- Favicon -->
@@ -12,20 +14,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <!-- Fontes: Plus Jakarta Sans (body) + JetBrains Mono (terminal) -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="container"> <!-- Contêiner principal que centraliza todo o conteúdo do chat -->
         <header>
             <div class="logo-area">
                 <div class="logo">
-                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Tennis AI" class="icon-img"> <!-- Logo SVG -->
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Tennis AI" class="icon-img">
+                    <!-- Logo SVG -->
                     <h1>Tennis AI</h1> <!-- Nome do projeto em destaque -->
                 </div>
                 <div class="header-actions">
                     <!-- Botão Tela Cheia -->
                     <button id="fullscreen-btn" class="fullscreen-btn" title="Modo Apresentação (F11)">
-                        <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="15 3 21 3 21 9" />
+                            <polyline points="9 21 3 21 3 15" />
+                            <line x1="21" y1="3" x2="14" y2="10" />
+                            <line x1="3" y1="21" x2="10" y2="14" />
+                        </svg>
                     </button>
                     <!-- Botão do Console -->
                     <button id="console-toggle-btn" class="terminal-btn" title="Ver Logs do Robô">
@@ -45,9 +56,9 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="chat-input-area">
-                <input type="text" id="user-input" placeholder="Pergunte sobre Federer, Nadal, Grand Slams..." autocomplete="off">
+                <input type="text" id="user-input" placeholder="Pergunte tudo sobre Tênis..." autocomplete="off">
                 <button id="send-btn">
                     <svg viewBox="0 0 24 24" width="24" height="24">
                         <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
@@ -59,7 +70,8 @@
         <footer>
             <div class="footer-content">
                 <p>&copy; 2026 Tennis AI - Python | NLTK & Flask</p> <!-- Texto do footer atualizado conforme pedido -->
-                <button id="group-btn" class="group-members-btn">Integrantes do Grupo</button> <!-- Botão para abrir o modal de créditos -->
+                <button id="group-btn" class="group-members-btn">Integrantes do Grupo</button>
+                <!-- Botão para abrir o modal de créditos -->
             </div>
         </footer>
     </div>
@@ -93,7 +105,8 @@
         <div class="console-body" id="console-body">
             <div class="pipeline-welcome">
                 <div class="pw-icon">🧠</div>
-                <div class="pw-text">Envie uma mensagem para visualizar<br>o pipeline de processamento em tempo real</div>
+                <div class="pw-text">Envie uma mensagem para visualizar<br>o pipeline de processamento em tempo real
+                </div>
             </div>
         </div>
     </div>
@@ -101,4 +114,5 @@
     <!-- Importa o arquivo JavaScript que controla a lógica do chat e a comunicação com o Python -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
+
 </html>
