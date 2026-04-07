@@ -634,7 +634,18 @@
       ]
     },
     
-    
+    {
+      "tag": "quantidade_masters_1000",
+      "patterns": [
+        "quantos masters tem no ano",
+        "quantidade de masters anual",
+        "quais são os masters que tem no ano",
+        "lista de masters 1000"
+      ],
+      "responses": [
+        "Existem 9 torneios de nível Masters 1000 durante o ano. São eles: Indian Wells (EUA), Miami (EUA), Monte Carlo (Mônaco), Madri (Espanha), Roma (Itália), Canadá (Toronto/Montreal), Cincinnati (EUA), Xangai (China) e Paris (França). 🎾"
+      ]
+    },
     {
       "tag": "atp_explicacao",
       "patterns": [
