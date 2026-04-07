@@ -435,10 +435,9 @@ def predict(): # Função principal de "predição" ou resposta
     # --- Passo 1.6: Listagem genérica de torneios ---
     if not target_tournament:
         tournament_generic_kw = ["torneio", "torneios", "campeonato", "campeonatos"]
-        list_intent_kw = ["quais", "listar", "lista", "todos", "quais são", "quais sao"]
         has_tournament_kw = any(kw in msg_lower for kw in tournament_generic_kw)
-        has_list_intent = any(kw in msg_lower for kw in list_intent_kw)
-        if has_tournament_kw and has_list_intent:
+        has_winner_kw = any(token in winner_stems for token in msg_stems)
+        if has_tournament_kw and not has_winner_kw:
             add_step("Motor de Dados", "success", "Listagem de torneios")
             result = tennis_engine.get_tournaments_list()
             return respond(result, topic="tournament", bot_action="showed_tournament_list")

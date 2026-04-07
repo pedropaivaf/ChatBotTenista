@@ -92,6 +92,7 @@ TOURNAMENT_LIST_KEYWORDS = [
     "quais são", "quais sao", "quais os", "listar", "lista de",
     "todos os torneios", "todos os campeonatos", "quais torneios",
     "quais campeonatos", "campeonatos", "campeonato",
+    "torneios", "torneio",
 ]
 
 # Keywords que indicam pedido de detalhes/info sobre Grand Slam (não campeões)
