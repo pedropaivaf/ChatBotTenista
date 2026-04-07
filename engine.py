@@ -24,6 +24,29 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
         self.data_path = data_path # Salva o caminho do arquivo de dados numa variável interna (atributo)
         self.data = self._load_data() # Chama a função interna para carregar os dados reais na memória
 
+    def get_player_surface_info(self, player_name):
+        """Retorna a informação de piso preferido buscando em todas as fontes."""
+        # 1. Caso especial direto para o João Fonseca
+        if "joao" in player_name.lower() and "fonseca" in player_name.lower():
+            return "O <span class='msg-highlight'>João Fonseca</span> brilha muito em **quadras rápidas**! 🎾 Seu estilo agressivo se adapta perfeitamente a esse piso."
+
+        # 2. Busca nos detalhes biográficos (onde você adicionou "surface": "Saibro")
+        players_details = self.data.get("player_details", {})
+        for p_name, details in players_details.items():
+            if player_name.lower() in p_name.lower():
+                piso = details.get('surface', details.get('piso', 'diversas superfícies'))
+                return f"O jogador <span class='msg-highlight'>{p_name}</span> prefere jogar em **{piso}**."
+
+        # 3. Busca nos Rankings (como backup)
+        for circuit in ['ranking_atp', 'ranking_wta']:
+            for p in self.data.get(circuit, []):
+                if p['name'].lower() == player_name.lower():
+                    piso = p.get('surface', p.get('piso', 'diversas superfícies'))
+                    return f"Segundo os dados da temporada, <span class='msg-highlight'>{p['name']}</span> tem melhor desempenho em **{piso}**."
+
+        return f"Ainda estou estudando o estilo de jogo de {player_name} para confirmar o piso favorito! 😅"
+    
+    
     def _load_data(self): # Função "privada" (interna) para carregar o conteúdo do JSON
         if os.path.exists(self.data_path): # Verifica se o arquivo físico (ex: tennis_data.json) existe no disco
             with open(self.data_path, 'r', encoding='utf-8') as f: # Abre o arquivo para leitura com acentuação correta
