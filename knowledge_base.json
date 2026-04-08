@@ -845,6 +845,23 @@
         "🎾 Quer começar no tênis? Aqui vão dicas!\n\n1️⃣ Equipamento básico: uma raquete intermediária, bolas e tênis confortável\n2️⃣ Aulas: procure um professor ou escola de tênis na sua cidade\n3️⃣ Técnica: comece pelo forehand e backhand, depois saque\n4️⃣ Prática: bata contra a parede para melhorar a consistência\n5️⃣ Condicionamento: tênis exige pernas fortes e resistência\n\n💡 Dica de ouro: assista jogos profissionais para entender posicionamento e estratégia. Os melhores para assistir são Federer (técnica) e Djokovic (tática)!"
       ],
       "follow_up": "Quer saber sobre equipamentos ou regras básicas?"
+    },
+    {
+      "tag": "equipamento",
+      "patterns": [
+        "Qual raquete usar?",
+        "tamanho da raquete",
+        "encordoamento",
+        "peso da raquete de tenis",
+        "melhores marcas de raquete",
+        "qual a melhor raquete?",
+        "libras da raquete",
+        "tensão das cordas"
+      ],
+      "responses": [
+        "A escolha do equipamento é super pessoal! Iniciantes geralmente usam raquetes mais leves (255g a 280g) para facilitar o manuseio. Profissionais usam raquetes pesadas (acima de 300g) para ter estabilidade contra bolas rápidas.\n\nSobre as cordas (tensão/libras): \n🧵 Menos libras (ex: 45-50): Mais potência e conforto.\n🧵 Mais libras (ex: 55-60): Mais controle, mas exige mais do braço.\n\nMarcas famosas incluem Wilson, Babolat, Head e Yonex."
+      ],
+      "follow_up": "Qual marca de raquete você acha mais bonita ou tem vontade de testar?"
     }
   ]
 }
