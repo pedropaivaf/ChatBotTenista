@@ -5,8 +5,12 @@ ATP 500, último ganhador, países, edge cases, WTA, off-topic, typos, fluxos de
 campos específicos (altura/títulos/idade), listagem de torneios, recordes, GOAT, lendas,
 posição no ranking, next gen, regras detalhadas.
 """
-import sys, re
+import sys, re, os
 sys.stdout.reconfigure(encoding='utf-8')
+# Garante o fallback LLM DESLIGADO durante os testes (determinismo). Como o
+# python-dotenv não sobrescreve variáveis já presentes, isto vence qualquer .env
+# e mantém as respostas canned esperadas pelos testes. Meta: 170/170.
+os.environ["LLM_ENABLED"] = "0"
 import app as app_module
 client = app_module.app.test_client()
 
@@ -180,7 +184,7 @@ expect('7.02', 'qual a origem do tenis?', 'b7b', ['Inglaterra'])
 expect('7.03', 'o que é a ATP?', 'b7c', ['ATP', '1972'])
 expect('7.04', 'piso duro', 'b7d', ['piso'])
 expect('7.05', 'grama', 'b7e', ['grama'])
-expect('7.06', 'quem é o numero 1 do mundo', 'b7f', ['Alcaraz'])
+expect('7.06', 'quem é o numero 1 do mundo', 'b7f', ['Sinner'])
 expect('7.07', 'melhor jogador da franca', 'b7g', ['França'])
 expect('7.08', 'melhor jogador da argentina', 'b7h', ['Argentina'])
 
@@ -283,7 +287,7 @@ expect('10.07', 'melhor jogador da russia', 'p7', ['Rússia'])
 expect('10.08', 'melhor jogador da alemanha', 'p8', ['Alemanha', 'Zverev'])
 expect('10.09', 'melhor jogador da servia', 'p9', ['Sérvia', 'Djokovic'])
 expect('10.10', 'melhor jogadora da polonia', 'p10', ['Polônia', 'Swiatek'])
-expect('10.11', 'quem é o numero 1 do mundo', 'p11', ['Alcaraz'])
+expect('10.11', 'quem é o numero 1 do mundo', 'p11', ['Sinner'])
 expect('10.12', 'melhor jogadora do mundo', 'p12', ['Sabalenka'])
 
 
@@ -332,7 +336,7 @@ expect('12.14', 'Medevedev', 'stress', ['Daniil Medvedev'])
 expect('12.15', 'a defesa dele impressiona', 'stress', ['Medvedev'], ['fugiu', 'Coria'])
 expect('12.16', 'quais as regras do tenis', 'stress', ['15', '30', '40'])
 expect('12.17', 'qual a cor da bolinha', 'stress', ['amarelo'], ['Coria'])
-expect('12.18', 'quem é o numero 1 do mundo', 'stress', ['Alcaraz'])
+expect('12.18', 'quem é o numero 1 do mundo', 'stress', ['Sinner'])
 expect('12.19', 'futebol', 'stress', ['Tênis'])
 expect('12.20', 'obrigado', 'stress', None)
 
@@ -615,6 +619,11 @@ expect('20.05', 'recorde de velocidade de saque', 'kb5', ['263'])
 expect('20.06', 'quem é o goat do tênis', 'kb6', ['Djokovic', 'Nadal', 'Federer'])
 expect('20.07', 'debate goat', 'kb7', ['Djokovic', 'Nadal', 'Federer'])
 expect('20.08', 'quem é o melhor de todos os tempos', 'kb8', ['Djokovic', 'Nadal', 'Federer'])
+# GOAT com contexto de jogador NÃO deve devolver o #1 atual (guard da base "gulosa")
+expect('20.08b', 'quem é o melhor tenista de todos os tempos', 'kbg1', ['Djokovic', 'Nadal', 'Federer'], ['Sinner'])
+expect('20.08c', 'melhor jogador da história', 'kbg2', ['Djokovic', 'Nadal', 'Federer'], ['Sinner'])
+# Pergunta de geografia (fora do tema) não deve devolver ranking de país (vai ao LLM/canned)
+expect('20.08d', 'qual a capital da austrália', 'kbg3', ['Tênis'], ['De Minaur'])
 
 # Lendas
 expect('20.09', 'Roger Federer', 'kb9', ['Federer', '1,85m'])
@@ -651,7 +660,7 @@ print('\n--- BATERIA 21: Posição no ranking + recordes ---')
 # Posição específica sem contexto
 expect('21.01', 'quem é o número 20 do mundo', 'pos1', ['20º'])
 expect('21.02', 'quem é o top 5 do ranking', 'pos2', ['5º'])
-expect('21.03', 'atual número 1 do mundo', 'pos3', ['1º', 'Alcaraz'])
+expect('21.03', 'atual número 1 do mundo', 'pos3', ['1º', 'Sinner'])
 
 # Posição WTA
 expect('21.04', 'quem é a número 1 do wta', 'pos4', ['1º', 'WTA', 'Sabalenka'])

@@ -494,6 +494,19 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
             for p in wta_best:
                 result += f"  {p['position']}º. {p['name']} — {p['points']} pts\n"
 
+        # Destaques fora do Top 100 atual (ex.: Beatriz Haddad Maia), vindos do
+        # player_details. Só jogadores(as) com idade numérica (ativos) e que não
+        # estejam já nos rankings, para não duplicar.
+        all_ranked = ({p['name'] for p in self.data.get('ranking_atp', [])}
+                      | {p['name'] for p in self.data.get('ranking_wta', [])})
+        extras = [name for name, d in self.data.get('player_details', {}).items()
+                  if d.get('country') == country and name not in all_ranked
+                  and isinstance(d.get('age'), (int, float))]
+        if extras:
+            result += "\n<span class='msg-highlight'>Outros destaques:</span>\n"
+            for name in extras[:4]:
+                result += f"  • {name}\n"
+
         return result.strip()
 
     def reload_data(self):

@@ -7,10 +7,16 @@ from session_manager import SessionManager # Gerenciador de sessões com context
 from query_parser import parse_query # Parser inteligente de queries (país/temporal/superlativo)
 from decision_tree import DecisionTree, _fuzzy_match_player # Árvore de decisão contextual com follow-ups
 from api_client import TennisAPIClient # Cliente de atualização de rankings (ATP/WTA)
+import llm_client # Fallback híbrido: consulta um LLM (LM Studio) quando a base não resolve
 import json # Para manipular arquivos de dados estruturados
 import os # Para verificar a existência de arquivos no sistema
+import re # Para limpar tags HTML do histórico antes de enviar ao LLM
 import random # Para escolher respostas variadas quando houver várias opções
 from datetime import datetime # Para registrar a data/hora nos logs de aprendizado
+
+# Regex simples para remover tags HTML (ex.: <span ...>) das respostas do bot
+# antes de reaproveitá-las como histórico de contexto para o LLM.
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 # Inicialização do aplicativo Flask (nosso servidor)
 app = Flask(__name__) # Cria a instância global do servidor web
@@ -56,6 +62,21 @@ OFF_TOPIC_KEYWORDS = [
     "programação", "programacao", "javascript", "código", "codigo",
     "clima", "previsão", "previsao",
     "religião", "religiao", "igreja",
+    # Geografia / conhecimento geral — caem no LLM (ex.: "capital da austrália")
+    "capital", "população", "populacao", "habitantes", "moeda", "idioma",
+    "continente", "fica em que país", "qual a língua",
+    # Ciência / astronomia / acadêmico — caem no LLM (ex.: "distância da terra à lua")
+    "planeta", "planetas", "sistema solar", "universo", "galáxia", "galaxia",
+    "estrela", "lua", "astronomia", "matemática", "matematica", "biologia",
+    "filosofia", "geografia", "equação", "equacao", "raiz quadrada",
+]
+
+# Qualificadores de "maior de todos os tempos" (GOAT). Quando presentes, o
+# superlativo "melhor" NÃO deve devolver o #1 atual do ranking — deixamos o
+# intent goat_debate (ou o LLM) responder ao debate histórico.
+GOAT_QUALIFIERS = [
+    "todos os tempos", "da história", "da historia", "na história", "na historia",
+    "goat", "maior de todos", "já existiu", "ja existiu",
 ]
 
 # Keywords que indicam que o usuário quer detalhes/informações sobre um Grand Slam (não campeões)
@@ -101,6 +122,39 @@ def log_unrecognized_query(query): # Define a função de log
     # Salva a lista atualizada de volta no arquivo JSON
     with open(UNRECOGNIZED_FILE, 'w', encoding='utf-8') as f: # Abre para escrita (sobrescreve)
         json.dump(data, f, indent=4, ensure_ascii=False) # Grava o JSON formatado com indentação
+
+# Monta um "contexto factual" curto e em texto puro para enviar ao LLM no fallback.
+# Objetivo: reduzir alucinação ancorando o modelo nos dados reais do projeto
+# (perfil do jogador citado e/ou topo do ranking atual). Reaproveita os dados já
+# carregados em memória pelo TennisEngine. Retorna string (pode ser vazia).
+def build_grounding(msg_lower):
+    parts = [] # Acumula os trechos de contexto relevantes
+    try:
+        # (a) A mensagem cita um jogador conhecido? Injeta o perfil dele.
+        matched = _fuzzy_match_player(msg_lower, tennis_engine.get_all_player_names())
+        if matched:
+            p = tennis_engine.data.get("player_details", {}).get(matched)
+            if p:
+                campos = [f"{matched}"]
+                if p.get("country"): campos.append(f"país: {p['country']}")
+                if p.get("age"):     campos.append(f"idade: {p['age']}")
+                if p.get("style"):   campos.append(f"estilo: {p['style']}")
+                if p.get("titles"):  campos.append(f"títulos: {p['titles']}")
+                if p.get("fact"):    campos.append(f"curiosidade: {p['fact']}")
+                parts.append("Jogador(a) — " + "; ".join(campos) + ".")
+
+        # (b) A mensagem é sobre ranking/melhor do mundo? Injeta o Top 5 atual.
+        if any(k in msg_lower for k in ["ranking", "top ", "número 1", "numero 1",
+                                         "nº1", "n1", "melhor do mundo", "líder", "lider",
+                                         "primeiro lugar", "número um", "numero um"]):
+            for circuito, chave in (("ATP", "ranking_atp"), ("WTA", "ranking_wta")):
+                top = tennis_engine.data.get(chave, [])[:5]
+                if top:
+                    linha = ", ".join(f"{x['position']}º {x['name']} ({x['country']})" for x in top)
+                    parts.append(f"Top 5 {circuito} atual (mar/2026): {linha}.")
+    except Exception:
+        pass # Grounding é best-effort: qualquer erro aqui não pode quebrar o chat.
+    return "\n".join(parts)
 
 # Rota principal que carrega a interface visual do nosso ChatBot
 @app.route('/') # Define que a URL raiz '/' chamará esta função
@@ -154,7 +208,35 @@ def predict(): # Função principal de "predição" ou resposta
         )
         add_log(f"[SESSÃO] Turno {context['turn_count']}, Tópico: {enriched['topic']}, Pendente: {enriched['pending_follow_up']}, Foco: {enriched.get('focus_player')}", "DEBUG")
         add_step("Resposta Final", "success", f"Tópico: {enriched['topic']} | Ação: {enriched['bot_action']}", {"follow_up": enriched['pending_follow_up'], "focus": enriched.get('focus_player')})
+        llm_client.record("resolved_by_base") # Métrica: pergunta resolvida pela base de conhecimento
         return jsonify({"answer": enriched["response"], "logs": current_logs, "pipeline": pipeline_steps})
+
+    # Função auxiliar: aciona o LLM (LM Studio) como FALLBACK universal.
+    # Retorna um Response (resposta gerada pelo LLM) ou None quando o LLM está
+    # desligado/indisponível/falha — caso em que o chamador usa a resposta canned.
+    def try_llm_fallback(step_detail="Base não resolveu — acionando LLM"):
+        add_step("LLM · LM Studio", "active", step_detail) # Acende a etapa LLM no pipeline visual
+        add_log("Acionando LLM de fallback (LM Studio)...", "SYSTEM")
+        grounding = build_grounding(msg_lower) # Contexto factual (anti-alucinação)
+        # Histórico curto (últimos turnos), já sem tags HTML, no formato do LLM
+        history = []
+        for h in context.get("history", [])[-4:]:
+            role = "assistant" if h.get("role") == "bot" else "user"
+            content = _HTML_TAG_RE.sub("", h.get("text", "") or "").strip()
+            if content:
+                history.append({"role": role, "content": content})
+        result = llm_client.query_llm(text, grounding=grounding, history=history)
+        if not result: # LLM indisponível ou sem resposta → deixa o canned assumir
+            add_step("LLM · LM Studio", "fail", "LLM indisponível ou sem resposta")
+            add_log("LLM indisponível — usando resposta padrão.", "WARNING")
+            return None
+        answer = result["answer"]
+        add_step("LLM · LM Studio", "success", f"Respondido pelo LLM em {result['latency']:.1f}s")
+        add_log(f"Resposta gerada pelo LLM ({result['latency']:.2f}s).", "SUCCESS")
+        session_mgr.update(session_id, "user", text)
+        session_mgr.update(session_id, "bot", answer, bot_action="showed_llm",
+                           topic=context.get("current_topic"))
+        return jsonify({"answer": answer, "logs": current_logs, "pipeline": pipeline_steps})
 
     # Processamento inicial da mensagem (Pré-processamento)
     add_log(f">> Comando recebido: {text}", "INFO")
@@ -183,7 +265,7 @@ def predict(): # Função principal de "predição" ou resposta
                 return True
             # 4+ consoantes consecutivas (raro em português/inglês)
             consonant_run = _re.search(r'[^aeiouáéíóúâêîôûãõ]{4,}', w)
-            if consonant_run and len(w) > 6:
+            if consonant_run and len(w) > 5:
                 return True
             # Mesma letra repetida 3+ vezes
             if _re.search(r'(.)\1{2,}', w):
@@ -203,19 +285,31 @@ def predict(): # Função principal de "predição" ou resposta
     is_off_topic = any(off in msg_lower for off in OFF_TOPIC_KEYWORDS)
     is_gibber = is_gibberish(msg_lower)
 
-    if is_off_topic or is_gibber:
-        reason = "Texto sem sentido detectado" if is_gibber else "Palavra bloqueada detectada na mensagem"
-        add_log("Assunto fora de contexto (Tênis) detectado!", "WARNING")
-        add_step("Filtro Off-Topic", "fail", reason)
+    # Gibberish (texto sem sentido) continua BLOQUEADO — não faz sentido gastar o
+    # LLM com "Xyfzq123". Tem prioridade sobre o filtro off-topic.
+    if is_gibber:
+        add_log("Texto sem sentido detectado!", "WARNING")
+        add_step("Filtro Off-Topic", "fail", "Texto sem sentido detectado")
         log_unrecognized_query(text)
         session_mgr.update(session_id, "user", text)
-        resp_text = ("Hmm, não entendi essa mensagem. 🤔\nTenta me perguntar sobre ranking ATP, jogadores ou torneios de Grand Slam!"
-                     if is_gibber else
-                     "Desculpe, mas eu respiro apenas Tênis! 🎾\nPosso te contar sobre o ranking da ATP ou os campeões de Grand Slam, mas sobre esse assunto eu prefiro não comentar.")
-        return jsonify({
-            "answer": resp_text,
-            "logs": current_logs, "pipeline": pipeline_steps
-        })
+        llm_client.record("unresolved") # Métrica: não resolvida
+        resp_text = "Hmm, não entendi essa mensagem. 🤔\nTenta me perguntar sobre ranking ATP, jogadores ou torneios de Grand Slam!"
+        return jsonify({"answer": resp_text, "logs": current_logs, "pipeline": pipeline_steps})
+
+    # Fora do contexto de tênis: a proposta do trabalho é "jogar para o LLM e
+    # retornar". Encaminhamos ao modelo; se ele estiver indisponível, mantemos a
+    # mensagem canned original ("respiro apenas Tênis").
+    if is_off_topic:
+        add_log("Assunto fora do contexto (Tênis) — encaminhando ao LLM.", "WARNING")
+        add_step("Filtro Off-Topic", "fail", "Pergunta fora do tema — fallback para o LLM")
+        log_unrecognized_query(text)
+        llm_resp = try_llm_fallback("Pergunta fora do contexto — acionando LLM")
+        if llm_resp is not None:
+            return llm_resp
+        session_mgr.update(session_id, "user", text)
+        llm_client.record("unresolved") # Métrica: não resolvida (LLM indisponível)
+        resp_text = "Desculpe, mas eu respiro apenas Tênis! 🎾\nPosso te contar sobre o ranking da ATP ou os campeões de Grand Slam, mas sobre esse assunto eu prefiro não comentar."
+        return jsonify({"answer": resp_text, "logs": current_logs, "pipeline": pipeline_steps})
 
     # --- Passo 0.5: Resolução Contextual (Árvore de Decisão) ---
     add_step("Filtro Off-Topic", "success", "Mensagem permitida (contexto tênis)")
@@ -270,7 +364,23 @@ def predict(): # Função principal de "predição" ou resposta
     import re as _re_check
     _specific_num = _re_check.search(r'(?:número|numero|n[°º]|top|posição|posicao|atual)\s*(\d{1,3})', msg_lower)
     _has_specific_position = _specific_num and int(_specific_num.group(1)) > 1
-    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words) and not _has_specific_position:
+    # GOAT: "melhor tenista de todos os tempos" NÃO é o #1 atual.
+    _is_goat_query = any(q in msg_lower for q in GOAT_QUALIFIERS)
+    if _is_goat_query and parsed["country_filter"]:
+        # "melhor brasileiro de todos os tempos" (Guga): a base só tem o debate
+        # global (Big Three), então o LLM responde o melhor histórico do país.
+        llm_resp = try_llm_fallback("GOAT histórico de um país → LLM")
+        if llm_resp is not None:
+            return llm_resp
+    if _is_goat_query and parsed["wants_best"] and any(w in msg_lower for w in player_context_words):
+        # Debate do GOAT (maior de todos os tempos) — serve a resposta curada da base,
+        # evitando tanto o #1 atual quanto o intent genérico players_tenis.
+        goat_intent = next((i for i in load_knowledge_base()["intents"] if i["tag"] == "goat_debate"), None)
+        if goat_intent:
+            add_log("[PARSER] Pergunta histórica/GOAT → goat_debate", "SUCCESS")
+            add_step("Base de Conhecimento", "success", "Intent: goat_debate (histórico)")
+            return respond(random.choice(goat_intent["responses"]), topic="trivia", bot_action="showed_trivia")
+    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words) and not _has_specific_position and not _is_goat_query:
         # Detecta se é feminino → WTA
         circuit = parsed["circuit"] or ('WTA' if any(w in msg_lower for w in feminine_words) else 'ATP')
         ranking_data = tennis_engine.data.get(f"ranking_{circuit.lower()}", [])
@@ -289,7 +399,8 @@ def predict(): # Função principal de "predição" ou resposta
         # "melhor jogador do brasil atualmente" ou "jogadores brasileiros" → retorna melhores do país
         rank_keywords_local = ["ranking", "top", "melhores", "rank", "posição", "tabela"]
         is_ranking_query = any(word in msg_lower for word in rank_keywords_local)
-        if parsed["wants_best"] or parsed["is_current"] or not is_ranking_query:
+        # "melhor brasileiro de todos os tempos" (Guga) não é o melhor ATUAL → deixa goat/LLM
+        if (parsed["wants_best"] or parsed["is_current"] or not is_ranking_query) and not _is_goat_query:
             result = tennis_engine.get_best_from_country(parsed["country_filter"])
             return respond(result, topic="player", bot_action="showed_country_best",
                            mentioned_countries=[parsed["country_filter"]])
@@ -560,7 +671,13 @@ def predict(): # Função principal de "predição" ou resposta
     log_unrecognized_query(text)
     add_log("Pergunta enviada para o banco de aprendizado.", "SYSTEM")
 
-    # Resposta padrão de erro/confusão — preserva contexto quando possível
+    # Antes de desistir, aciona o LLM (LM Studio) como fallback universal.
+    llm_resp = try_llm_fallback("Base não resolveu — acionando LLM")
+    if llm_resp is not None:
+        return llm_resp
+
+    # LLM indisponível/desligado → resposta padrão (preserva contexto quando possível)
+    llm_client.record("unresolved") # Métrica: não resolvida (nem base nem LLM)
     if context.get("focus_player"):
         fallback_response = f"Não entendi bem essa pergunta... 🤔 Quer que eu continue falando sobre {context['focus_player']} ou prefere mudar de assunto?\n\nPosso mostrar ranking, torneios de Grand Slam ou curiosidades!"
     elif context.get("current_topic"):
@@ -572,6 +689,13 @@ def predict(): # Função principal de "predição" ou resposta
                        pending_follow_up=context.get("pending_follow_up"),
                        topic=context.get("current_topic"))
     return jsonify({"answer": fallback_response, "logs": current_logs, "pipeline": pipeline_steps})
+
+# Rota de métricas: resumo de quantas perguntas foram resolvidas pela base vs LLM
+# e o tempo médio de resposta do LLM. Alimenta a seção "Resultados e Discussão"
+# do relatório e pode ser exibida no vídeo de demonstração.
+@app.route('/metrics', methods=['GET'])
+def metrics():
+    return jsonify(llm_client.metrics_snapshot())
 
 # Ponto de entrada que inicia o servidor se o arquivo for executado diretamente
 if __name__ == "__main__":

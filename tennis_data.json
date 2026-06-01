@@ -2,603 +2,603 @@
   "ranking_atp": [
     {
       "position": 1,
-      "name": "Carlos Alcaraz",
-      "country": "Espanha",
-      "points": "13590"
+      "name": "Jannik Sinner",
+      "country": "Itália",
+      "points": "14750"
     },
     {
       "position": 2,
-      "name": "Jannik Sinner",
-      "country": "Itália",
-      "points": "12400"
+      "name": "Carlos Alcaraz",
+      "country": "Espanha",
+      "points": "11960"
     },
     {
       "position": 3,
       "name": "Alexander Zverev",
       "country": "Alemanha",
-      "points": "5205"
+      "points": "5705"
     },
     {
       "position": 4,
       "name": "Novak Djokovic",
       "country": "Sérvia",
-      "points": "4720"
+      "points": "4460"
     },
     {
       "position": 5,
-      "name": "Lorenzo Musetti",
-      "country": "Itália",
-      "points": "4265"
+      "name": "Ben Shelton",
+      "country": "EUA",
+      "points": "4070"
     },
     {
       "position": 6,
-      "name": "Alex De Minaur",
-      "country": "Austrália",
-      "points": "4095"
+      "name": "Félix Auger-Aliassime",
+      "country": "Canadá",
+      "points": "4050"
     },
     {
       "position": 7,
-      "name": "Félix Auger-Aliassime",
-      "country": "Canadá",
-      "points": "4000"
+      "name": "Alex De Minaur",
+      "country": "Austrália",
+      "points": "3855"
     },
     {
       "position": 8,
-      "name": "Ben Shelton",
-      "country": "EUA",
-      "points": "3900"
+      "name": "Daniil Medvedev",
+      "country": "Rússia",
+      "points": "3760"
     },
     {
       "position": 9,
       "name": "Taylor Fritz",
       "country": "EUA",
-      "points": "3870"
+      "points": "3720"
     },
     {
       "position": 10,
-      "name": "Daniil Medvedev",
-      "country": "Rússia",
-      "points": "3610"
+      "name": "Alexander Bublik",
+      "country": "Cazaquistão",
+      "points": "3320"
     },
     {
       "position": 11,
-      "name": "Alexander Bublik",
-      "country": "Cazaquistão",
-      "points": "3345"
+      "name": "Lorenzo Musetti",
+      "country": "Itália",
+      "points": "3115"
     },
     {
       "position": 12,
-      "name": "Casper Ruud",
-      "country": "Noruega",
-      "points": "2625"
+      "name": "Jiří Lehečka",
+      "country": "Rep. Tcheca",
+      "points": "2665"
     },
     {
       "position": 13,
-      "name": "Jiří Lehečka",
-      "country": "Rep. Tcheca",
-      "points": "2490"
+      "name": "Andrey Rublev",
+      "country": "Rússia",
+      "points": "2460"
     },
     {
       "position": 14,
-      "name": "Karen Khachanov",
-      "country": "Rússia",
-      "points": "2410"
+      "name": "Flavio Cobolli",
+      "country": "Itália",
+      "points": "2340"
     },
     {
       "position": 15,
-      "name": "Andrey Rublev",
+      "name": "Karen Khachanov",
       "country": "Rússia",
-      "points": "2400"
-    },
-    {
-      "position": 16,
-      "name": "Flavio Cobolli",
-      "country": "Itália",
       "points": "2320"
     },
     {
+      "position": 16,
+      "name": "Casper Ruud",
+      "country": "Noruega",
+      "points": "2275"
+    },
+    {
       "position": 17,
-      "name": "Alejandro Davidovich Fokina",
-      "country": "Espanha",
-      "points": "2220"
+      "name": "Luciano Darderi",
+      "country": "Itália",
+      "points": "2260"
     },
     {
       "position": 18,
-      "name": "Tommy Paul",
+      "name": "Learner Tien",
       "country": "EUA",
-      "points": "2065"
+      "points": "2180"
     },
     {
       "position": 19,
-      "name": "Francisco Cerundolo",
-      "country": "Argentina",
-      "points": "2020"
+      "name": "Valentin Vacherot",
+      "country": "Mônaco",
+      "points": "2103"
     },
     {
       "position": 20,
-      "name": "Frances Tiafoe",
-      "country": "EUA",
-      "points": "2005"
+      "name": "Arthur Fils",
+      "country": "França",
+      "points": "2040"
     },
     {
       "position": 21,
-      "name": "Luciano Darderi",
-      "country": "Itália",
-      "points": "1920"
+      "name": "Tommy Paul",
+      "country": "EUA",
+      "points": "1945"
     },
     {
       "position": 22,
-      "name": "Learner Tien",
+      "name": "Frances Tiafoe",
       "country": "EUA",
-      "points": "1885"
+      "points": "1905"
     },
     {
       "position": 23,
-      "name": "Valentin Vacherot",
-      "country": "Mônaco",
-      "points": "1818"
+      "name": "Alejandro Davidovich Fokina",
+      "country": "Espanha",
+      "points": "1860"
     },
     {
       "position": 24,
       "name": "Cameron Norrie",
       "country": "Reino Unido",
-      "points": "1753"
+      "points": "1785"
     },
     {
       "position": 25,
-      "name": "Jack Draper",
-      "country": "Reino Unido",
-      "points": "1710"
+      "name": "Arthur Rinderknech",
+      "country": "França",
+      "points": "1736"
     },
     {
       "position": 26,
-      "name": "Jakub Mensik",
-      "country": "Rep. Tcheca",
-      "points": "1700"
+      "name": "Francisco Cerundolo",
+      "country": "Argentina",
+      "points": "1570"
     },
     {
       "position": 27,
-      "name": "Arthur Rinderknech",
-      "country": "França",
-      "points": "1651"
+      "name": "Jakub Mensik",
+      "country": "Rep. Tcheca",
+      "points": "1550"
     },
     {
       "position": 28,
-      "name": "Arthur Fils",
-      "country": "França",
-      "points": "1640"
+      "name": "Tomás Martin Etcheverry",
+      "country": "Argentina",
+      "points": "1510"
     },
     {
       "position": 29,
-      "name": "Holger Rune",
-      "country": "Dinamarca",
-      "points": "1630"
+      "name": "Rafael Jodar",
+      "country": "Espanha",
+      "points": "1461"
     },
     {
       "position": 30,
-      "name": "Tomás Martin Etcheverry",
-      "country": "Argentina",
-      "points": "1540"
+      "name": "João Fonseca",
+      "country": "Brasil",
+      "points": "1435"
     },
     {
       "position": 31,
-      "name": "Corentin Moutet",
-      "country": "França",
-      "points": "1433"
+      "name": "Ignacio Buse",
+      "country": "Peru",
+      "points": "1412"
     },
     {
       "position": 32,
-      "name": "Tallon Griekspoor",
-      "country": "Holanda",
-      "points": "1430"
+      "name": "Ugo Humbert",
+      "country": "França",
+      "points": "1370"
     },
     {
       "position": 33,
-      "name": "Brandon Nakashima",
-      "country": "EUA",
-      "points": "1385"
+      "name": "Tallon Griekspoor",
+      "country": "Holanda",
+      "points": "1340"
     },
     {
       "position": 34,
-      "name": "Ugo Humbert",
+      "name": "Corentin Moutet",
       "country": "França",
-      "points": "1320"
+      "points": "1323"
     },
     {
       "position": 35,
-      "name": "Alex Michelsen",
+      "name": "Brandon Nakashima",
       "country": "EUA",
-      "points": "1200"
+      "points": "1295"
     },
     {
       "position": 36,
-      "name": "Gabriel Diallo",
-      "country": "Canadá",
-      "points": "1175"
+      "name": "Alejandro Tabilo",
+      "country": "Chile",
+      "points": "1278"
     },
     {
       "position": 37,
-      "name": "Jaume Munar",
-      "country": "Espanha",
-      "points": "1175"
+      "name": "Alexander Blockx",
+      "country": "Bélgica",
+      "points": "1238"
     },
     {
       "position": 38,
-      "name": "Denis Shapovalov",
-      "country": "Canadá",
-      "points": "1120"
+      "name": "Mariano Navone",
+      "country": "Argentina",
+      "points": "1215"
     },
     {
       "position": 39,
-      "name": "Alejandro Tabilo",
-      "country": "Chile",
-      "points": "1118"
+      "name": "Denis Shapovalov",
+      "country": "Canadá",
+      "points": "1170"
     },
     {
       "position": 40,
-      "name": "João Fonseca",
-      "country": "Brasil",
-      "points": "1115"
+      "name": "Zizou Bergs",
+      "country": "Bélgica",
+      "points": "1150"
     },
     {
       "position": 41,
-      "name": "Sebastian Korda",
-      "country": "EUA",
-      "points": "1100"
+      "name": "Jaume Munar",
+      "country": "Espanha",
+      "points": "1145"
     },
     {
       "position": 42,
-      "name": "Mariano Navone",
-      "country": "Argentina",
-      "points": "1100"
+      "name": "Alex Michelsen",
+      "country": "EUA",
+      "points": "1115"
     },
     {
       "position": 43,
-      "name": "Fabian Marozsan",
-      "country": "Hungria",
-      "points": "1095"
+      "name": "Tomas Machac",
+      "country": "Rep. Tcheca",
+      "points": "1080"
     },
     {
       "position": 44,
-      "name": "Alexei Popyrin",
-      "country": "Austrália",
+      "name": "Holger Rune",
+      "country": "Dinamarca",
       "points": "1060"
     },
     {
       "position": 45,
-      "name": "Terence Atmane",
+      "name": "Adrian Mannarino",
       "country": "França",
-      "points": "1058"
+      "points": "1037"
     },
     {
       "position": 46,
-      "name": "Adrian Mannarino",
-      "country": "França",
-      "points": "1050"
-    },
-    {
-      "position": 47,
-      "name": "Zizou Bergs",
-      "country": "Bélgica",
+      "name": "Marin Cilic",
+      "country": "Croácia",
       "points": "1010"
     },
     {
+      "position": 47,
+      "name": "Sebastian Korda",
+      "country": "EUA",
+      "points": "1000"
+    },
+    {
       "position": 48,
-      "name": "Stefanos Tsitsipas",
-      "country": "Grécia",
-      "points": "995"
+      "name": "Miomir Kecmanovic",
+      "country": "Sérvia",
+      "points": "980"
     },
     {
       "position": 49,
-      "name": "Daniel Altmaier",
-      "country": "Alemanha",
-      "points": "994"
+      "name": "Gabriel Diallo",
+      "country": "Canadá",
+      "points": "975"
     },
     {
       "position": 50,
+      "name": "Ethan Quinn",
+      "country": "EUA",
+      "points": "974"
+    },
+    {
+      "position": 51,
       "name": "Nuno Borges",
       "country": "Portugal",
       "points": "970"
     },
     {
-      "position": 51,
-      "name": "Marin Cilic",
-      "country": "Croácia",
-      "points": "950"
-    },
-    {
       "position": 52,
-      "name": "Botic Van De Zandschulp",
-      "country": "Holanda",
-      "points": "931"
+      "name": "Terence Atmane",
+      "country": "França",
+      "points": "938"
     },
     {
       "position": 53,
-      "name": "Tomas Machac",
-      "country": "Rep. Tcheca",
-      "points": "930"
+      "name": "Yannick Hanfmann",
+      "country": "Alemanha",
+      "points": "936"
     },
     {
       "position": 54,
-      "name": "Ethan Quinn",
-      "country": "EUA",
-      "points": "911"
+      "name": "Fabian Marozsan",
+      "country": "Hungria",
+      "points": "935"
     },
     {
       "position": 55,
-      "name": "Yannick Hanfmann",
-      "country": "Alemanha",
-      "points": "899"
+      "name": "Botic Van De Zandschulp",
+      "country": "Holanda",
+      "points": "935"
     },
     {
       "position": 56,
-      "name": "Giovanni Mpetshi Perricard",
-      "country": "França",
-      "points": "890"
+      "name": "Juan Manuel Cerundolo",
+      "country": "Argentina",
+      "points": "935"
     },
     {
       "position": 57,
-      "name": "Rafael Jodar",
-      "country": "Espanha",
-      "points": "886"
+      "name": "Daniel Altmaier",
+      "country": "Alemanha",
+      "points": "930"
     },
     {
       "position": 58,
-      "name": "Marton Fucsovics",
-      "country": "Hungria",
-      "points": "877"
+      "name": "Hamad Medjedovic",
+      "country": "Sérvia",
+      "points": "894"
     },
     {
       "position": 59,
-      "name": "Miomir Kecmanovic",
-      "country": "Sérvia",
-      "points": "875"
+      "name": "Camilo Ugo Carabelli",
+      "country": "Argentina",
+      "points": "890"
     },
     {
       "position": 60,
-      "name": "Kamil Majchrzak",
-      "country": "Polônia",
-      "points": "867"
+      "name": "Thiago Agustín Tirante",
+      "country": "Argentina",
+      "points": "887"
     },
     {
       "position": 61,
-      "name": "Ignacio Buse",
-      "country": "Peru",
-      "points": "864"
+      "name": "Alexei Popyrin",
+      "country": "Austrália",
+      "points": "870"
     },
     {
       "position": 62,
-      "name": "Roman Andrés Burruchaga",
+      "name": "Raphael Collignon",
+      "country": "Bélgica",
+      "points": "866"
+    },
+    {
+      "position": 63,
+      "name": "Jenson Brooksby",
+      "country": "EUA",
+      "points": "865"
+    },
+    {
+      "position": 64,
+      "name": "Sebastian Baez",
       "country": "Argentina",
       "points": "860"
     },
     {
-      "position": 63,
-      "name": "Camilo Ugo Carabelli",
-      "country": "Argentina",
-      "points": "855"
-    },
-    {
-      "position": 64,
-      "name": "Jenson Brooksby",
-      "country": "EUA",
-      "points": "852"
-    },
-    {
       "position": 65,
-      "name": "Sebastian Baez",
-      "country": "Argentina",
-      "points": "840"
+      "name": "Marton Fucsovics",
+      "country": "Hungria",
+      "points": "859"
     },
     {
       "position": 66,
-      "name": "Lorenzo Sonego",
-      "country": "Itália",
-      "points": "810"
+      "name": "Vit Kopriva",
+      "country": "Rep. Tcheca",
+      "points": "856"
     },
     {
       "position": 67,
-      "name": "Reilly Opelka",
+      "name": "Aleksandar Kovacevic",
       "country": "EUA",
-      "points": "803"
+      "points": "837"
     },
     {
       "position": 68,
-      "name": "Raphael Collignon",
-      "country": "Bélgica",
-      "points": "793"
+      "name": "Roman Andrés Burruchaga",
+      "country": "Argentina",
+      "points": "833"
     },
     {
       "position": 69,
-      "name": "Marcos Giron",
-      "country": "EUA",
-      "points": "790"
+      "name": "Martin Landaluce",
+      "country": "Espanha",
+      "points": "827"
     },
     {
       "position": 70,
-      "name": "Arthur Cazaux",
-      "country": "França",
-      "points": "777"
+      "name": "Lorenzo Sonego",
+      "country": "Itália",
+      "points": "815"
     },
     {
       "position": 71,
-      "name": "Juan Manuel Cerundolo",
-      "country": "Argentina",
-      "points": "773"
+      "name": "Daniel Vallejo Adolfo",
+      "country": "Paraguai",
+      "points": "786"
     },
     {
       "position": 72,
-      "name": "Thiago Agustín Tirante",
-      "country": "Argentina",
-      "points": "765"
+      "name": "Dino Prizmic",
+      "country": "Croácia",
+      "points": "785"
     },
     {
       "position": 73,
-      "name": "Valentin Royer",
-      "country": "França",
-      "points": "751"
+      "name": "Mattia Bellucci",
+      "country": "Itália",
+      "points": "777"
     },
     {
       "position": 74,
-      "name": "Hubert Hurkacz",
-      "country": "Polônia",
-      "points": "745"
+      "name": "Valentin Royer",
+      "country": "França",
+      "points": "773"
     },
     {
       "position": 75,
-      "name": "Vit Kopriva",
-      "country": "Rep. Tcheca",
-      "points": "738"
+      "name": "Jack Draper",
+      "country": "Reino Unido",
+      "points": "760"
     },
     {
       "position": 76,
-      "name": "Marco Trungelliti",
-      "country": "Argentina",
-      "points": "732"
+      "name": "Reilly Opelka",
+      "country": "EUA",
+      "points": "758"
     },
     {
       "position": 77,
-      "name": "Alexander Shevchenko",
-      "country": "Cazaquistão",
-      "points": "727"
+      "name": "Arthur Cazaux",
+      "country": "França",
+      "points": "757"
     },
     {
       "position": 78,
-      "name": "Jan-Lennard Struff",
-      "country": "Alemanha",
-      "points": "719"
+      "name": "Kamil Majchrzak",
+      "country": "Polônia",
+      "points": "747"
     },
     {
       "position": 79,
-      "name": "Mattia Bellucci",
-      "country": "Itália",
-      "points": "715"
+      "name": "Stefanos Tsitsipas",
+      "country": "Grécia",
+      "points": "740"
     },
     {
       "position": 80,
-      "name": "Eliot Spizzirri",
-      "country": "EUA",
-      "points": "688"
+      "name": "Jan-Lennard Struff",
+      "country": "Alemanha",
+      "points": "739"
     },
     {
       "position": 81,
-      "name": "Damir Dzumhur",
-      "country": "Bósnia",
-      "points": "681"
+      "name": "Marco Trungelliti",
+      "country": "Argentina",
+      "points": "731"
     },
     {
       "position": 82,
-      "name": "Sebastian Ofner",
-      "country": "Áustria",
-      "points": "680"
+      "name": "James Duckworth",
+      "country": "Austrália",
+      "points": "722"
     },
     {
       "position": 83,
-      "name": "Hamad Medjedovic",
-      "country": "Sérvia",
-      "points": "680"
+      "name": "Giovanni Mpetshi Perricard",
+      "country": "França",
+      "points": "710"
     },
     {
       "position": 84,
-      "name": "Zachary Svajda",
+      "name": "Marcos Giron",
       "country": "EUA",
-      "points": "674"
+      "points": "705"
     },
     {
       "position": 85,
-      "name": "Roberto Bautista-Agut",
-      "country": "Espanha",
-      "points": "673"
+      "name": "Zachary Svajda",
+      "country": "EUA",
+      "points": "696"
     },
     {
       "position": 86,
-      "name": "James Duckworth",
-      "country": "Austrália",
-      "points": "672"
+      "name": "Daniel Merida Aguilar",
+      "country": "Espanha",
+      "points": "696"
     },
     {
       "position": 87,
-      "name": "Aleksandar Vukic",
-      "country": "Austrália",
-      "points": "663"
+      "name": "Damir Dzumhur",
+      "country": "Bósnia",
+      "points": "694"
     },
     {
       "position": 88,
-      "name": "Alexandre Muller",
-      "country": "França",
-      "points": "651"
+      "name": "Alexander Shevchenko",
+      "country": "Cazaquistão",
+      "points": "689"
     },
     {
       "position": 89,
-      "name": "Quentin Halys",
-      "country": "França",
-      "points": "650"
+      "name": "Pablo Carreno-Busta",
+      "country": "Espanha",
+      "points": "685"
     },
     {
       "position": 90,
-      "name": "Matteo Berrettini",
-      "country": "Itália",
-      "points": "650"
+      "name": "Quentin Halys",
+      "country": "França",
+      "points": "678"
     },
     {
       "position": 91,
-      "name": "Alexander Blockx",
-      "country": "Bélgica",
-      "points": "649"
+      "name": "Eliot Spizzirri",
+      "country": "EUA",
+      "points": "660"
     },
     {
       "position": 92,
-      "name": "Pablo Carreno-Busta",
-      "country": "Espanha",
-      "points": "647"
+      "name": "Yibing Wu",
+      "country": "China",
+      "points": "655"
     },
     {
       "position": 93,
-      "name": "Grigor Dimitrov",
-      "country": "Bulgária",
-      "points": "645"
+      "name": "Patrick Kypson",
+      "country": "EUA",
+      "points": "649"
     },
     {
       "position": 94,
-      "name": "Luca Van Assche",
-      "country": "França",
-      "points": "644"
+      "name": "Emilio Nava",
+      "country": "EUA",
+      "points": "631"
     },
     {
       "position": 95,
-      "name": "Patrick Kypson",
-      "country": "EUA",
-      "points": "640"
+      "name": "Benjamin Bonzi",
+      "country": "França",
+      "points": "629"
     },
     {
       "position": 96,
-      "name": "Daniel Vallejo Adolfo",
-      "country": "Paraguai",
-      "points": "640"
+      "name": "Aleksandar Vukic",
+      "country": "Austrália",
+      "points": "626"
     },
     {
       "position": 97,
-      "name": "Jacob Fearnley",
-      "country": "Reino Unido",
-      "points": "639"
+      "name": "Adam Walton",
+      "country": "Austrália",
+      "points": "614"
     },
     {
       "position": 98,
-      "name": "Aleksandar Kovacevic",
-      "country": "EUA",
-      "points": "636"
+      "name": "Rinky Hijikata",
+      "country": "Austrália",
+      "points": "612"
     },
     {
       "position": 99,
-      "name": "Francisco Comesana",
-      "country": "Argentina",
-      "points": "634"
+      "name": "Hubert Hurkacz",
+      "country": "Polônia",
+      "points": "600"
     },
     {
       "position": 100,
-      "name": "Rinky Hijikata",
-      "country": "Austrália",
-      "points": "632"
+      "name": "Luca Van Assche",
+      "country": "França",
+      "points": "599"
     }
   ],
   "ranking_wta": [
@@ -606,601 +606,601 @@
       "position": 1,
       "name": "Aryna Sabalenka",
       "country": "Bielorrússia",
-      "points": "11025"
+      "points": "9960"
     },
     {
       "position": 2,
       "name": "Elena Rybakina",
       "country": "Cazaquistão",
-      "points": "8108"
+      "points": "8313"
     },
     {
       "position": 3,
-      "name": "Coco Gauff",
-      "country": "EUA",
-      "points": "7278"
+      "name": "Iga Swiatek",
+      "country": "Polônia",
+      "points": "7273"
     },
     {
       "position": 4,
-      "name": "Iga Swiatek",
-      "country": "Polônia",
-      "points": "7263"
+      "name": "Coco Gauff",
+      "country": "EUA",
+      "points": "6749"
     },
     {
       "position": 5,
       "name": "Jessica Pegula",
       "country": "EUA",
-      "points": "6243"
+      "points": "6286"
     },
     {
       "position": 6,
       "name": "Amanda Anisimova",
       "country": "EUA",
-      "points": "5995"
+      "points": "5958"
     },
     {
       "position": 7,
       "name": "Elina Svitolina",
       "country": "Ucrânia",
-      "points": "3965"
+      "points": "4315"
     },
     {
       "position": 8,
-      "name": "Jasmine Paolini",
-      "country": "Itália",
-      "points": "3907"
+      "name": "Mirra Andreeva",
+      "country": "Rússia",
+      "points": "4181"
     },
     {
       "position": 9,
       "name": "Victoria Mboko",
       "country": "Canadá",
-      "points": "3531"
+      "points": "3710"
     },
     {
       "position": 10,
-      "name": "Mirra Andreeva",
-      "country": "Rússia",
-      "points": "3121"
+      "name": "Karolina Muchova",
+      "country": "Rep. Tcheca",
+      "points": "3318"
     },
     {
       "position": 11,
       "name": "Belinda Bencic",
       "country": "Suíça",
-      "points": "3090"
+      "points": "3145"
     },
     {
       "position": 12,
-      "name": "Karolina Muchova",
+      "name": "Linda Noskova",
       "country": "Rep. Tcheca",
-      "points": "2993"
+      "points": "3054"
     },
     {
       "position": 13,
-      "name": "Ekaterina Alexandrova",
-      "country": "Rússia",
-      "points": "2886"
+      "name": "Jasmine Paolini",
+      "country": "Itália",
+      "points": "2787"
     },
     {
       "position": 14,
-      "name": "Linda Noskova",
-      "country": "Rep. Tcheca",
-      "points": "2801"
+      "name": "Ekaterina Alexandrova",
+      "country": "Rússia",
+      "points": "2679"
     },
     {
       "position": 15,
-      "name": "Naomi Osaka",
-      "country": "Japão",
-      "points": "2324"
+      "name": "Marta Kostyuk",
+      "country": "Ucrânia",
+      "points": "2387"
     },
     {
       "position": 16,
-      "name": "Iva Jovic",
-      "country": "EUA",
-      "points": "2270"
+      "name": "Naomi Osaka",
+      "country": "Japão",
+      "points": "2341"
     },
     {
       "position": 17,
-      "name": "Madison Keys",
+      "name": "Iva Jovic",
       "country": "EUA",
-      "points": "2161"
+      "points": "2306"
     },
     {
       "position": 18,
-      "name": "Clara Tauson",
-      "country": "Dinamarca",
-      "points": "2040"
+      "name": "Sorana Cirstea",
+      "country": "Romênia",
+      "points": "1985"
     },
     {
       "position": 19,
-      "name": "Diana Shnaider",
-      "country": "Rússia",
-      "points": "2001"
+      "name": "Madison Keys",
+      "country": "EUA",
+      "points": "1962"
     },
     {
       "position": 20,
-      "name": "Elise Mertens",
-      "country": "Bélgica",
-      "points": "1906"
+      "name": "Clara Tauson",
+      "country": "Dinamarca",
+      "points": "1920"
     },
     {
       "position": 21,
-      "name": "Liudmila Samsonova",
-      "country": "Rússia",
-      "points": "1845"
+      "name": "Elise Mertens",
+      "country": "Bélgica",
+      "points": "1858"
     },
     {
       "position": 22,
-      "name": "Anna Kalinskaya",
-      "country": "Rússia",
-      "points": "1813"
+      "name": "Leylah Fernandez",
+      "country": "Canadá",
+      "points": "1844"
     },
     {
       "position": 23,
-      "name": "Jelena Ostapenko",
-      "country": "Letônia",
-      "points": "1706"
+      "name": "Diana Shnaider",
+      "country": "Rússia",
+      "points": "1796"
     },
     {
       "position": 24,
-      "name": "Marie Bouzkova",
-      "country": "Rep. Tcheca",
-      "points": "1676"
+      "name": "Anna Kalinskaya",
+      "country": "Rússia",
+      "points": "1792"
     },
     {
       "position": 25,
-      "name": "Leylah Fernandez",
-      "country": "Canadá",
-      "points": "1598"
+      "name": "Emma Navarro",
+      "country": "EUA",
+      "points": "1719"
     },
     {
       "position": 26,
-      "name": "Emma Navarro",
+      "name": "Hailey Baptiste",
       "country": "EUA",
-      "points": "1492"
+      "points": "1683"
     },
     {
       "position": 27,
-      "name": "Marta Kostyuk",
-      "country": "Ucrânia",
-      "points": "1473"
+      "name": "Liudmila Samsonova",
+      "country": "Rússia",
+      "points": "1635"
     },
     {
       "position": 28,
-      "name": "Emma Raducanu",
-      "country": "Reino Unido",
-      "points": "1465"
+      "name": "Marie Bouzkova",
+      "country": "Rep. Tcheca",
+      "points": "1631"
     },
     {
       "position": 29,
-      "name": "Sorana Cirstea",
-      "country": "Romênia",
-      "points": "1459"
+      "name": "Ann Li",
+      "country": "EUA",
+      "points": "1601"
     },
     {
       "position": 30,
-      "name": "Maya Joint",
-      "country": "Austrália",
-      "points": "1435"
+      "name": "Anastasia Potapova",
+      "country": "Áustria",
+      "points": "1470"
     },
     {
       "position": 31,
-      "name": "Cristina Bucsa",
-      "country": "Espanha",
-      "points": "1426"
+      "name": "Jelena Ostapenko",
+      "country": "Letônia",
+      "points": "1464"
     },
     {
       "position": 32,
-      "name": "Xinyu Wang",
-      "country": "China",
-      "points": "1383"
+      "name": "Jaqueline Cristian",
+      "country": "Romênia",
+      "points": "1414"
     },
     {
       "position": 33,
-      "name": "Jaqueline Cristian",
-      "country": "Romênia",
-      "points": "1382"
+      "name": "Cristina Bucsa",
+      "country": "Espanha",
+      "points": "1406"
     },
     {
       "position": 34,
-      "name": "Sara Bejlek",
-      "country": "Rep. Tcheca",
-      "points": "1380"
+      "name": "Xinyu Wang",
+      "country": "China",
+      "points": "1371"
     },
     {
       "position": 35,
-      "name": "Hailey Baptiste",
-      "country": "EUA",
-      "points": "1372"
+      "name": "Sara Bejlek",
+      "country": "Rep. Tcheca",
+      "points": "1369"
     },
     {
       "position": 36,
-      "name": "Ann Li",
-      "country": "EUA",
-      "points": "1356"
+      "name": "Katerina Siniakova",
+      "country": "Rep. Tcheca",
+      "points": "1362"
     },
     {
       "position": 37,
-      "name": "Qinwen Zheng",
-      "country": "China",
-      "points": "1350"
+      "name": "Alexandra Eala",
+      "country": "Filipinas",
+      "points": "1340"
     },
     {
       "position": 38,
-      "name": "Maria Sakkari",
-      "country": "Grécia",
-      "points": "1348"
+      "name": "Elisabetta Cocciaretto",
+      "country": "Itália",
+      "points": "1320"
     },
     {
       "position": 39,
-      "name": "Magdalena Frech",
-      "country": "Polônia",
-      "points": "1348"
+      "name": "Emma Raducanu",
+      "country": "Reino Unido",
+      "points": "1301"
     },
     {
       "position": 40,
-      "name": "Lois Boisson",
-      "country": "França",
-      "points": "1318"
+      "name": "Janice Tjen",
+      "country": "Indonésia",
+      "points": "1292"
     },
     {
       "position": 41,
-      "name": "Janice Tjen",
-      "country": "Indonésia",
-      "points": "1317"
+      "name": "Barbora Krejcikova",
+      "country": "Rep. Tcheca",
+      "points": "1271"
     },
     {
       "position": 42,
-      "name": "Elisabetta Cocciaretto",
-      "country": "Itália",
-      "points": "1310"
+      "name": "Tereza Valentova",
+      "country": "Rep. Tcheca",
+      "points": "1265"
     },
     {
       "position": 43,
-      "name": "Katerina Siniakova",
-      "country": "Rep. Tcheca",
-      "points": "1299"
+      "name": "Lois Boisson",
+      "country": "França",
+      "points": "1264"
     },
     {
       "position": 44,
-      "name": "Peyton Stearns",
-      "country": "EUA",
-      "points": "1296"
-    },
-    {
-      "position": 45,
       "name": "Marketa Vondrousova",
       "country": "Rep. Tcheca",
       "points": "1263"
     },
     {
+      "position": 45,
+      "name": "Dayana Yastremska",
+      "country": "Ucrânia",
+      "points": "1246"
+    },
+    {
       "position": 46,
-      "name": "Alexandra Eala",
-      "country": "Filipinas",
-      "points": "1255"
+      "name": "Magdalena Frech",
+      "country": "Polônia",
+      "points": "1238"
     },
     {
       "position": 47,
-      "name": "Jessica Bouzas Maneiro",
-      "country": "Espanha",
+      "name": "Laura Siegemund",
+      "country": "Alemanha",
       "points": "1230"
     },
     {
       "position": 48,
       "name": "Mccartney Kessler",
       "country": "EUA",
-      "points": "1214"
+      "points": "1229"
     },
     {
       "position": 49,
-      "name": "Dayana Yastremska",
-      "country": "Ucrânia",
-      "points": "1172"
+      "name": "Maria Sakkari",
+      "country": "Grécia",
+      "points": "1208"
     },
     {
       "position": 50,
-      "name": "Tereza Valentova",
-      "country": "Rep. Tcheca",
-      "points": "1161"
+      "name": "Jessica Bouzas Maneiro",
+      "country": "Espanha",
+      "points": "1200"
     },
     {
       "position": 51,
-      "name": "Laura Siegemund",
-      "country": "Alemanha",
-      "points": "1158"
+      "name": "Petra Marcinko",
+      "country": "Croácia",
+      "points": "1140"
     },
     {
       "position": 52,
-      "name": "Barbora Krejcikova",
-      "country": "Rep. Tcheca",
-      "points": "1155"
+      "name": "Maya Joint",
+      "country": "Austrália",
+      "points": "1130"
     },
     {
       "position": 53,
-      "name": "Yuliia Starodubtseva",
-      "country": "Ucrânia",
-      "points": "1139"
+      "name": "Daria Kasatkina",
+      "country": "Austrália",
+      "points": "1119"
     },
     {
       "position": 54,
-      "name": "Sonay Kartal",
-      "country": "Reino Unido",
-      "points": "1092"
+      "name": "Tatjana Maria",
+      "country": "Alemanha",
+      "points": "1111"
     },
     {
       "position": 55,
-      "name": "Magda Linette",
-      "country": "Polônia",
-      "points": "1059"
+      "name": "Yuliia Starodubtseva",
+      "country": "Ucrânia",
+      "points": "1093"
     },
     {
       "position": 56,
-      "name": "Talia Gibson",
-      "country": "Austrália",
-      "points": "1050"
+      "name": "Qinwen Zheng",
+      "country": "China",
+      "points": "1080"
     },
     {
       "position": 57,
-      "name": "Antonia Ruzic",
-      "country": "Croácia",
-      "points": "1046"
+      "name": "Anna Bondar",
+      "country": "Hungria",
+      "points": "1047"
     },
     {
       "position": 58,
-      "name": "Varvara Gracheva",
-      "country": "França",
-      "points": "1045"
+      "name": "Talia Gibson",
+      "country": "Austrália",
+      "points": "1040"
     },
     {
       "position": 59,
-      "name": "Elsa Jacquemot",
-      "country": "França",
+      "name": "Panna Udvardy",
+      "country": "Hungria",
       "points": "1029"
     },
     {
       "position": 60,
-      "name": "Veronika Kudermetova",
-      "country": "Rússia",
-      "points": "1023"
+      "name": "Anhelina Kalinina",
+      "country": "Ucrânia",
+      "points": "1026"
     },
     {
       "position": 61,
-      "name": "Tatjana Maria",
-      "country": "Alemanha",
-      "points": "1023"
+      "name": "Shuai Zhang",
+      "country": "China",
+      "points": "1025"
     },
     {
       "position": 62,
-      "name": "Katie Boulter",
+      "name": "Sonay Kartal",
       "country": "Reino Unido",
-      "points": "1012"
+      "points": "1019"
     },
     {
       "position": 63,
-      "name": "Anna Bondar",
-      "country": "Hungria",
-      "points": "999"
+      "name": "Caty Mcnally",
+      "country": "EUA",
+      "points": "1018"
     },
     {
       "position": 64,
-      "name": "Shuai Zhang",
-      "country": "China",
-      "points": "989"
+      "name": "Antonia Ruzic",
+      "country": "Croácia",
+      "points": "1011"
     },
     {
       "position": 65,
-      "name": "Anastasia Zakharova",
-      "country": "Rússia",
-      "points": "978"
+      "name": "Oleksandra Oliynykova",
+      "country": "Ucrânia",
+      "points": "1005"
     },
     {
       "position": 66,
-      "name": "Sofia Kenin",
-      "country": "EUA",
-      "points": "952"
+      "name": "Zeynep Sonmez",
+      "country": "Turquia",
+      "points": "1003"
     },
     {
       "position": 67,
-      "name": "Beatriz Haddad Maia",
-      "country": "Brasil",
-      "points": "942"
+      "name": "Elsa Jacquemot",
+      "country": "França",
+      "points": "984"
     },
     {
       "position": 68,
-      "name": "Oleksandra Oliynykova",
-      "country": "Ucrânia",
-      "points": "931"
+      "name": "Solana Sierra",
+      "country": "Argentina",
+      "points": "974"
     },
     {
       "position": 69,
-      "name": "Caty Mcnally",
+      "name": "Nikola Bartunkova",
+      "country": "Rep. Tcheca",
+      "points": "970"
+    },
+    {
+      "position": 70,
+      "name": "Varvara Gracheva",
+      "country": "França",
+      "points": "969"
+    },
+    {
+      "position": 71,
+      "name": "Katie Boulter",
+      "country": "Reino Unido",
+      "points": "941"
+    },
+    {
+      "position": 72,
+      "name": "Donna Vekic",
+      "country": "Croácia",
+      "points": "933"
+    },
+    {
+      "position": 73,
+      "name": "Magda Linette",
+      "country": "Polônia",
+      "points": "931"
+    },
+    {
+      "position": 74,
+      "name": "Renata Zarazua",
+      "country": "México",
+      "points": "925"
+    },
+    {
+      "position": 75,
+      "name": "Taylor Townsend",
       "country": "EUA",
       "points": "919"
     },
     {
-      "position": 70,
-      "name": "Daria Kasatkina",
-      "country": "Austrália",
-      "points": "918"
-    },
-    {
-      "position": 71,
-      "name": "Panna Udvardy",
-      "country": "Hungria",
-      "points": "918"
-    },
-    {
-      "position": 72,
-      "name": "Kamilla Rakhimova",
-      "country": "Uzbequistão",
-      "points": "914"
-    },
-    {
-      "position": 73,
-      "name": "Oksana Selekhmeteva",
-      "country": "Rússia",
-      "points": "898"
-    },
-    {
-      "position": 74,
+      "position": 76,
       "name": "Yulia Putintseva",
       "country": "Cazaquistão",
-      "points": "893"
-    },
-    {
-      "position": 75,
-      "name": "Eva Lys",
-      "country": "Alemanha",
-      "points": "891"
-    },
-    {
-      "position": 76,
-      "name": "Zeynep Sonmez",
-      "country": "Turquia",
-      "points": "891"
+      "points": "918"
     },
     {
       "position": 77,
-      "name": "Petra Marcinko",
-      "country": "Croácia",
-      "points": "890"
+      "name": "Elena-Gabriela Ruse",
+      "country": "Romênia",
+      "points": "918"
     },
     {
       "position": 78,
-      "name": "Solana Sierra",
-      "country": "Argentina",
-      "points": "885"
+      "name": "Peyton Stearns",
+      "country": "EUA",
+      "points": "915"
     },
     {
       "position": 79,
-      "name": "Viktorija Golubic",
-      "country": "Suíça",
-      "points": "881"
+      "name": "Alycia Parks",
+      "country": "EUA",
+      "points": "905"
     },
     {
       "position": 80,
+      "name": "Anastasia Zakharova",
+      "country": "Rússia",
+      "points": "903"
+    },
+    {
+      "position": 81,
+      "name": "Eva Lys",
+      "country": "Alemanha",
+      "points": "901"
+    },
+    {
+      "position": 82,
+      "name": "Viktorija Golubic",
+      "country": "Suíça",
+      "points": "901"
+    },
+    {
+      "position": 83,
       "name": "Kimberly Birrell",
       "country": "Austrália",
       "points": "880"
     },
     {
-      "position": 81,
-      "name": "Camila Osorio",
-      "country": "Colômbia",
-      "points": "876"
-    },
-    {
-      "position": 82,
-      "name": "Renata Zarazua",
-      "country": "México",
-      "points": "875"
-    },
-    {
-      "position": 83,
-      "name": "Ajla Tomljanovic",
-      "country": "Austrália",
-      "points": "867"
-    },
-    {
       "position": 84,
-      "name": "Moyuka Uchijima",
-      "country": "Japão",
-      "points": "863"
+      "name": "Veronika Erjavec",
+      "country": "Eslovênia",
+      "points": "873"
     },
     {
       "position": 85,
-      "name": "Ella Seidel",
-      "country": "Alemanha",
-      "points": "850"
+      "name": "Veronika Kudermetova",
+      "country": "Rússia",
+      "points": "868"
     },
     {
       "position": 86,
-      "name": "Emiliana Arango",
+      "name": "Camila Osorio",
       "country": "Colômbia",
-      "points": "843"
+      "points": "868"
     },
     {
       "position": 87,
-      "name": "Elena-Gabriela Ruse",
-      "country": "Romênia",
-      "points": "840"
+      "name": "Sofia Kenin",
+      "country": "EUA",
+      "points": "867"
     },
     {
       "position": 88,
-      "name": "Katie Volynets",
-      "country": "EUA",
-      "points": "831"
+      "name": "Oksana Selekhmeteva",
+      "country": "Rússia",
+      "points": "865"
     },
     {
       "position": 89,
-      "name": "Julia Grabher",
-      "country": "Áustria",
-      "points": "829"
+      "name": "Kamilla Rakhimova",
+      "country": "Uzbequistão",
+      "points": "860"
     },
     {
       "position": 90,
-      "name": "Anna Blinkova",
-      "country": "Rússia",
-      "points": "819"
+      "name": "Lilli Tagger",
+      "country": "Áustria",
+      "points": "857"
     },
     {
       "position": 91,
       "name": "Simona Waltert",
       "country": "Suíça",
-      "points": "818"
+      "points": "856"
     },
     {
       "position": 92,
-      "name": "Taylor Townsend",
-      "country": "EUA",
-      "points": "814"
+      "name": "Diane Parry",
+      "country": "França",
+      "points": "853"
     },
     {
       "position": 93,
-      "name": "Alycia Parks",
-      "country": "EUA",
-      "points": "814"
+      "name": "Daria Snigur",
+      "country": "Ucrânia",
+      "points": "839"
     },
     {
       "position": 94,
-      "name": "Hanne Vandewinkel",
-      "country": "Bélgica",
-      "points": "813"
+      "name": "Emiliana Arango",
+      "country": "Colômbia",
+      "points": "833"
     },
     {
       "position": 95,
-      "name": "Diane Parry",
-      "country": "França",
-      "points": "806"
+      "name": "Tamara Korpatsch",
+      "country": "Alemanha",
+      "points": "829"
     },
     {
       "position": 96,
-      "name": "Daria Snigur",
-      "country": "Ucrânia",
-      "points": "803"
+      "name": "Ella Seidel",
+      "country": "Alemanha",
+      "points": "818"
     },
     {
       "position": 97,
-      "name": "Anastasia Potapova",
-      "country": "Áustria",
-      "points": "800"
+      "name": "Lanlana Tararudee",
+      "country": "Tailândia",
+      "points": "799"
     },
     {
       "position": 98,
-      "name": "Nikola Bartunkova",
-      "country": "Rep. Tcheca",
-      "points": "800"
+      "name": "Sinja Kraus",
+      "country": "Áustria",
+      "points": "795"
     },
     {
       "position": 99,
-      "name": "Veronika Erjavec",
-      "country": "Eslovênia",
-      "points": "786"
+      "name": "Hanne Vandewinkel",
+      "country": "Bélgica",
+      "points": "790"
     },
     {
       "position": 100,
-      "name": "Francesca Jones",
-      "country": "Reino Unido",
-      "points": "775"
+      "name": "Ajla Tomljanovic",
+      "country": "Austrália",
+      "points": "784"
     }
   ],
   "grand_slams": {
@@ -1305,7 +1305,7 @@
     "Jannik Sinner": {
       "age": 24,
       "style": "Destro",
-      "titles": "26 títulos ATP: 4 Grand Slams (AO 2024-25, US Open 2024, Wimbledon 2025), 7 Masters 1000, 7 ATP 500",
+      "titles": "Títulos ATP: 4 Grand Slams (AO 2024-25, US Open 2024, Wimbledon 2025), 7 Masters 1000, 7 ATP 500",
       "country": "Itália",
       "fact": "Primeiro italiano #1.",
       "height": "1,92m",
@@ -1314,7 +1314,7 @@
     "Carlos Alcaraz": {
       "age": 22,
       "style": "Agressivo",
-      "titles": "26 títulos ATP: 7 Grand Slams (RG 2024-25, Wimbledon 2023-24, US Open 2022-25, AO 2026), 8 Masters 1000, 9 ATP 500",
+      "titles": "Títulos ATP: 7 Grand Slams (RG 2024-25, Wimbledon 2023-24, US Open 2022-25, AO 2026), 8 Masters 1000, 9 ATP 500",
       "country": "Espanha",
       "fact": "#1 mais jovem.",
       "height": "1,83m",
@@ -1323,7 +1323,7 @@
     "Novak Djokovic": {
       "age": 38,
       "style": "Completo",
-      "titles": "101 títulos ATP: 24 Grand Slams, 40 Masters 1000, 7 ATP Finals, Ouro olímpico 2024",
+      "titles": "Títulos ATP: 24 Grand Slams, 40 Masters 1000, 7 ATP Finals, Ouro olímpico 2024",
       "country": "Sérvia",
       "fact": "GOAT (estatístico).",
       "height": "1,88m",
@@ -1342,11 +1342,11 @@
     "Beatriz Haddad Maia": {
       "age": 29,
       "style": "Canhota (potente)",
-      "titles": "3 títulos WTA",
+      "titles": "4 títulos WTA de simples, incluindo Nottingham e Birmingham 2022 (grama) e Coreia 2024 (500)",
       "country": "Brasil",
       "fact": "Maior brasileira pós-Maria Esther Bueno.",
       "height": "1,85m",
-      "titles_count": 3
+      "titles_count": 4
     },
     "Iga Swiatek": {
       "age": 24,
@@ -1435,11 +1435,11 @@
     "Taylor Fritz": {
       "age": 28,
       "style": "Saque e Forehand",
-      "titles": "9 títulos ATP: incluindo ATP 500s e 250s",
+      "titles": "10 títulos ATP, incluindo Indian Wells 2022 (Masters 1000), Tóquio 2022 (500) e Eastbourne (3x, grama)",
       "country": "EUA",
       "fact": "Destaque americano com um dos saques mais potentes do circuito.",
       "height": "1,93m",
-      "titles_count": 9
+      "titles_count": 10
     },
     "Alexander Zverev": {
       "age": 28,
@@ -1478,11 +1478,11 @@
     "Casper Ruud": {
       "age": 28,
       "style": "Destro",
-      "titles": "10 títulos ATP: predominantemente em saibro",
+      "titles": "14 títulos ATP (12 no saibro), incluindo Madri 2025 (Masters 1000) e Barcelona 2024 (500)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Noruega",
       "height": "1,83m",
-      "titles_count": 10
+      "titles_count": 14
     },
     "Hubert Hurkacz": {
       "age": 29,
@@ -1492,13 +1492,6 @@
       "country": "Polônia",
       "height": "1,96m",
       "titles_count": 8
-    },
-    "Alex de Minaur": {
-      "age": 27,
-      "style": "Destro",
-      "titles": "Buscando o 1º título principal",
-      "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Austrália"
     },
     "Stefanos Tsitsipas": {
       "age": 28,
@@ -1521,7 +1514,7 @@
     "Tommy Paul": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "4 títulos ATP",
+      "titles": "4 títulos ATP: Estocolmo 2021, Queen's 2024 (500, grama), Dallas 2024 e Houston 2026",
       "country": "EUA",
       "fact": "Tenista de alto rendimento da(o) EUA.",
       "height": "1,85m",
@@ -1530,11 +1523,11 @@
     "Ben Shelton": {
       "age": 24,
       "style": "Canhoto",
-      "titles": "2 títulos ATP",
+      "titles": "5 títulos ATP, incluindo Toronto 2025 (Masters 1000), Tóquio 2023 (500) e Munique 2026 (500)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,93m",
-      "titles_count": 2
+      "titles_count": 5
     },
     "Holger Rune": {
       "age": 23,
@@ -1548,7 +1541,7 @@
     "Sebastian Korda": {
       "age": 26,
       "style": "Destro",
-      "titles": "3 títulos ATP",
+      "titles": "3 títulos ATP: Emilia-Romagna 2021, Washington 2024 (500) e Delray Beach 2026",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,96m",
@@ -1563,13 +1556,6 @@
       "height": "1,85m",
       "titles_count": 2
     },
-    "Felix Auger-Aliassime": {
-      "age": "25 anos (Est.)",
-      "style": "Destro",
-      "titles": "Top 100",
-      "country": "Canadá",
-      "fact": "Tenista de alto rendimento da(o) Canadá."
-    },
     "Nicolas Jarry": {
       "age": "25 anos (Est.)",
       "style": "Destro",
@@ -1580,47 +1566,47 @@
     "Ugo Humbert": {
       "age": 28,
       "style": "Canhoto",
-      "titles": "5 títulos ATP",
+      "titles": "7 títulos ATP, incluindo Dubai 2024 e Halle 2021 (500, grama), além de Marselha (2x)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "França",
       "height": "1,88m",
-      "titles_count": 5
+      "titles_count": 7
     },
     "Arthur Fils": {
       "age": 22,
       "style": "Destro",
-      "titles": "3 títulos ATP",
+      "titles": "4 títulos ATP: Lyon 2023, Hamburgo 2024 (500), Tóquio 2024 (500) e Barcelona 2026 (500)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "França",
       "height": "1,88m",
-      "titles_count": 3
+      "titles_count": 4
     },
     "Jack Draper": {
       "age": 25,
       "style": "Canhoto",
-      "titles": "2 títulos ATP",
+      "titles": "3 títulos ATP: Stuttgart 2024, Viena 2024 (500) e Indian Wells 2025 (Masters 1000)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Reino Unido",
       "height": "1,93m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Frances Tiafoe": {
       "age": 28,
       "style": "Destro",
-      "titles": "2 títulos ATP: incluindo ATP 250s",
+      "titles": "3 títulos ATP: Delray Beach 2018, Houston 2023 e Stuttgart 2023 (grama)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,88m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Alejandro Tabilo": {
       "age": 29,
       "style": "Canhoto",
-      "titles": "2 títulos ATP",
+      "titles": "3 títulos ATP (nível 250): Auckland 2024, Maiorca 2024 (grama) e Chengdu 2025",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Chile",
       "height": "1,88m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Karen Khachanov": {
       "age": 30,
@@ -1634,36 +1620,29 @@
     "Alexander Bublik": {
       "age": 29,
       "style": "Destro",
-      "titles": "5 títulos ATP: incluindo ATP 500s",
+      "titles": "9 títulos ATP, incluindo Halle 2023 e 2025 (500, grama) e Montpellier (2x)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Cazaquistão",
       "height": "1,96m",
-      "titles_count": 5
+      "titles_count": 9
     },
     "Brandon Nakashima": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "1 título ATP: San Diego 2022",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,83m",
       "titles_count": 1
     },
-    "Tomas Martin Etcheverry": {
-      "age": "25 anos (Est.)",
-      "style": "Destro",
-      "titles": "Top 100",
-      "country": "Argentina",
-      "fact": "Tenista de alto rendimento da(o) Argentina."
-    },
     "Francisco Cerundolo": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "4 títulos ATP: Bastad 2022, Eastbourne 2023 (grama), Umag 2024 e Buenos Aires 2026",
       "country": "Argentina",
       "fact": "Tenista de alto rendimento da(o) Argentina.",
       "height": "1,87m",
-      "titles_count": 2
+      "titles_count": 4
     },
     "Jordan Thompson": {
       "age": "25 anos (Est.)",
@@ -1675,7 +1654,7 @@
     "Tallon Griekspoor": {
       "age": 30,
       "style": "Destro",
-      "titles": "3 títulos ATP",
+      "titles": "3 títulos ATP (nível 250): Pune 2023, 's-Hertogenbosch 2023 (grama) e Maiorca 2025",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Holanda",
       "height": "1,98m",
@@ -1684,45 +1663,38 @@
     "Flavio Cobolli": {
       "age": 24,
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "3 títulos ATP: Bucareste 2025, Hamburgo 2025 (500) e Acapulco 2026 (500)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Itália",
       "height": "1,83m",
-      "titles_count": 2
-    },
-    "Jiri Lehecka": {
-      "age": "25 anos (Est.)",
-      "style": "Destro",
-      "titles": "Top 100",
-      "country": "Rep. Tcheca",
-      "fact": "Tenista de alto rendimento da(o) Rep. Tcheca."
+      "titles_count": 3
     },
     "Tomas Machac": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "2 títulos ATP: Acapulco 2025 (500) e Adelaide 2026",
       "country": "Rep. Tcheca",
       "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
       "height": "1,88m",
-      "titles_count": 1
+      "titles_count": 2
     },
     "Nuno Borges": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "1 título ATP: Bastad 2024 (saibro), vencendo Nadal na final",
       "country": "Portugal",
       "fact": "Tenista de alto rendimento da(o) Portugal.",
       "height": "1,83m",
-      "titles_count": 2
+      "titles_count": 1
     },
     "Jan-Lennard Struff": {
       "age": 36,
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "1 título ATP: Munique 2024 (saibro)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Alemanha",
       "height": "1,96m",
-      "titles_count": 2
+      "titles_count": 1
     },
     "Matteo Arnaldi": {
       "age": 25,
@@ -1734,61 +1706,61 @@
     "Luciano Darderi": {
       "age": 24,
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "5 títulos ATP no saibro: Córdoba 2024, Marrakech, Bastad e Umag (2025) e Santiago 2026",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Itália",
       "height": "1,85m",
-      "titles_count": 2
+      "titles_count": 5
     },
     "Fabian Marozsan": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "Sem títulos ATP; notabilizou-se ao vencer Alcaraz em Roma 2023 (Masters 1000)",
       "country": "Hungria",
       "fact": "Tenista de alto rendimento da(o) Hungria.",
       "height": "1,91m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Alexei Popyrin": {
       "age": 27,
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "3 títulos ATP, incluindo Montreal 2024 (Masters 1000)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Austrália",
       "height": "1,96m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Giovanni Mpetshi Perricard": {
       "age": 23,
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "2 títulos ATP: Lyon 2024 e Basileia 2024 (500, indoor)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "França",
       "height": "2,03m",
-      "titles_count": 1
+      "titles_count": 2
     },
     "Jakub Mensik": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "2 títulos ATP: Miami 2025 (Masters 1000, vencendo Djokovic) e Auckland 2026",
       "country": "Rep. Tcheca",
       "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
       "height": "1,93m",
-      "titles_count": 1
+      "titles_count": 2
     },
     "Mariano Navone": {
       "age": 25,
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "1 título ATP: Bucareste 2026 (saibro)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Argentina",
       "height": "1,80m",
-      "titles_count": 2
+      "titles_count": 1
     },
     "Matteo Berrettini": {
       "age": 30,
       "style": "Destro",
-      "titles": "10 títulos ATP: incluindo Queen's 2021-22",
+      "titles": "10 títulos ATP, incluindo Queen's (2x, 500, grama), Gstaad (2x) e Stuttgart (2x)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Itália",
       "height": "1,96m",
@@ -1797,20 +1769,20 @@
     "Cameron Norrie": {
       "age": 31,
       "style": "Canhoto",
-      "titles": "6 títulos ATP: incluindo Indian Wells 2021",
+      "titles": "5 títulos ATP, incluindo Indian Wells 2021 (Masters 1000) e Rio 2023",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Reino Unido",
       "height": "1,88m",
-      "titles_count": 6
+      "titles_count": 5
     },
     "Miomir Kecmanovic": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "2 títulos ATP: Kitzbühel 2020 (saibro) e Delray Beach 2025",
       "country": "Sérvia",
       "fact": "Tenista de alto rendimento da(o) Sérvia.",
       "height": "1,91m",
-      "titles_count": 1
+      "titles_count": 2
     },
     "Dusan Lajovic": {
       "age": "25 anos (Est.)",
@@ -1829,7 +1801,7 @@
     "Marcos Giron": {
       "age": 33,
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "1 título ATP: Newport 2024 (grama)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,80m",
@@ -1838,20 +1810,20 @@
     "Adrian Mannarino": {
       "age": 38,
       "style": "Canhoto",
-      "titles": "3 títulos ATP",
+      "titles": "5 títulos ATP: 's-Hertogenbosch 2019 (grama), Winston-Salem 2022, Newport 2023, Astana 2023 e Sofia 2023",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "França",
       "height": "1,80m",
-      "titles_count": 3
+      "titles_count": 5
     },
     "Lorenzo Sonego": {
       "age": 31,
       "style": "Destro",
-      "titles": "3 títulos ATP",
+      "titles": "4 títulos ATP (nível 250): Antália 2019 (grama), Cagliari 2021, Metz 2022 e Winston-Salem 2024",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Itália",
       "height": "1,91m",
-      "titles_count": 3
+      "titles_count": 4
     },
     "Roberto Carballes Baena": {
       "age": "25 anos (Est.)",
@@ -1884,11 +1856,11 @@
     "Alexander Shevchenko": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "Vice-campeão de Metz 2023; ainda busca o 1º título ATP",
       "country": "Cazaquistão",
       "fact": "Tenista de alto rendimento da(o) Cazaquistão.",
       "height": "1,88m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Hugo Gaston": {
       "age": 26,
@@ -1923,11 +1895,11 @@
     "Corentin Moutet": {
       "age": 27,
       "style": "Canhoto",
-      "titles": "1 título ATP",
+      "titles": "Vice em finais ATP (Doha 2020, Maiorca e Almaty 2025); ainda busca o 1º título",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "França",
       "height": "1,75m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Sumit Nagal": {
       "age": 29,
@@ -2008,18 +1980,11 @@
     "Marton Fucsovics": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "3 títulos ATP: Genebra 2018, Bucareste 2024 e Winston-Salem 2025",
       "country": "Hungria",
       "fact": "Tenista de alto rendimento da(o) Hungria.",
       "height": "1,83m",
-      "titles_count": 2
-    },
-    "Botic van de Zandschulp": {
-      "age": 31,
-      "style": "Destro",
-      "titles": "Buscando o 1º título principal",
-      "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "Holanda"
+      "titles_count": 3
     },
     "Dominik Koepfer": {
       "age": 32,
@@ -2038,11 +2003,11 @@
     "Rinky Hijikata": {
       "age": 25,
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "Sem títulos ATP de simples; campeão do Australian Open 2023 em DUPLAS",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Austrália",
       "height": "1,80m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Stan Wawrinka": {
       "age": 41,
@@ -2061,11 +2026,11 @@
     "Arthur Rinderknech": {
       "age": 31,
       "style": "Destro",
-      "titles": "2 títulos ATP",
+      "titles": "Vice-campeão do Masters 1000 de Xangai 2025; ainda busca o 1º título ATP",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "França",
       "height": "1,90m",
-      "titles_count": 2
+      "titles_count": 0
     },
     "Borna Gojo": {
       "age": 28,
@@ -2084,11 +2049,11 @@
     "Denis Shapovalov": {
       "age": 27,
       "style": "Canhoto",
-      "titles": "3 títulos ATP",
+      "titles": "4 títulos ATP: Estocolmo 2019, Belgrado 2024, Dallas 2025 (500) e Los Cabos 2025",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Canadá",
       "height": "1,85m",
-      "titles_count": 3
+      "titles_count": 4
     },
     "Kei Nishikori": {
       "age": 37,
@@ -2100,7 +2065,7 @@
     "Alexandre Muller": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "1 título ATP: Hong Kong 2025 (250)",
       "country": "França",
       "fact": "Tenista de alto rendimento da(o) França.",
       "height": "1,85m",
@@ -2162,11 +2127,11 @@
     "Jaume Munar": {
       "age": 29,
       "style": "Destro",
-      "titles": "1 título ATP",
+      "titles": "Vice-campeão de Marbella 2021; ainda busca o 1º título ATP",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Espanha",
       "height": "1,78m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Pedro Martinez": {
       "age": "25 anos (Est.)",
@@ -2242,7 +2207,7 @@
     "Jasmine Paolini": {
       "age": 30,
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "3 títulos WTA: Portorož 2021, Roma 2025 (WTA 1000) e Dubai 2025 (WTA 1000)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Itália",
       "height": "1,63m",
@@ -2258,20 +2223,20 @@
     "Jessica Pegula": {
       "age": 32,
       "style": "Destro",
-      "titles": "5 títulos WTA",
+      "titles": "11 títulos WTA, incluindo 4 WTA 1000 (Montreal 2023, Toronto 2024, Dubai 2026)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,70m",
-      "titles_count": 5
+      "titles_count": 11
     },
     "Emma Navarro": {
       "age": 25,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "3 títulos WTA: Hobart 2024, Mérida 2025 (500) e Estrasburgo 2026 (500)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,68m",
-      "titles_count": 1
+      "titles_count": 3
     },
     "Danielle Collins": {
       "age": 33,
@@ -2283,11 +2248,11 @@
     "Daria Kasatkina": {
       "age": 29,
       "style": "Destro",
-      "titles": "7 títulos WTA",
+      "titles": "8 títulos WTA, incluindo São Petersburgo 2021 e San José 2022 (500)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Rússia",
       "height": "1,70m",
-      "titles_count": 7
+      "titles_count": 8
     },
     "Barbora Krejcikova": {
       "age": "25 anos (Est.)",
@@ -2301,20 +2266,20 @@
     "Anna Kalinskaya": {
       "age": 28,
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "Vice-campeã de Dubai 2024 (WTA 1000); ainda busca o 1º título de simples",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Rússia",
       "height": "1,78m",
-      "titles_count": 3
+      "titles_count": 0
     },
     "Mirra Andreeva": {
       "age": 19,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "5 títulos WTA, incluindo Dubai e Indian Wells 2025 (WTA 1000)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Rússia",
       "height": "1,74m",
-      "titles_count": 1
+      "titles_count": 5
     },
     "Madison Keys": {
       "age": 31,
@@ -2328,11 +2293,11 @@
     "Marta Kostyuk": {
       "age": 24,
       "style": "Destro",
-      "titles": "2 títulos WTA",
+      "titles": "3 títulos WTA: Austin 2023, Rouen 2026 e Madri 2026 (WTA 1000)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Ucrânia",
       "height": "1,74m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Donna Vekic": {
       "age": "25 anos (Est.)",
@@ -2351,11 +2316,11 @@
     "Amanda Anisimova": {
       "age": 25,
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "4 títulos WTA, incluindo Doha e Pequim 2025 (WTA 1000)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,80m",
-      "titles_count": 3
+      "titles_count": 4
     },
     "Victoria Azarenka": {
       "age": 37,
@@ -2374,34 +2339,34 @@
     "Diana Shnaider": {
       "age": 22,
       "style": "Canhoto",
-      "titles": "3 títulos WTA",
+      "titles": "5 títulos WTA (nível 250): Hua Hin, Bad Homburg, Budapeste e Hong Kong (2024) e Monterrey 2025",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Rússia",
       "height": "1,76m",
-      "titles_count": 3
+      "titles_count": 5
     },
     "Katie Boulter": {
       "age": 30,
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "4 títulos WTA: Nottingham 2023-24 (grama), San Diego 2024 (500) e Ostrava 2026",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Reino Unido",
       "height": "1,83m",
-      "titles_count": 3
+      "titles_count": 4
     },
     "Karolina Muchova": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "2 títulos WTA: Seul 2019 e Doha 2026 (WTA 1000)",
       "country": "Rep. Tcheca",
       "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
       "height": "1,80m",
-      "titles_count": 3
+      "titles_count": 2
     },
     "Linda Noskova": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "1 título WTA: Monterrey 2024 (500)",
       "country": "Rep. Tcheca",
       "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
       "height": "1,80m",
@@ -2410,11 +2375,11 @@
     "Maria Sakkari": {
       "age": 31,
       "style": "Destro",
-      "titles": "4 títulos WTA",
+      "titles": "2 títulos WTA: Marrocos 2019 e Guadalajara 2023 (WTA 1000)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Grécia",
       "height": "1,72m",
-      "titles_count": 4
+      "titles_count": 2
     },
     "Caroline Garcia": {
       "age": 33,
@@ -2426,7 +2391,7 @@
     "Yulia Putintseva": {
       "age": 31,
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "3 títulos WTA (nível 250): Nuremberg 2019, Budapeste 2021 e Birmingham 2024 (grama)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Cazaquistão",
       "height": "1,63m",
@@ -2435,11 +2400,11 @@
     "Elina Svitolina": {
       "age": 32,
       "style": "Destro",
-      "titles": "17 títulos WTA: incluindo WTA Finals 2018",
+      "titles": "20 títulos WTA, incluindo o WTA Finals 2018, 5 WTA 1000 e bronze olímpico (Paris 2024)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Ucrânia",
       "height": "1,74m",
-      "titles_count": 17
+      "titles_count": 20
     },
     "Anastasia Pavlyuchenkova": {
       "age": 35,
@@ -2451,43 +2416,43 @@
     "Katerina Siniakova": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "2 títulos WTA",
+      "titles": "5 títulos WTA de simples, incluindo Shenzhen 2017 (500); lenda das duplas (10 Grand Slams)",
       "country": "Rep. Tcheca",
       "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
       "height": "1,77m",
-      "titles_count": 2
+      "titles_count": 5
     },
     "Leylah Fernandez": {
       "age": 24,
       "style": "Canhoto",
-      "titles": "3 títulos WTA",
+      "titles": "5 títulos WTA, incluindo Monterrey 2021-22 (500) e Washington 2025 (500)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Canadá",
       "height": "1,68m",
-      "titles_count": 3
+      "titles_count": 5
     },
     "Elise Mertens": {
       "age": 31,
       "style": "Destro",
-      "titles": "7 títulos WTA",
+      "titles": "9 títulos WTA de simples, incluindo Doha 2019 (nível 1000); também campeã de Grand Slam em duplas",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Bélgica",
       "height": "1,78m",
-      "titles_count": 7
+      "titles_count": 9
     },
     "Clara Tauson": {
       "age": 24,
       "style": "Destro",
-      "titles": "2 títulos WTA",
+      "titles": "3 títulos WTA: Lyon e Luxemburgo (2021) e Auckland 2025",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Dinamarca",
       "height": "1,79m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Magda Linette": {
       "age": 34,
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "3 títulos WTA (nível 250): Bronx 2019, Tailândia 2020 e Praga 2024",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Polônia",
       "height": "1,74m",
@@ -2503,29 +2468,29 @@
     "Xinyu Wang": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "Vice em 2 finais WTA (Berlim 2025, 500; Auckland 2026); ainda busca o 1º título de simples",
       "country": "China",
       "fact": "Tenista de alto rendimento da(o) China.",
       "height": "1,82m",
-      "titles_count": 3
+      "titles_count": 0
     },
     "Marie Bouzkova": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "2 títulos WTA",
+      "titles": "3 títulos WTA (nível 250): Praga 2022 e 2025 e Bogotá 2026",
       "country": "Rep. Tcheca",
       "fact": "Tenista de alto rendimento da(o) Rep. Tcheca.",
       "height": "1,72m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Diane Parry": {
       "age": 24,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "Sem títulos WTA; vice em Montevidéu 2023 (WTA 125)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "França",
       "height": "1,76m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Clara Burel": {
       "age": 25,
@@ -2567,11 +2532,11 @@
     "Sorana Cirstea": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "3 títulos WTA",
+      "titles": "4 títulos WTA de simples, incluindo Tashkent 2008 e Istambul 2021",
       "country": "Romênia",
       "fact": "Tenista de alto rendimento da(o) Romênia.",
       "height": "1,76m",
-      "titles_count": 3
+      "titles_count": 4
     },
     "Anhelina Kalinina": {
       "age": 29,
@@ -2597,20 +2562,20 @@
     "Ajla Tomljanovic": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "Vice em 5 finais WTA (incluindo Birmingham 2024); ainda busca o 1º título",
       "country": "Austrália",
       "fact": "Tenista de alto rendimento da(o) Austrália.",
       "height": "1,80m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Tatjana Maria": {
       "age": 39,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "4 títulos WTA: Maiorca 2018 (grama), Bogotá 2022-23 e Queen's 2025 (500, grama)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Alemanha",
       "height": "1,70m",
-      "titles_count": 1
+      "titles_count": 4
     },
     "Mayar Sherif": {
       "age": 30,
@@ -2622,20 +2587,20 @@
     "Camila Osorio": {
       "age": 25,
       "style": "Destro",
-      "titles": "2 títulos WTA",
+      "titles": "3 títulos WTA (nível 250): Bogotá 2021, 2024 e 2025 (saibro)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Colômbia",
       "height": "1,70m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Elisabetta Cocciaretto": {
       "age": 25,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "2 títulos WTA (nível 250): Lausanne 2023 e Hobart 2026",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Itália",
       "height": "1,80m",
-      "titles_count": 1
+      "titles_count": 2
     },
     "Lucia Bronzetti": {
       "age": 28,
@@ -2661,20 +2626,20 @@
     "Varvara Gracheva": {
       "age": 26,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "Sem títulos WTA; vice no ATX Open 2023",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "França",
       "height": "1,76m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Peyton Stearns": {
       "age": 25,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "2 títulos WTA (nível 250): Rabat 2024 e Austin 2026",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,78m",
-      "titles_count": 1
+      "titles_count": 2
     },
     "Taylor Townsend": {
       "age": 30,
@@ -2709,7 +2674,7 @@
     "Laura Siegemund": {
       "age": 38,
       "style": "Destro",
-      "titles": "2 títulos WTA",
+      "titles": "2 títulos WTA de simples (Bastad 2016, Stuttgart 2017); muito mais forte nas duplas (campeã de Grand Slam)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Alemanha",
       "height": "1,70m",
@@ -2762,11 +2727,11 @@
     "Jessica Bouzas Maneiro": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "Sem títulos WTA; quartas no WTA 1000 de Montreal 2025",
       "country": "Espanha",
       "fact": "Tenista de alto rendimento da(o) Espanha.",
       "height": "1,80m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Kamilla Rakhimova": {
       "age": 25,
@@ -2801,7 +2766,7 @@
     "Viktorija Golubic": {
       "age": 34,
       "style": "Destro",
-      "titles": "2 títulos WTA",
+      "titles": "2 títulos WTA: Gstaad 2016 (saibro) e Jiangxi 2024 (250)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Suíça",
       "height": "1,72m",
@@ -2817,11 +2782,11 @@
     "Moyuka Uchijima": {
       "age": 25,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "Sem títulos WTA; quartas no WTA 1000 de Madri 2025",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "Japão",
       "height": "1,65m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Mai Hontama": {
       "age": 27,
@@ -2893,18 +2858,11 @@
     "Anna Bondar": {
       "age": "25 anos (Est.)",
       "style": "Destro",
-      "titles": "2 títulos WTA",
+      "titles": "Vice-campeã de Hamburgo 2025 (WTA 250); ainda busca o 1º título",
       "country": "Hungria",
       "fact": "Tenista de alto rendimento da(o) Hungria.",
       "height": "1,72m",
-      "titles_count": 2
-    },
-    "McCartney Kessler": {
-      "age": 27,
-      "style": "Destro",
-      "titles": "Buscando o 1º título principal",
-      "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
-      "country": "EUA"
+      "titles_count": 0
     },
     "Brenda Fruhvirtova": {
       "age": "25 anos (Est.)",
@@ -2923,7 +2881,7 @@
     "Alycia Parks": {
       "age": 26,
       "style": "Destro",
-      "titles": "1 título WTA",
+      "titles": "1 título WTA: Lyon 2023 (250)",
       "fact": "Atleta profissional que se consolidou no Top 100 mundial.",
       "country": "EUA",
       "height": "1,83m",
@@ -2949,25 +2907,25 @@
       "age": "N/A",
       "country": "Austrália",
       "style": "N/A",
-      "titles": "8 títulos ATP: ATP 250s e 500s",
+      "titles": "11 títulos ATP, incluindo Acapulco 2023-24 e Washington 2025 (500)",
       "fact": "Atualmente na posição 6 do ranking ATP.",
       "height": "1,83m",
-      "titles_count": 8
+      "titles_count": 11
     },
     "Félix Auger-Aliassime": {
       "age": "N/A",
       "country": "Canadá",
       "style": "N/A",
-      "titles": "4 títulos ATP",
+      "titles": "9 títulos ATP, incluindo Roterdã 2022 e Basileia 2022-23 (500)",
       "fact": "Atualmente na posição 7 do ranking ATP.",
       "height": "1,93m",
-      "titles_count": 4
+      "titles_count": 9
     },
     "Jiří Lehečka": {
       "age": "N/A",
       "country": "Rep. Tcheca",
       "style": "N/A",
-      "titles": "2 títulos ATP",
+      "titles": "2 títulos ATP (nível 250): Adelaide 2024 e Brisbane 2025",
       "fact": "Atualmente na posição 13 do ranking ATP.",
       "height": "1,86m",
       "titles_count": 2
@@ -2976,19 +2934,19 @@
       "age": "N/A",
       "country": "Espanha",
       "style": "N/A",
-      "titles": "2 títulos ATP",
+      "titles": "Vice em 5 finais ATP, incluindo Monte Carlo 2022 (Masters 1000); ainda busca o 1º título",
       "fact": "Atualmente na posição 17 do ranking ATP.",
       "height": "1,83m",
-      "titles_count": 2
+      "titles_count": 0
     },
     "Learner Tien": {
       "age": "N/A",
       "country": "EUA",
       "style": "N/A",
-      "titles": "1 título ATP",
+      "titles": "2 títulos ATP: Metz 2025 e Genebra 2026",
       "fact": "Atualmente na posição 22 do ranking ATP.",
       "height": "1,80m",
-      "titles_count": 1
+      "titles_count": 2
     },
     "Valentin Vacherot": {
       "age": "N/A",
@@ -3003,19 +2961,19 @@
       "age": "N/A",
       "country": "Argentina",
       "style": "N/A",
-      "titles": "2 títulos ATP",
+      "titles": "1 título ATP: Rio de Janeiro 2026 (500)",
       "fact": "Atualmente na posição 30 do ranking ATP.",
       "height": "1,91m",
-      "titles_count": 2
+      "titles_count": 1
     },
     "Alex Michelsen": {
       "age": "N/A",
       "country": "EUA",
       "style": "N/A",
-      "titles": "1 título ATP",
+      "titles": "Vice em 3 finais ATP (Newport 2023-24, Winston-Salem 2024); ainda busca o 1º título",
       "fact": "Atualmente na posição 35 do ranking ATP.",
       "height": "1,93m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Gabriel Diallo": {
       "age": "N/A",
@@ -3066,10 +3024,10 @@
       "age": "N/A",
       "country": "Alemanha",
       "style": "N/A",
-      "titles": "1 título ATP",
+      "titles": "Vice em 3 finais ATP no saibro (Gstaad 2017, Kitzbühel 2020, Santiago 2026); ainda busca o 1º título",
       "fact": "Atualmente na posição 55 do ranking ATP.",
       "height": "1,93m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Rafael Jodar": {
       "age": "N/A",
@@ -3120,16 +3078,16 @@
       "age": "N/A",
       "country": "Argentina",
       "style": "N/A",
-      "titles": "5 títulos ATP: predominantemente em saibro",
+      "titles": "7 títulos ATP no saibro, incluindo Rio 2024 e 2025 (500)",
       "fact": "Atualmente na posição 65 do ranking ATP.",
       "height": "1,70m",
-      "titles_count": 5
+      "titles_count": 7
     },
     "Reilly Opelka": {
       "age": "N/A",
       "country": "EUA",
       "style": "N/A",
-      "titles": "4 títulos ATP",
+      "titles": "4 títulos ATP: Nova York 2019, Delray Beach 2020, Dallas 2022 e Houston 2022",
       "fact": "Atualmente na posição 67 do ranking ATP.",
       "height": "2,11m",
       "titles_count": 4
@@ -3147,10 +3105,10 @@
       "age": "N/A",
       "country": "Argentina",
       "style": "N/A",
-      "titles": "2 títulos ATP",
+      "titles": "1 título ATP: Córdoba 2021 (saibro)",
       "fact": "Atualmente na posição 71 do ranking ATP.",
       "height": "1,80m",
-      "titles_count": 2
+      "titles_count": 1
     },
     "Thiago Agustín Tirante": {
       "age": "N/A",
@@ -3183,10 +3141,10 @@
       "age": "N/A",
       "country": "Argentina",
       "style": "N/A",
-      "titles": "1 título ATP",
+      "titles": "Vice-campeão de Marrakech 2026; ainda busca o 1º título ATP",
       "fact": "Atualmente na posição 76 do ranking ATP.",
       "height": "1,80m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Mattia Bellucci": {
       "age": "N/A",
@@ -3210,7 +3168,7 @@
       "age": "N/A",
       "country": "Bósnia",
       "style": "N/A",
-      "titles": "3 títulos ATP",
+      "titles": "3 títulos ATP: São Petersburgo 2017, Moscou 2017 e Antália 2018",
       "fact": "Atualmente na posição 81 do ranking ATP.",
       "height": "1,72m",
       "titles_count": 3
@@ -3237,10 +3195,10 @@
       "age": "N/A",
       "country": "Espanha",
       "style": "N/A",
-      "titles": "11 títulos ATP",
+      "titles": "12 títulos ATP, incluindo Dubai 2018 (500) e Doha (2x)",
       "fact": "Atualmente na posição 85 do ranking ATP.",
       "height": "1,83m",
-      "titles_count": 11
+      "titles_count": 12
     },
     "Quentin Halys": {
       "age": "N/A",
@@ -3264,7 +3222,7 @@
       "age": "N/A",
       "country": "Espanha",
       "style": "N/A",
-      "titles": "7 títulos ATP",
+      "titles": "7 títulos ATP, incluindo Montreal 2022 (Masters 1000) e Hamburgo 2021 (500); bronze olímpico (Tóquio 2020)",
       "fact": "Atualmente na posição 92 do ranking ATP.",
       "height": "1,85m",
       "titles_count": 7
@@ -3309,10 +3267,10 @@
       "age": "N/A",
       "country": "Argentina",
       "style": "N/A",
-      "titles": "1 título ATP",
+      "titles": "Sem títulos ATP; melhor resultado: semifinal do Rio 2025 (500)",
       "fact": "Atualmente na posição 99 do ranking ATP.",
       "height": "1,83m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Victoria Mboko": {
       "age": "N/A",
@@ -3327,19 +3285,19 @@
       "age": "N/A",
       "country": "Suíça",
       "style": "N/A",
-      "titles": "8 títulos WTA: ouro olímpico Tóquio 2020",
+      "titles": "10 títulos WTA, incluindo o OURO olímpico (Tóquio 2020) e Dubai 2019",
       "fact": "Atualmente na posição 11 do ranking WTA.",
       "height": "1,75m",
-      "titles_count": 8
+      "titles_count": 10
     },
     "Ekaterina Alexandrova": {
       "age": "N/A",
       "country": "Rússia",
       "style": "N/A",
-      "titles": "4 títulos WTA",
+      "titles": "5 títulos WTA (nível 500): Shenzhen 2020, 's-Hertogenbosch 2022-23 (grama), Seul 2022 e Linz 2025",
       "fact": "Atualmente na posição 13 do ranking WTA.",
       "height": "1,78m",
-      "titles_count": 4
+      "titles_count": 5
     },
     "Naomi Osaka": {
       "age": "N/A",
@@ -3363,7 +3321,7 @@
       "age": "N/A",
       "country": "Rússia",
       "style": "N/A",
-      "titles": "5 títulos WTA",
+      "titles": "5 títulos WTA, incluindo Berlim 2021 e Tóquio 2022 (500)",
       "fact": "Atualmente na posição 21 do ranking WTA.",
       "height": "1,80m",
       "titles_count": 5
@@ -3390,10 +3348,10 @@
       "age": "N/A",
       "country": "Romênia",
       "style": "N/A",
-      "titles": "1 título WTA",
+      "titles": "Vice em 2 finais WTA (Linz 2021, Marrocos 2025); ainda busca o 1º título",
       "fact": "Atualmente na posição 33 do ranking WTA.",
       "height": "1,80m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Sara Bejlek": {
       "age": "N/A",
@@ -3426,7 +3384,7 @@
       "age": "N/A",
       "country": "China",
       "style": "N/A",
-      "titles": "4 títulos WTA: ouro olímpico Paris 2024",
+      "titles": "4 títulos WTA (Palermo 2x, Zhengzhou, Tóquio 2024) e OURO olímpico em Paris 2024",
       "fact": "Atualmente na posição 37 do ranking WTA.",
       "height": "1,78m",
       "titles_count": 4
@@ -3435,7 +3393,7 @@
       "age": "N/A",
       "country": "Polônia",
       "style": "N/A",
-      "titles": "1 título WTA",
+      "titles": "1 título WTA: Guadalajara 2024 (500)",
       "fact": "Atualmente na posição 39 do ranking WTA.",
       "height": "1,72m",
       "titles_count": 1
@@ -3489,10 +3447,10 @@
       "age": "N/A",
       "country": "Ucrânia",
       "style": "N/A",
-      "titles": "4 títulos WTA",
+      "titles": "3 títulos WTA: Hong Kong 2018, Hua Hin 2019 (500) e Estrasburgo 2019",
       "fact": "Atualmente na posição 49 do ranking WTA.",
       "height": "1,80m",
-      "titles_count": 4
+      "titles_count": 3
     },
     "Tereza Valentova": {
       "age": "N/A",
@@ -3507,10 +3465,10 @@
       "age": "N/A",
       "country": "Ucrânia",
       "style": "N/A",
-      "titles": "1 título WTA",
+      "titles": "Vice-campeã de Charleston 2026 (WTA 500); ainda busca o 1º título",
       "fact": "Atualmente na posição 53 do ranking WTA.",
       "height": "1,73m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Talia Gibson": {
       "age": "N/A",
@@ -3543,16 +3501,16 @@
       "age": "N/A",
       "country": "Rússia",
       "style": "N/A",
-      "titles": "6 títulos WTA",
+      "titles": "2 títulos WTA (nível 500): Charleston 2021 e Tóquio 2023",
       "fact": "Atualmente na posição 60 do ranking WTA.",
       "height": "1,78m",
-      "titles_count": 6
+      "titles_count": 2
     },
     "Shuai Zhang": {
       "age": "N/A",
       "country": "China",
       "style": "N/A",
-      "titles": "3 títulos WTA",
+      "titles": "3 títulos WTA (nível 250): Guangzhou 2013 e 2017 e Lyon 2022",
       "fact": "Atualmente na posição 64 do ranking WTA.",
       "height": "1,77m",
       "titles_count": 3
@@ -3588,10 +3546,10 @@
       "age": "N/A",
       "country": "Hungria",
       "style": "N/A",
-      "titles": "1 título WTA",
+      "titles": "Vice-campeã da Copa Colsanitas 2026 (WTA 250); ainda busca o 1º título",
       "fact": "Atualmente na posição 71 do ranking WTA.",
       "height": "1,75m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Oksana Selekhmeteva": {
       "age": "N/A",
@@ -3669,10 +3627,10 @@
       "age": "N/A",
       "country": "Romênia",
       "style": "N/A",
-      "titles": "2 títulos WTA",
+      "titles": "1 título WTA: Hamburgo 2021 (saibro)",
       "fact": "Atualmente na posição 87 do ranking WTA.",
       "height": "1,72m",
-      "titles_count": 2
+      "titles_count": 1
     },
     "Katie Volynets": {
       "age": "N/A",
@@ -3687,19 +3645,19 @@
       "age": "N/A",
       "country": "Áustria",
       "style": "N/A",
-      "titles": "1 título WTA",
+      "titles": "Sem títulos WTA; vice no Marrocos Open 2023 (WTA 250)",
       "fact": "Atualmente na posição 89 do ranking WTA.",
       "height": "1,68m",
-      "titles_count": 1
+      "titles_count": 0
     },
     "Anna Blinkova": {
       "age": "N/A",
       "country": "Rússia",
       "style": "N/A",
-      "titles": "1 título WTA",
+      "titles": "2 títulos WTA (nível 250): Transilvânia 2022 e Jiangxi 2025",
       "fact": "Atualmente na posição 90 do ranking WTA.",
       "height": "1,75m",
-      "titles_count": 1
+      "titles_count": 2
     },
     "Simona Waltert": {
       "age": "N/A",
@@ -3732,10 +3690,10 @@
       "age": "N/A",
       "country": "Áustria",
       "style": "N/A",
-      "titles": "2 títulos WTA",
+      "titles": "3 títulos WTA (nível 250): Istambul 2022, Linz 2023 e Transilvânia 2025",
       "fact": "Atualmente na posição 97 do ranking WTA.",
       "height": "1,80m",
-      "titles_count": 2
+      "titles_count": 3
     },
     "Nikola Bartunkova": {
       "age": "N/A",
@@ -4187,5 +4145,5 @@
     "goat_debate": "O debate do GOAT (Greatest Of All Time) é um dos mais acalorados do esporte. Os principais candidatos são:\n\n🇷🇸 Novak Djokovic — 24 Grand Slams, 99 títulos, 428 semanas como #1. Domínio absoluto em números.\n\n🇪🇸 Rafael Nadal — 22 Grand Slams, 14x Roland Garros (recorde em um único Slam). Rei indiscutível do saibro.\n\n🇨🇭 Roger Federer — 20 Grand Slams, 8x Wimbledon. Considerado o mais elegante e revolucionário.\n\nCada um dominou uma era e possui argumentos válidos. Djokovic lidera em estatísticas brutas, Nadal no saibro e Federer no estilo e longevidade competitiva.",
     "big_three": "Os Big Three (Federer, Nadal e Djokovic) dominaram o tênis por quase duas décadas (2003-2023), conquistando juntos 66 dos 80 Grand Slams disputados nesse período. É considerada a maior rivalidade esportiva da história moderna."
   },
-  "last_updated": "2026-04-08T13:36:06.513433"
+  "last_updated": "2026-06-01T12:01:31.515838"
 }

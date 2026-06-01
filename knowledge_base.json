@@ -193,21 +193,6 @@
       "follow_up": "Você prefere o calor do Australian Open ou a energia noturna de Nova York no US Open?"
     },
     {
-      "tag": "equipamento",
-      "patterns": [
-        "Qual raquete usar?",
-        "tamanho da raquete",
-        "encordoamento",
-        "peso da raquete de tenis",
-        "melhores marcas de raquete",
-        "qual a melhor raquete?"
-      ],
-      "responses": [
-        "A escolha da raquete depende do seu nível. Iniciantes geralmente usam raquetes mais leves e com cabeça maior para facilitar o acerto. Marcas famosas incluem Wilson, Babolat, Head e Yonex."
-      ],
-      "follow_up": "Você joga tênis ou está apenas começando a se interessar pelos equipamentos?"
-    },
-    {
       "tag": "brasil_tenis",
       "patterns": [
         "tênis no brasil",
