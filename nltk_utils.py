@@ -2,6 +2,18 @@ import nltk # Biblioteca principal de Processamento de Linguagem Natural (NLP)
 import numpy as np # Biblioteca para cálculos matemáticos e manipulação de vetores numéricos
 from nltk.stem.porter import PorterStemmer # Algoritmo de Porter para reduzir palavras ao seu "radical" (stem)
 
+# Garante os dados do tokenizador (punkt) na 1ª execução de uma máquina nova.
+# Em PCs que já têm os dados, isto é um no-op (apenas verifica). Precisa de
+# internet apenas na primeira vez que rodar num computador sem o NLTK 'punkt'.
+for _pkg in ("punkt", "punkt_tab"):
+    try:
+        nltk.data.find(f"tokenizers/{_pkg}")
+    except LookupError:
+        try:
+            nltk.download(_pkg, quiet=True)
+        except Exception:
+            pass  # Sem internet? O word_tokenize ainda funciona se o punkt já existir.
+
 # Criamos uma instância global do Stemmer que vai podar as palavras (ex: "vencedores" -> "venc")
 stemmer = PorterStemmer() # Inicializa o objeto responsável pela extração do radical
 
