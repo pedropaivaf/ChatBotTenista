@@ -20,16 +20,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Adiciona mensagem ao chat
     // Nota: innerHTML usado intencionalmente para renderizar destaques HTML do backend (msg-highlight, attr-label, etc.)
     // O conteudo vem exclusivamente do servidor Flask (nao do usuario), portanto e seguro.
-    const addMessage = (text, sender) => {
+    const addMessage = (text, sender, meta = {}) => {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', sender);
         const bubble = document.createElement('div');
         bubble.classList.add('bubble');
-        const formattedText = text.replace(/\n/g, '<br>');
-        bubble.innerHTML = formattedText;
+
+        // Resposta gerada pelo LLM (LM Studio) -> badge + identidade violeta
+        if (meta.fromLLM) {
+            bubble.classList.add('from-llm');
+            const badge = document.createElement('div');
+            badge.className = 'llm-badge';
+            badge.appendChild(createEl('span', 'llm-core'));
+            badge.appendChild(document.createTextNode('Gerado por IA · LM Studio'));
+            if (meta.latency) badge.appendChild(createEl('span', 'llm-latency', meta.latency));
+            bubble.appendChild(badge);
+        }
+
+        const content = document.createElement('div');
+        if (sender === 'bot') {
+            // Respostas do bot trazem HTML confiável do servidor (destaques, badges de jogador)
+            content.innerHTML = text.replace(/\n/g, '<br>');
+        } else {
+            // Entrada do usuário -> texto puro (evita XSS de auto-injeção)
+            content.textContent = text;
+        }
+        bubble.appendChild(content);
+
         messageDiv.appendChild(bubble);
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
+        return messageDiv;
     };
 
     // Helper: cria elemento com texto seguro
@@ -38,6 +59,83 @@ document.addEventListener('DOMContentLoaded', () => {
         if (className) el.className = className;
         if (text) el.textContent = text;
         return el;
+    };
+
+    // Indicador de "pensando" enquanto o servidor responde. A base responde em
+    // milissegundos; se passar de ~0,9s, é o LLM -> revela "consultando o modelo de IA".
+    const showTyping = () => {
+        const messageDiv = createEl('div', 'message bot');
+        const bubble = createEl('div', 'bubble');
+        const ind = createEl('div', 'typing-indicator');
+        const dots = createEl('div', 'typing-dots');
+        dots.appendChild(createEl('span'));
+        dots.appendChild(createEl('span'));
+        dots.appendChild(createEl('span'));
+        ind.appendChild(dots);
+        ind.appendChild(createEl('span', 'typing-label', 'consultando o modelo de IA…'));
+        bubble.appendChild(ind);
+        messageDiv.appendChild(bubble);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        const timer = setTimeout(() => ind.classList.add('consulting'), 900);
+        return { messageDiv, timer };
+    };
+
+    // Constrói o "inspetor de API" da chamada ao LLM: requisição -> resposta -> métricas
+    const buildLlmInspector = (llm) => {
+        const card = createEl('div', 'llm-card');
+
+        const head = createEl('div', 'llm-card-head');
+        head.appendChild(createEl('span', 'llm-chip', 'LM Studio'));
+        if (llm.request && llm.request.model) head.appendChild(createEl('span', 'llm-model', llm.request.model));
+        card.appendChild(head);
+
+        // Métricas (latência, tokens, tok/s)
+        const stats = createEl('div', 'llm-stats');
+        const addStat = (val, lbl) => {
+            if (val === null || val === undefined || val === '') return;
+            const s = createEl('div', 'llm-stat');
+            s.appendChild(createEl('span', 'lst-val', String(val)));
+            s.appendChild(createEl('span', 'lst-lbl', lbl));
+            stats.appendChild(s);
+        };
+        if (llm.latency != null) addStat(llm.latency + 's', 'latência');
+        const u = llm.usage || {};
+        addStat(u.prompt_tokens, 'tokens in');
+        addStat(u.completion_tokens, 'tokens out');
+        if (llm.tokens_per_s != null) addStat(llm.tokens_per_s, 'tok/s');
+        if (stats.children.length) card.appendChild(stats);
+
+        // Requisição enviada (colapsável)
+        if (llm.request) {
+            const det = createEl('details', 'llm-details');
+            const sum = createEl('summary', 'llm-sec-title');
+            sum.textContent = '📤 Requisição enviada';
+            det.appendChild(sum);
+            det.appendChild(createEl('div', 'llm-endpoint',
+                (llm.request.method || 'POST') + ' ' + (llm.request.endpoint || '')));
+            const params = createEl('div', 'llm-params');
+            if (llm.request.temperature != null) params.appendChild(createEl('span', 'llm-param', 'temperature ' + llm.request.temperature));
+            if (llm.request.max_tokens != null) params.appendChild(createEl('span', 'llm-param', 'max_tokens ' + llm.request.max_tokens));
+            params.appendChild(createEl('span', 'llm-param', 'stream false'));
+            det.appendChild(params);
+            (llm.request.messages || []).forEach((m) => {
+                const msg = createEl('div', 'llm-msg');
+                msg.appendChild(createEl('span', 'llm-role llm-role-' + m.role, m.role));
+                msg.appendChild(createEl('div', 'llm-msg-text', m.content || ''));
+                det.appendChild(msg);
+            });
+            card.appendChild(det);
+        }
+
+        // Resposta retornada
+        const resp = createEl('div', 'llm-resp');
+        resp.appendChild(createEl('div', 'llm-sec-title', '📥 Resposta retornada'));
+        resp.appendChild(createEl('div', 'llm-resp-text', llm.answer || ''));
+        if (llm.finish_reason) resp.appendChild(createEl('div', 'llm-finish', 'finish_reason: ' + llm.finish_reason));
+        card.appendChild(resp);
+
+        return card;
     };
 
     // Renderiza o pipeline visual de processamento no painel lateral
@@ -60,7 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         const typeIcons = {
             input: '\uD83D\uDD0D', token: '\uD83D\uDD24', filter: '\uD83D\uDEE1\uFE0F', tree: '\uD83C\uDF33',
-            parser: '\uD83D\uDD0E', engine: '\u26A1', response: '\u2705', fail: '\u274C'
+            parser: '\uD83D\uDD0E', engine: '\u26A1', response: '\u2705', fail: '\u274C',
+            llm: '\uD83E\uDD16'
         };
         const delay = 130;
 
@@ -72,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 block.appendChild(conn);
             }
 
-            const stepType = typeMap[step.name] || '';
+            const stepType = typeMap[step.name] || (/LLM/i.test(step.name) ? 'llm' : '');
             const el = createEl('div', `pipeline-step ps-${step.status} ps-type-${stepType}`);
             el.style.opacity = '0';
             el.style.transform = 'translateX(-10px)';
@@ -151,6 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 addBadges(body, badges);
             }
 
+            // Inspetor do LLM: requisi\u00E7\u00E3o enviada -> resposta -> m\u00E9tricas do LM Studio
+            if (step.data && step.data.llm) {
+                body.appendChild(buildLlmInspector(step.data.llm));
+            }
+
             el.appendChild(icon);
             el.appendChild(body);
 
@@ -177,6 +281,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addMessage(message, 'user');
         userInput.value = '';
+        userInput.disabled = true;
+        sendBtn.disabled = true;
+
+        // Animação de "saque" na bolinha de envio
+        sendBtn.classList.add('serving');
+        setTimeout(() => sendBtn.classList.remove('serving'), 500);
+
+        const typing = showTyping();
 
         try {
             const response = await fetch('/predict', {
@@ -186,7 +298,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            addMessage(data.answer, 'bot');
+
+            clearTimeout(typing.timer);
+            typing.messageDiv.remove();
+
+            // Detecta se a resposta veio do LLM (passo "LLM · LM Studio" com sucesso)
+            const llmStep = Array.isArray(data.pipeline)
+                ? data.pipeline.find(s => /LLM/i.test(s.name) && s.status === 'success')
+                : null;
+            let latency = '';
+            if (llmStep && llmStep.detail) {
+                const m = llmStep.detail.match(/([\d]+[.,]?[\d]*)\s*s/);
+                if (m) latency = m[1].replace(',', '.') + 's';
+            }
+
+            addMessage(data.answer, 'bot', { fromLLM: !!llmStep, latency });
 
             if (data.pipeline && data.pipeline.length > 0) {
                 renderPipeline(data.pipeline);
@@ -194,7 +320,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Erro:', error);
+            clearTimeout(typing.timer);
+            typing.messageDiv.remove();
             addMessage('Ops, algo deu errado no servidor. Tente novamente.', 'bot');
+        } finally {
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+            userInput.focus();
         }
     };
 

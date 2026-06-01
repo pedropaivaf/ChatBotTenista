@@ -21,8 +21,26 @@
 import os        # Leitura de variáveis de ambiente (configuração via .env)
 import json      # Leitura/escrita do arquivo de métricas
 import time      # Medição da latência (tempo médio de resposta) do LLM
+import re        # Detecção de caracteres CJK (chinês/japonês/coreano) na resposta
 import requests  # Cliente HTTP para falar com o servidor local do LM Studio
 from datetime import datetime  # Carimbo de data/hora nas métricas
+
+# Qwen ocasionalmente "vaza" para o chinês. Este regex detecta CJK para forçarmos
+# português (re-tentativa + sanitização da resposta).
+_CJK_RE = re.compile(r'[぀-ヿ㐀-鿿가-힯ｦ-ﾟ]')
+
+
+def _strip_cjk(text):
+    """Se sobrar chinês/japonês/coreano, corta a partir do 1º caractere CJK e
+    limpa conectores/pontuação pendurados no fim."""
+    if not text:
+        return text
+    m = _CJK_RE.search(text)
+    if not m:
+        return text
+    head = text[:m.start()].rstrip()
+    head = re.sub(r'[\s,;:\-–—(]+$', '', head)  # remove pontuação solta no fim
+    return head.strip()
 
 # Carrega variáveis do arquivo .env, se existir. O python-dotenv NÃO sobrescreve
 # variáveis já definidas no ambiente (override=False por padrão) — é justamente
@@ -48,7 +66,10 @@ METRICS_FILE    = os.getenv("LLM_METRICS_FILE", "llm_metrics.json")
 # alucinação.
 SYSTEM_PROMPT = (
     "Você é o assistente do 'ChatBot Tenista', especialista em tênis (ATP/WTA). "
-    "Responda SEMPRE em português do Brasil, de forma correta, objetiva e amigável. "
+    "REGRA ABSOLUTA DE IDIOMA: responda SEMPRE e EXCLUSIVAMENTE em português do Brasil. "
+    "É proibido usar chinês, inglês ou qualquer outro idioma — mesmo que a pergunta "
+    "venha em outra língua, sua resposta deve ser 100% em português do Brasil. "
+    "Responda de forma correta, objetiva e amigável. "
     "Você domina tênis — jogadores, rankings, Grand Slams, história e regras — mas "
     "também pode responder outras perguntas gerais de forma útil e concisa. "
     "Se não tiver certeza de um fato, admita em vez de inventar. "
@@ -169,6 +190,12 @@ def query_llm(user_text, grounding=None, history=None):
     if history:
         messages.extend(history)
     messages.append({"role": "user", "content": user_text})
+    # Lembrete por RECÊNCIA (logo antes de gerar): trava o idioma. Modelos pequenos
+    # (ex.: Qwen) respeitam melhor a instrução de idioma quando ela é a última.
+    messages.append({
+        "role": "system",
+        "content": "Escreva a resposta INTEIRA em português do Brasil. NÃO use nenhum caractere chinês, japonês ou coreano.",
+    })
 
     payload = {
         "model": LLM_MODEL,
@@ -188,6 +215,26 @@ def query_llm(user_text, grounding=None, history=None):
         resp.raise_for_status()
         data = resp.json()
         answer = (data["choices"][0]["message"]["content"] or "").strip()
+
+        # Qwen às vezes mistura chinês: re-tenta reforçando PT-BR e, no fim, sanitiza.
+        if answer and _CJK_RE.search(answer):
+            try:
+                retry = dict(payload)
+                retry["temperature"] = 0.2
+                retry["messages"] = [{
+                    "role": "system",
+                    "content": "RESPONDA SOMENTE EM PORTUGUÊS DO BRASIL. NÃO use nenhum caractere chinês, japonês ou coreano.",
+                }] + payload["messages"]
+                r2 = requests.post(f"{LLM_BASE_URL}/chat/completions", json=retry, timeout=LLM_TIMEOUT)
+                r2.raise_for_status()
+                d2 = r2.json()
+                a2 = (d2["choices"][0]["message"]["content"] or "").strip()
+                if a2:
+                    answer, data = a2, d2
+            except Exception:
+                pass
+            answer = _strip_cjk(answer)
+
         latency = time.perf_counter() - start
 
         if not answer:
@@ -195,7 +242,26 @@ def query_llm(user_text, grounding=None, history=None):
             return None
 
         record("resolved_by_llm", latency=latency)
-        return {"answer": answer, "latency": latency}
+        usage = data.get("usage") or {}
+        return {
+            "answer": answer,
+            "latency": latency,
+            # Detalhes da chamada — alimentam o "inspetor de API" no pipeline visual
+            "request": {
+                "method": "POST",
+                "endpoint": f"{LLM_BASE_URL}/chat/completions",
+                "model": LLM_MODEL,
+                "temperature": LLM_TEMPERATURE,
+                "max_tokens": LLM_MAX_TOKENS,
+                "messages": messages,
+            },
+            "usage": {
+                "prompt_tokens": usage.get("prompt_tokens"),
+                "completion_tokens": usage.get("completion_tokens"),
+                "total_tokens": usage.get("total_tokens"),
+            },
+            "finish_reason": (data["choices"][0] or {}).get("finish_reason"),
+        }
     except Exception:
         record("llm_failures")
         return None

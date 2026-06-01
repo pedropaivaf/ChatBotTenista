@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2600 1340" preserveAspectRatio="xMidYMid slice">
+  <!-- Linhas brancas de uma quadra de tênis (vista de cima). Fundo transparente:
+       a cor azul (US Open) vem do CSS. Orientação paisagem: rede vertical ao centro. -->
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.9" stroke-width="7" stroke-linecap="square">
+    <!-- Limite de duplas (retângulo externo) -->
+    <rect x="130" y="130" width="2340" height="1080"/>
+    <!-- Laterais de simples -->
+    <line x1="130" y1="265"  x2="2470" y2="265"/>
+    <line x1="130" y1="1075" x2="2470" y2="1075"/>
+    <!-- Linhas de saque -->
+    <line x1="670"  y1="265" x2="670"  y2="1075"/>
+    <line x1="1930" y1="265" x2="1930" y2="1075"/>
+    <!-- Linha central de saque -->
+    <line x1="670" y1="670" x2="1930" y2="670"/>
+    <!-- Marcas centrais nas linhas de fundo -->
+    <line x1="130"  y1="670" x2="172"  y2="670"/>
+    <line x1="2428" y1="670" x2="2470" y2="670"/>
+  </g>
+  <!-- Rede (linha central mais marcada) -->
+  <line x1="1300" y1="120" x2="1300" y2="1220" stroke="#ffffff" stroke-opacity="0.95" stroke-width="10"/>
+</svg>

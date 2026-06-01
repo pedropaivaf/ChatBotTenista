@@ -152,6 +152,21 @@ def build_grounding(msg_lower):
                 if top:
                     linha = ", ".join(f"{x['position']}º {x['name']} ({x['country']})" for x in top)
                     parts.append(f"Top 5 {circuito} atual (mar/2026): {linha}.")
+
+        # (c) Pergunta histórica/GOAT? Injeta lendas REAIS para reduzir alucinação
+        # (ex.: "melhor brasileiro de todos os tempos" = Guga, não nomes inventados).
+        if any(t in msg_lower for t in ["todos os tempos", "da história", "da historia",
+                                         "maior de todos", "melhor de todos", "lenda",
+                                         "goat", "já existiu", "ja existiu", "da hist"]):
+            parts.append(
+                "Maiores tenistas da história (referência factual, use isto): "
+                "Masculino — Novak Djokovic (24 Grand Slams), Rafael Nadal (22), Roger Federer (20). "
+                "Feminino — Serena Williams (23), Steffi Graf (22), Martina Navratilova. "
+                "Brasil — Gustavo Kuerten 'Guga' (3x Roland Garros, ex-nº1 do mundo, considerado o maior "
+                "tenista brasileiro de todos os tempos), Maria Esther Bueno (19 Grand Slams, maior lenda "
+                "feminina do Brasil), Beatriz Haddad Maia (maior brasileira da atualidade) e "
+                "João Fonseca (jovem promessa). NÃO invente nomes fora desta lista."
+            )
     except Exception:
         pass # Grounding é best-effort: qualquer erro aqui não pode quebrar o chat.
     return "\n".join(parts)
@@ -231,8 +246,19 @@ def predict(): # Função principal de "predição" ou resposta
             add_log("LLM indisponível — usando resposta padrão.", "WARNING")
             return None
         answer = result["answer"]
-        add_step("LLM · LM Studio", "success", f"Respondido pelo LLM em {result['latency']:.1f}s")
-        add_log(f"Resposta gerada pelo LLM ({result['latency']:.2f}s).", "SUCCESS")
+        lat = result.get("latency") or 0
+        usage = result.get("usage") or {}
+        comp = usage.get("completion_tokens")
+        tps = round(comp / lat, 1) if (comp and lat) else None
+        add_step("LLM · LM Studio", "success", f"Respondido pelo LLM em {lat:.1f}s", data={"llm": {
+            "request": result.get("request", {}),
+            "answer": answer,
+            "latency": round(lat, 2),
+            "usage": usage,
+            "finish_reason": result.get("finish_reason"),
+            "tokens_per_s": tps,
+        }})
+        add_log(f"Resposta gerada pelo LLM ({lat:.2f}s).", "SUCCESS")
         session_mgr.update(session_id, "user", text)
         session_mgr.update(session_id, "bot", answer, bot_action="showed_llm",
                            topic=context.get("current_topic"))

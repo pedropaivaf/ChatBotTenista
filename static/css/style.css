@@ -12,6 +12,11 @@
 
     --bot-bubble: rgba(30, 41, 59, 0.9);
     --user-bubble: #0284c7;
+
+    /* Identidade da IA (LLM · LM Studio) — violeta→ciano iridescente */
+    --llm-violet: #a78bfa;
+    --llm-cyan: #22d3ee;
+    --llm-glow: rgba(167, 139, 250, 0.35);
 }
 
 * {
@@ -818,4 +823,399 @@ body.presentation-mode .fullscreen-btn {
     border-color: var(--accent-color);
     color: var(--accent-color);
     box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+/* =====================================================================
+   IDENTIDADE VISUAL DA IA (LLM · LM Studio)
+   A base = quadra (amarelo/teal). O LLM = consultor de IA (violeta→ciano).
+   ===================================================================== */
+
+/* Bolha vinda do LLM: aura violeta + faixa lateral iridescente animada */
+.bot .bubble.from-llm {
+    border: 1px solid rgba(167, 139, 250, 0.35);
+    border-bottom-left-radius: 4px;
+    background:
+        radial-gradient(120% 120% at 0% 0%, rgba(167, 139, 250, 0.10), transparent 60%),
+        linear-gradient(180deg, rgba(34, 211, 238, 0.04), transparent 70%),
+        var(--bot-bubble);
+    box-shadow:
+        0 0 0 1px rgba(167, 139, 250, 0.10),
+        0 10px 38px rgba(167, 139, 250, 0.16);
+    overflow: hidden;
+}
+.bot .bubble.from-llm::before {
+    content: '';
+    position: absolute;
+    left: -1px; top: 8px; bottom: 8px;
+    width: 3px; border-radius: 3px;
+    background: linear-gradient(180deg, var(--llm-violet), var(--llm-cyan));
+    box-shadow: 0 0 12px var(--llm-glow);
+}
+/* Shimmer sutil que cruza a bolha uma vez ao aparecer */
+.bot .bubble.from-llm::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, rgba(167, 139, 250, 0.14) 50%, transparent 70%);
+    transform: translateX(-120%);
+    animation: llmSweep 1.4s ease-out 0.15s 1;
+    pointer-events: none;
+}
+@keyframes llmSweep {
+    to { transform: translateX(120%); }
+}
+
+/* Badge "Gerado por IA · LM Studio" */
+.llm-badge {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+    padding: 4px 11px 4px 8px;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #ede9fe;
+    font-family: 'JetBrains Mono', monospace;
+    background:
+        linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)) padding-box,
+        linear-gradient(120deg, var(--llm-violet), var(--llm-cyan), var(--llm-violet)) border-box;
+    border: 1px solid transparent;
+    background-size: 100% 100%, 220% 100%;
+    animation: llmBorderFlow 4s linear infinite;
+}
+@keyframes llmBorderFlow {
+    to { background-position: 0 0, 220% 0; }
+}
+.llm-badge .llm-core {
+    position: relative;
+    width: 12px; height: 12px; flex-shrink: 0;
+}
+.llm-badge .llm-core::before,
+.llm-badge .llm-core::after {
+    content: '';
+    position: absolute; inset: 0; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--llm-cyan), var(--llm-violet));
+}
+.llm-badge .llm-core::after {
+    animation: llmPulse 1.8s ease-out infinite;
+}
+@keyframes llmPulse {
+    0%   { transform: scale(1); opacity: 0.75; }
+    70%  { transform: scale(2.4); opacity: 0; }
+    100% { opacity: 0; }
+}
+.llm-badge .llm-latency {
+    color: var(--llm-cyan);
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+/* Pipeline: etapa do LLM em violeta com glow pulsante */
+.pipeline-step.ps-type-llm { border-left-color: var(--llm-violet); }
+.pipeline-step.ps-type-llm .ps-icon { color: var(--llm-violet); }
+.pipeline-step.ps-type-llm .ps-name { color: #ddd6fe; }
+.pipeline-step.ps-type-llm.ps-success {
+    border-left-color: var(--llm-violet);
+    background: linear-gradient(90deg, rgba(167, 139, 250, 0.10), transparent 75%);
+    box-shadow: inset 0 0 22px rgba(167, 139, 250, 0.07);
+}
+.pipeline-step.ps-type-llm.ps-success .ps-icon {
+    animation: llmGlow 1.9s ease-in-out infinite;
+}
+@keyframes llmGlow {
+    0%, 100% { filter: drop-shadow(0 0 2px var(--llm-glow)); }
+    50%      { filter: drop-shadow(0 0 9px var(--llm-violet)); }
+}
+
+/* Indicador "consultando o modelo de IA…" enquanto espera */
+.typing-indicator { display: flex; align-items: center; gap: 11px; }
+.typing-dots { display: inline-flex; gap: 5px; }
+.typing-dots span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--text-secondary);
+    animation: typingBounce 1.2s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.18s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30%           { transform: translateY(-5px); opacity: 1; }
+}
+.typing-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    transition: max-width 0.5s ease, opacity 0.4s ease;
+}
+.typing-indicator.consulting .typing-label { max-width: 220px; opacity: 1; }
+.typing-indicator.consulting .typing-dots span { background: var(--llm-violet); }
+
+/* Presentation mode: badge maior */
+body.presentation-mode .llm-badge { font-size: 0.78rem; padding: 6px 14px 6px 10px; }
+body.presentation-mode .typing-label { font-size: 0.95rem; }
+
+/* =====================================================================
+   AMBIÊNCIA & MOVIMENTO — orbes flutuantes, entrada cinematográfica,
+   shimmer no título e "saque" no envio. (CSS-first, sem dependências)
+   ===================================================================== */
+
+/* Mantém o chat acima da camada de ambiência */
+.container { z-index: 1; }
+
+/* Orbes de luz flutuando atrás do vidro (a desfocagem do container os frosta) */
+.ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.ambient .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(34px);
+    opacity: 0.45;
+    will-change: transform;
+    animation: orbDrift var(--dur, 24s) ease-in-out infinite alternate;
+}
+.orb.o1 { width: 200px; height: 200px; left: 6%;  top: 16%; background: radial-gradient(circle at 35% 35%, rgba(223,255,79,0.55), transparent 68%); --dur: 26s; }
+.orb.o2 { width: 150px; height: 150px; left: 78%; top: 22%; background: radial-gradient(circle at 35% 35%, rgba(56,189,248,0.45), transparent 68%); --dur: 30s; animation-delay: -6s; }
+.orb.o3 { width: 240px; height: 240px; left: 70%; top: 64%; background: radial-gradient(circle at 35% 35%, rgba(167,139,250,0.40), transparent 68%); --dur: 34s; animation-delay: -12s; }
+.orb.o4 { width: 130px; height: 130px; left: 14%; top: 72%; background: radial-gradient(circle at 35% 35%, rgba(34,211,238,0.38), transparent 68%); --dur: 22s; animation-delay: -3s; }
+.orb.o5 { width: 110px; height: 110px; left: 44%; top: 8%;  background: radial-gradient(circle at 35% 35%, rgba(223,255,79,0.35), transparent 68%); --dur: 28s; animation-delay: -9s; }
+@keyframes orbDrift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(46px, -34px) scale(1.18); }
+}
+
+/* Entrada cinematográfica em cascata no carregamento */
+.logo,
+header p,
+.chat-messages .message:first-child,
+.chat-input-area {
+    animation: riseIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.logo { animation-delay: 0.15s; }
+header p { animation-delay: 0.30s; }
+.chat-messages .message:first-child { animation-delay: 0.45s; }
+.chat-input-area { animation-delay: 0.60s; }
+@keyframes riseIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Shimmer percorrendo o título TENNIS AI */
+.logo h1 {
+    background: linear-gradient(110deg, #fff 10%, var(--accent-color) 35%, #fff 50%, var(--accent-color) 65%, #fff 90%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleShimmer 6s linear infinite;
+}
+@keyframes titleShimmer {
+    to { background-position: -250% 0; }
+}
+
+/* "Saque": pulso na bolinha ao enviar (classe via JS) */
+#send-btn.serving {
+    animation: serve 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes serve {
+    0%   { transform: scale(1) rotate(0); }
+    40%  { transform: scale(1.18) translateY(-4px) rotate(-18deg); box-shadow: 0 14px 30px rgba(223,255,79,0.45); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+/* Acessibilidade: respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+    .ambient .orb,
+    .logo h1,
+    .logo,
+    header p,
+    .chat-messages .message:first-child,
+    .chat-input-area,
+    #send-btn.serving {
+        animation: none !important;
+    }
+}
+
+/* =====================================================================
+   INSPETOR DE API DO LLM (no pipeline): requisição -> resposta -> métricas
+   ===================================================================== */
+.llm-card {
+    margin-top: 8px;
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(56, 189, 248, 0.05), rgba(10, 12, 16, 0.55));
+    overflow: hidden;
+}
+.llm-card-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.14);
+}
+.llm-chip {
+    font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    color: #06121c; padding: 2px 9px; border-radius: 999px; flex-shrink: 0;
+    background: linear-gradient(120deg, var(--llm-violet), var(--llm-cyan));
+}
+.llm-model {
+    font-size: 0.66rem; color: #9fd6f5; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.llm-stats { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 10px; }
+.llm-stat {
+    display: flex; flex-direction: column; align-items: center;
+    min-width: 54px; padding: 5px 9px; border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(56, 189, 248, 0.12);
+}
+.lst-val { font-size: 0.82rem; font-weight: 800; color: #bfe6ff; font-family: 'JetBrains Mono', monospace; }
+.lst-lbl { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.6px; color: #6f7681; margin-top: 2px; }
+
+.llm-sec-title {
+    font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+    color: #93c9ec; padding: 7px 10px;
+}
+summary.llm-sec-title { cursor: pointer; list-style: none; user-select: none; }
+summary.llm-sec-title::-webkit-details-marker { display: none; }
+summary.llm-sec-title::before { content: '\25B8  '; color: var(--accent-color); }
+details.llm-details[open] > summary.llm-sec-title::before { content: '\25BE  '; }
+
+.llm-endpoint {
+    margin: 0 10px 6px; padding: 5px 8px; border-radius: 6px;
+    background: rgba(0, 0, 0, 0.35); color: #84d6ac;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.64rem; word-break: break-all;
+}
+.llm-params { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 10px 8px; }
+.llm-param {
+    font-size: 0.58rem; color: #9aa3ae; font-family: 'JetBrains Mono', monospace;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 2px 7px; border-radius: 5px;
+}
+.llm-msg { margin: 0 10px 7px; }
+.llm-role {
+    display: inline-block; font-size: 0.54rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.6px; padding: 1px 7px; border-radius: 4px; margin-bottom: 3px;
+}
+.llm-role-system { background: rgba(56, 189, 248, 0.14); color: #7dd3fc; }
+.llm-role-user { background: rgba(103, 232, 249, 0.14); color: #67e8f9; }
+.llm-role-assistant { background: rgba(148, 163, 184, 0.14); color: #cbd5e1; }
+.llm-msg-text {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.64rem; line-height: 1.5;
+    color: #c2c9d2; white-space: pre-wrap; word-break: break-word;
+    max-height: 110px; overflow-y: auto;
+    background: rgba(0, 0, 0, 0.25); border-left: 2px solid rgba(56, 189, 248, 0.28);
+    padding: 6px 8px; border-radius: 0 6px 6px 0;
+}
+.llm-resp { border-top: 1px solid rgba(56, 189, 248, 0.12); padding-top: 2px; }
+.llm-resp-text {
+    margin: 0 10px 6px; padding: 7px 9px; border-radius: 6px;
+    background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.14);
+    font-size: 0.72rem; line-height: 1.55; color: #dbe6f0;
+    max-height: 150px; overflow-y: auto;
+}
+.llm-finish { padding: 0 10px 9px; font-size: 0.58rem; color: #6f7681; font-family: 'JetBrains Mono', monospace; }
+.llm-msg-text::-webkit-scrollbar, .llm-resp-text::-webkit-scrollbar { width: 3px; }
+.llm-msg-text::-webkit-scrollbar-thumb, .llm-resp-text::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.22); border-radius: 3px; }
+
+/* =====================================================================
+   PALETA "GRAPHITE & ICE" — minimalista preto/cinza/azul
+   (tokens redefinidos + ajustes pontuais; estas regras vencem as do topo)
+   ===================================================================== */
+:root {
+    --bg-color: #0a0b0e;
+    --container-bg: rgba(18, 20, 25, 0.60);
+    --accent-color: #4f9cd9;
+    --text-primary: #eef1f4;
+    --text-secondary: #868d98;
+    --glass-border: rgba(255, 255, 255, 0.09);
+    --bot-bubble: rgba(24, 27, 32, 0.86);
+    --user-bubble: #1d3a56;
+    /* IA: azul -> ciano (no lugar do violeta), distinta pelo brilho */
+    --llm-violet: #38bdf8;
+    --llm-cyan: #67e8f9;
+    --llm-glow: rgba(56, 189, 248, 0.32);
+}
+
+/* Fundo: grafite quase-preto com brumas frias (remove a quadra azul) */
+body { background-color: var(--bg-color); }
+body::before {
+    background-image:
+        radial-gradient(1100px 720px at 80% -12%, rgba(56, 189, 248, 0.10), transparent 60%),
+        radial-gradient(880px 600px at 8% 112%, rgba(79, 156, 217, 0.07), transparent 60%),
+        linear-gradient(165deg, #0c0e13 0%, #070809 58%, #0a0c11 100%);
+    background-size: cover;
+    opacity: 1;
+}
+
+/* Bolha do usuário: azul profundo e contido (menos saturado) */
+.user .bubble {
+    background: linear-gradient(135deg, #234a6e, #15293d);
+    border: 1px solid rgba(120, 180, 230, 0.18);
+}
+
+/* Destaque de mensagem: azul-gelo em vez de amarelo */
+.msg-highlight { color: #8fd3ff; }
+
+/* (botão de envio mantém a bolinha de tênis amarela original) */
+
+/* Orbes: cinza-azulados e ciano (sem amarelo/violeta), sutis */
+.orb.o1 { background: radial-gradient(circle at 35% 35%, rgba(120, 160, 200, 0.22), transparent 68%); }
+.orb.o2 { background: radial-gradient(circle at 35% 35%, rgba(56, 189, 248, 0.22), transparent 68%); }
+.orb.o3 { background: radial-gradient(circle at 35% 35%, rgba(90, 110, 140, 0.20), transparent 68%); }
+.orb.o4 { background: radial-gradient(circle at 35% 35%, rgba(103, 232, 249, 0.18), transparent 68%); }
+.orb.o5 { background: radial-gradient(circle at 35% 35%, rgba(120, 140, 170, 0.16), transparent 68%); }
+
+/* Identidade da IA realinhada ao azul (substitui os violetas fixos) */
+.bot .bubble.from-llm {
+    border-color: rgba(56, 189, 248, 0.32);
+    background:
+        radial-gradient(120% 120% at 0% 0%, rgba(56, 189, 248, 0.10), transparent 60%),
+        linear-gradient(180deg, rgba(103, 232, 249, 0.04), transparent 70%),
+        var(--bot-bubble);
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.10), 0 10px 38px rgba(56, 189, 248, 0.16);
+}
+.bot .bubble.from-llm::after {
+    background: linear-gradient(115deg, transparent 30%, rgba(56, 189, 248, 0.14) 50%, transparent 70%);
+}
+.pipeline-step.ps-type-llm.ps-success {
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.10), transparent 75%);
+    box-shadow: inset 0 0 22px rgba(56, 189, 248, 0.07);
+}
+
+/* =====================================================================
+   QUADRA US OPEN — fundo azul + linhas brancas desenhando a quadra
+   em volta da janela. A JANELA fica dark/premium sobre a quadra azul.
+   ===================================================================== */
+:root { --container-bg: rgba(12, 15, 22, 0.86); }
+
+body { background-color: #1f3d63; }
+body::before {
+    background:
+        url('../img/court-lines.svg') center center / cover no-repeat,
+        radial-gradient(125% 95% at 50% 46%, #44719b 0%, #2d5482 52%, #1e3c62 100%);
+    background-size: cover;
+    opacity: 1;
+}
+
+/* A quadra é o cenário principal -> esconde os orbes flutuantes */
+.ambient { display: none; }
+
+/* Vidro azulado para integrar a janela à quadra */
+.container {
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 28px 90px rgba(0, 0, 0, 0.55);
 }
