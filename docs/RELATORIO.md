@@ -5,7 +5,7 @@
 > exigidas (ex.: ABNT).
 
 **Autor(es):** Pedro Paiva Ferreira · Bernardo Ladeira Leal de Medeiros · João Hugo Martins Botelho · Mateus Silva Xavier
-**Disciplina:** ⟨disciplina⟩ — **Professor:** ⟨professor⟩
+**Disciplina:** Inteligência Artificial e Machine Learning — **Professor:** Tassio Ferenzini Martins Sirqueira
 **Repositório:** https://github.com/pedropaivaf/ChatBotTenista
 **Vídeo de demonstração:** ⟨link⟩
 
