@@ -233,16 +233,11 @@ def predict(): # Função principal de "predição" ou resposta
         add_step("LLM · LM Studio", "active", step_detail) # Acende a etapa LLM no pipeline visual
         add_log("Acionando LLM de fallback (LM Studio)...", "SYSTEM")
         grounding = build_grounding(msg_lower) # Contexto factual (anti-alucinação)
-        # Histórico BEM curto e truncado: contexto demais (ex.: a ficha longa de um
-        # jogador) confunde modelos pequenos e dispara troca de idioma (chinês). Só 2
-        # turnos e no máximo 220 caracteres cada.
-        history = []
-        for h in context.get("history", [])[-2:]:
-            role = "assistant" if h.get("role") == "bot" else "user"
-            content = _HTML_TAG_RE.sub("", h.get("text", "") or "").strip()
-            if content:
-                history.append({"role": role, "content": content[:220]})
-        result = llm_client.query_llm(text, grounding=grounding, history=history)
+        # NÃO enviamos histórico ao LLM: o contexto de tênis (ex.: a ficha de um jogador)
+        # confunde modelos pequenos e dispara troca de idioma (chinês). Follow-ups de
+        # tênis já são resolvidos pela base (árvore de decisão); aqui o LLM responde a
+        # pergunta isolada, o que deixa a resposta mais estável e mais rápida (sem retry).
+        result = llm_client.query_llm(text, grounding=grounding, history=None)
         if not result: # LLM indisponível ou sem resposta → deixa o canned assumir
             add_step("LLM · LM Studio", "fail", "LLM indisponível ou sem resposta")
             add_log("LLM indisponível — usando resposta padrão.", "WARNING")
