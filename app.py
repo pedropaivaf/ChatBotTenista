@@ -578,6 +578,20 @@ def predict(): # Função principal de "predição" ou resposta
 
     # --- Lógica de Jogadores DINÂMICA (NLTK) ---
     players_list = tennis_engine.get_all_player_names()
+    # GUARDA DE CONTEXTO: se a mensagem usa pronome ("dele/dela/seu/sua") e há um
+    # jogador em FOCO, o pronome se refere ao foco — NUNCA trocar por um fuzzy match
+    # fraco (ex.: "qual a mão dominante dele" não pode virar outro jogador). Só troca
+    # se a mensagem nomear EXPLICITAMENTE outro jogador (match forte por entidade).
+    if re.search(r'\b(dele|dela|deles|delas|seu|sua)\b', msg_lower) and context.get("focus_player"):
+        _focus_now = context["focus_player"]
+        _explicit = __import__('nltk_utils').extract_entities(msg_stems, players_list)
+        if not _explicit or _explicit == _focus_now:
+            add_log(f"[CONTEXTO] Pronome refere o foco ({_focus_now}); mantendo o jogador.", "SUCCESS")
+            add_step("Motor de Dados", "success", f"Pronome → mantém foco: {_focus_now}")
+            _info = tennis_engine.get_player_info(_focus_now)
+            if _info:
+                return respond(_info, topic="player", bot_action="showed_player_info",
+                               mentioned_players=[_focus_now])
     target_player = __import__('nltk_utils').extract_entities(msg_stems, players_list)
     if target_player:
         from nltk_utils import stem as _stem, tokenize as _tok

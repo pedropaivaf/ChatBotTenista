@@ -56,7 +56,8 @@ FOLLOW_UPS = {
 # Lista de palavras relacionadas ao estilo de jogo de um tenista
 STYLE_KEYWORDS = ["estilo", "forehand", "backhand", "saque", "serviço", "voleio",
                    "movimentação", "jogo", "tática", "agressivo", "defensivo",
-                   "destro", "canhoto", "mão"]
+                   "destro", "destra", "canhoto", "canhota", "mão", "mao",
+                   "mão dominante", "mao dominante", "dominante"]
 # Lista de palavras relacionadas a torneios de tênis
 TOURNAMENT_KEYWORDS = ["torneio", "slam", "grand slam", "australian", "roland",
                         "wimbledon", "us open", "masters", "finals", "atp 500",
