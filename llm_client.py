@@ -191,12 +191,13 @@ def query_llm(user_text, grounding=None, history=None):
     messages = [{"role": "system", "content": system_content}]
     if history:
         messages.extend(history)
-    messages.append({"role": "user", "content": user_text})
-    # Lembrete por RECÊNCIA (logo antes de gerar): trava o idioma. Modelos pequenos
-    # (ex.: Qwen) respeitam melhor a instrução de idioma quando ela é a última.
+    # Lembrete de idioma anexado à PRÓPRIA pergunta (recência máxima): é o texto que
+    # o modelo responde diretamente, então trava melhor o português em modelos pequenos
+    # (Qwen tende a "vazar" para chinês/inglês quando a instrução fica longe).
     messages.append({
-        "role": "system",
-        "content": "Escreva a resposta INTEIRA em português do Brasil. NÃO use nenhum caractere chinês, japonês ou coreano.",
+        "role": "user",
+        "content": user_text + "\n\n(Importante: escreva a resposta INTEIRA em português do Brasil, "
+                                "sem nenhuma palavra em chinês, japonês ou inglês.)",
     })
 
     payload = {
@@ -218,15 +219,19 @@ def query_llm(user_text, grounding=None, history=None):
         data = resp.json()
         answer = (data["choices"][0]["message"]["content"] or "").strip()
 
-        # Qwen às vezes mistura chinês: re-tenta reforçando PT-BR e, no fim, sanitiza.
+        # Qwen às vezes mistura chinês: re-tenta com prompt LIMPO e, no fim, sanitiza.
         if answer and _CJK_RE.search(answer):
             try:
+                # Retry LIMPO: descarta o histórico (principal gatilho da confusão);
+                # mantém só persona + grounding + a pergunta, com idioma reforçado.
                 retry = dict(payload)
                 retry["temperature"] = 0.2
-                retry["messages"] = [{
-                    "role": "system",
-                    "content": "RESPONDA SOMENTE EM PORTUGUÊS DO BRASIL. NÃO use nenhum caractere chinês, japonês ou coreano.",
-                }] + payload["messages"]
+                retry["messages"] = [
+                    {"role": "system", "content": system_content +
+                        "\n\nRESPONDA EXCLUSIVAMENTE EM PORTUGUÊS DO BRASIL. É proibido escrever "
+                        "qualquer palavra em chinês, japonês, coreano ou inglês."},
+                    {"role": "user", "content": user_text + "\n\n(Responda em português do Brasil.)"},
+                ]
                 r2 = requests.post(f"{LLM_BASE_URL}/chat/completions", json=retry, timeout=LLM_TIMEOUT)
                 r2.raise_for_status()
                 d2 = r2.json()
