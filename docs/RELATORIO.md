@@ -1,11 +1,10 @@
 # Chatbot Híbrido de Tênis (NLTK + LLM) — Relatório do Trabalho Final
 
-> **RASCUNHO** — preencha os campos marcados com `⟨...⟩` (nomes, métricas reais da
-> sua execução, link do vídeo) e ajuste a formatação às normas exigidas (ex.: ABNT).
-> As métricas reais saem do endpoint `GET /metrics` após você usar o bot com o LM
-> Studio ligado.
+> **Métricas reais já preenchidas** (seção 5). Falta só completar os campos `⟨...⟩` abaixo
+> (autores/RA, disciplina, professor, link do vídeo) e ajustar a formatação às normas
+> exigidas (ex.: ABNT).
 
-**Autor(es):** ⟨seu nome / RA⟩
+**Autor(es):** Pedro Paiva Ferreira · Bernardo Ladeira Leal de Medeiros · João Hugo Martins Botelho · Mateus Silva Xavier
 **Disciplina:** ⟨disciplina⟩ — **Professor:** ⟨professor⟩
 **Repositório:** https://github.com/pedropaivaf/ChatBotTenista
 **Vídeo de demonstração:** ⟨link⟩
@@ -118,6 +117,12 @@ ferramentas e recuperação. Comparado ao **estado da arte**, este projeto:
 - **Alucinações:** o LLM pode inventar fatos. Mitigamos com (i) *system prompt* que pede
   honestidade e foco, (ii) **grounding** com dados reais e (iii) **prioridade da base** no
   núcleo do domínio.
+- **Troca de idioma (*code-switching*):** modelos pequenos — em especial a variante
+  *Qwen2.5-7B-Instruct-**1M*** (contexto longo) — ocasionalmente "vazavam" para o **chinês** no
+  meio da resposta. Mitigado com: (i) instrução de idioma reforçada por **recência** no prompt,
+  (ii) **sanitização** da saída (remoção de caracteres CJK), (iii) **não enviar histórico** ao
+  modelo (contexto irrelevante disparava a troca) e, principalmente, (iv) a escolha do modelo
+  **padrão `Qwen2.5-7B-Instruct`** (não-`1M`), bem mais estável em português.
 - **Dependência de dados:** a qualidade do núcleo depende do `tennis_data.json`/
   `knowledge_base.json`; dados desatualizados geram respostas erradas (ex.: troca de nº 1 do
   ranking).
@@ -136,8 +141,10 @@ ferramentas e recuperação. Comparado ao **estado da arte**, este projeto:
   rankings) e em perguntas subjetivas — ótimo para evidenciar a divisão **base × LLM**.
 - **Modelo (Qwen2.5-7B-Instruct):** (1) **forte em português**; (2) **instruction-tuned** (bom
   para Q&A/conversa); (3) **não-gated** no Hugging Face (download livre); (4) tamanho **7B**
-  equilibra qualidade e viabilidade local em quantização GGUF (ex.: `Q4_K_M`, ~4–5 GB).
-  Alternativa para máquinas modestas: **Qwen2.5-3B-Instruct**.
+  equilibra qualidade e viabilidade local em quantização GGUF (`Q4_K_M`, ~4,7 GB, roda em ~8 GB
+  de RAM). Avaliamos três variantes do Qwen 7B: a **`-1M`** (contexto longo) trocava de idioma
+  com frequência; a **`-Coder`** é especializada em programação; a **padrão `Instruct`** foi a
+  mais estável em português e a escolhida. Alternativa para máquinas modestas: **Qwen2.5-3B-Instruct**.
 - **Extras:** *grounding* leve (injeção de contexto), painel de *pipeline* didático, endpoint
   `/metrics` para avaliação quantitativa, e **degradação graciosa** (o bot funciona mesmo sem o
   LLM).
@@ -171,29 +178,45 @@ Mensagem
 
 ## 5. Resultados e Discussão
 
-> Preencha com os números reais de `GET /metrics` após interagir com o bot (LM Studio ligado).
+> Métricas reais coletadas via `GET /metrics` numa sessão representativa de 15 perguntas, com o
+> LM Studio rodando o **`Qwen2.5-7B-Instruct`**. Os percentuais variam conforme o mix de perguntas.
 
 ### Avaliação de Desempenho
 | Métrica | Valor |
 |---|---|
-| Total de perguntas avaliadas | ⟨total_perguntas⟩ |
-| Resolvidas pela **base** | ⟨resolvidas_pela_base⟩ (⟨pct_base⟩%) |
-| Resolvidas pelo **LLM** | ⟨resolvidas_pelo_llm⟩ (⟨pct_llm⟩%) |
-| Não resolvidas | ⟨nao_resolvidas⟩ (⟨pct_nao_resolvidas⟩%) |
-| **Tempo médio de resposta do LLM** | ⟨tempo_medio_llm_s⟩ s |
-| Falhas de chamada ao LLM | ⟨falhas_llm⟩ |
+| Total de perguntas avaliadas | 15 |
+| Resolvidas pela **base** | 9 (**60,0%**) |
+| Resolvidas pelo **LLM** | 5 (**33,3%**) |
+| Não resolvidas (gibberish bloqueado) | 1 (6,7%) |
+| **Tempo médio de resposta do LLM** | **2,65 s** |
+| Falhas de chamada ao LLM | 0 |
 
-**Suíte de testes automatizados:** `run_tests.py` → ⟨X⟩/297 cenários. *(Observação: a integração
-do LLM não altera o resultado dos testes, pois eles rodam com o LLM desligado.)*
+> **Custo computacional:** ~19–20 tokens/s no LM Studio (GPU NVIDIA RTX 3050 6 GB); a base
+> responde em milissegundos. Com o modelo padrão, o LLM responde em **uma única chamada**
+> (sem retry), tipicamente em 2–6 s.
+
+**Suíte de testes automatizados:** `run_tests.py` → **300/300** cenários (21 baterias). *(A
+integração do LLM não altera o resultado: os testes rodam com `LLM_ENABLED=0`.)*
+
+**Robustez de contexto (20 turnos):** validado num fluxo de 20 turnos — o bot mantém o foco em
+conversas longas (pronomes "dele/dela" sempre resolvem para o jogador em foco; a troca de foco
+só ocorre quando um novo jogador é nomeado explicitamente), alternando entre atributos, troca de
+tema e perguntas fora do tema (→ LLM), sem perder contexto.
 
 ### Qualidade das respostas (avaliação qualitativa)
-Exemplos representativos (compare base × LLM):
-- **Resolvido pela base (núcleo):** "ranking ATP", "quem é o Sinner", "campeão de Wimbledon".
-- **Resolvido pelo LLM (cauda subjetiva/contextual):** "quem é o melhor tenista de todos os
-  tempos?", "e o melhor brasileiro atual?" (João Fonseca), "e de todos os tempos?" (Guga).
-- **Resolvido pelo LLM (fora do tema):** "o que é um buraco negro?".
+- **Base (núcleo de tênis):** "ranking ATP", "quem é o Sinner", "campeão de Wimbledon", "qual a
+  idade dele?" (segue o foco) — 100% confiável.
+- **Base (debate curado):** "quem é o melhor de todos os tempos?" → *Big Three* (intent `goat_debate`).
+- **LLM (cauda subjetiva):** "melhor brasileiro de todos os tempos?" → **"Gustavo Kuerten (Guga)"**,
+  correto graças ao *grounding*.
+- **LLM (fora do tema):** "o que é fotossíntese?", "qual a capital da França?" → respostas corretas.
 
-Discussão: ⟨comente acertos, eventuais alucinações observadas, e como o *grounding* ajudou⟩.
+**Discussão:** a base resolveu a maioria (**60%**) com confiabilidade total no núcleo; o LLM
+cobriu a cauda (**33%**) — perguntas gerais e subjetivas. O ***grounding*** foi decisivo: em
+testes sem ele, o modelo **alucinava** nomes de tenistas brasileiros inexistentes ("Vasco
+Vasques", "Carlos Costa"); com a injeção das lendas reais (Guga, Bia Haddad, Maria Esther Bueno),
+passou a responder **Guga** corretamente. A transparência do painel (badge "Gerado por IA")
+deixa claro ao usuário quando a resposta veio do modelo — reforçando o controle sobre alucinações.
 
 ---
 
