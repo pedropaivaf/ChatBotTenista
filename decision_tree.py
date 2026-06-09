@@ -266,6 +266,13 @@ _STOP_WORDS = {
     "absurda", "absurdo", "lendaria", "lendário", "perfeito", "perfeita",
     "impressiona", "impressionante", "admiro", "adoro", "amo",
     "rapidez", "rápido", "rapido",
+    # Conhecimento geral: palavras comuns que NÃO podem fuzzy-matchar sobrenomes
+    # (ex.: "alto" casava com "Walton"; "monte"/"predio" com torneios/jogadores).
+    "alto", "alta", "baixo", "baixa", "mundo", "planeta", "terra",
+    "predio", "prédio", "edificio", "edifício", "montanha", "monte",
+    "torre", "ponte", "cidade", "capital", "comprido", "longo", "largo",
+    "fundo", "profundo", "pesado", "leve", "antigo", "grande", "pequeno",
+    "populoso", "quente", "frio",
 }
 
 
@@ -301,6 +308,13 @@ def _fuzzy_match_player(msg_lower, candidates, threshold=0.65):
                 continue
             # Compara cada palavra da mensagem do usuário com a parte do nome
             for word in words:
+                # Guard de 1ª letra: typos reais preservam a inicial
+                # ("Alcaras"→"Alcaraz"), enquanto colisões de palavra comum NÃO
+                # ("batman"→"Atmane", "mona"→"Simona", "alto"→"Walton"). Isso
+                # separa typos de palavras quaisquer melhor que só o threshold,
+                # já que 0.83 (batman) e 0.86 (alcaras) ficam quase colados.
+                if word[0] != part[0]:
+                    continue
                 # Calcula a taxa de similaridade entre a palavra e a parte do nome usando SequenceMatcher
                 ratio = difflib.SequenceMatcher(None, word, part).ratio()
                 # Se a similaridade é maior que a melhor encontrada e está acima do limiar mínimo
@@ -347,8 +361,10 @@ def _resolve_player_from_context(msg_lower, msg_stems, context, engine):
         return result
 
     # 3. Fuzzy match — tolera typos como "Medevedev" → "Medvedev"
-    # Última tentativa: usa matching fuzzy para tolerar erros de digitação
-    return _fuzzy_match_player(msg_lower, mentioned, threshold=0.65)
+    # Última tentativa: usa matching fuzzy para tolerar erros de digitação.
+    # 0.82: typos reais passam; palavras comuns ("alto"→"Walton") não sequestram
+    # o contexto (também já filtradas via _STOP_WORDS).
+    return _fuzzy_match_player(msg_lower, mentioned, threshold=0.82)
 
 
 # Classe principal que implementa a árvore de decisão contextual do chatbot

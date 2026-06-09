@@ -70,14 +70,21 @@ Acesse: **http://localhost:5000**
 | Pergunta | Esperado |
 |---|---|
 | `ranking atp` / `quem é o Sinner` | 📚 responde pela **base** (sem badge) |
-| `o que é fotossíntese?` | 🤖 **LLM** em português (badge "Gerado por IA") |
-| `melhor brasileiro de todos os tempos` | 🤖 LLM → **Guga** |
-| `asdfgh qwerty` | 🚫 bloqueado |
+| `melhor brasileiro de todos os tempos` | 🤖 **LLM** (tênis) → **Guga** |
+| pergunta de tênis fora da base (ex.: fato histórico) | 🤖 **LLM** em português, **dentro do tema tênis** |
+| `o que é fotossíntese?` / `qual o prédio mais alto do mundo?` | 🚫 **bloqueado** (fora do tema) |
+| `asdfgh qwerty` | 🚫 bloqueado (sem sentido) |
 
 No canto superior direito, o botão da **bolinha verde** abre o **pipeline** — numa resposta de IA, expanda **"📤 Requisição enviada"** para ver requisição, resposta e métricas do LM Studio (latência, tokens, tok/s).
 
+## 🤖 Como o roteamento funciona
+O bot é **fechado no tema tênis**:
+- **Fora de tênis** → **avisa e bloqueia** ("respiro apenas Tênis"). Nunca vai ao LLM.
+- **Tênis que a base local cobre** → responde pela base.
+- **Tênis que a base NÃO cobre** → o **Qwen (LM Studio)** responde, **dentro do contexto de tênis**.
+
 ## 🤖 Sem o LM Studio ligado?
-O app **não quebra**: responde tênis normalmente pela base; perguntas fora do tema voltam à mensagem padrão ("respiro apenas Tênis"). Basta ligar o LM Studio para o fallback de IA voltar a funcionar (**degradação graciosa**).
+O app **não quebra** (**degradação graciosa**): responde tênis pela base e bloqueia off-topic normalmente. Só o complemento de IA para perguntas de tênis fora da base fica indisponível — basta ligar o LM Studio (em `http://127.0.0.1:1234`) para voltar.
 
 ## ✅ Rodar os testes automatizados
 ```bash

@@ -2,10 +2,10 @@
 from flask import Flask, render_template, request, jsonify # Framework web para criar a API e servir o site
 from flask_cors import CORS # Permite que o frontend acesse o backend de diferentes origens
 from engine import TennisEngine # Importa o nosso motor de dados técnicos de tênis
-from nltk_utils import tokenize, stem, bag_of_words # Utilitários de Processamento de Linguagem Natural
+from nltk_utils import tokenize, stem, bag_of_words, extract_entities # Utilitários de Processamento de Linguagem Natural
 from session_manager import SessionManager # Gerenciador de sessões com contexto
 from query_parser import parse_query # Parser inteligente de queries (país/temporal/superlativo)
-from decision_tree import DecisionTree, _fuzzy_match_player # Árvore de decisão contextual com follow-ups
+from decision_tree import DecisionTree, _fuzzy_match_player, PRONOUN_KEYWORDS # Árvore de decisão contextual com follow-ups
 from api_client import TennisAPIClient # Cliente de atualização de rankings (ATP/WTA)
 import llm_client # Fallback híbrido: consulta um LLM (LM Studio) quando a base não resolve
 import json # Para manipular arquivos de dados estruturados
@@ -71,6 +71,44 @@ OFF_TOPIC_KEYWORDS = [
     "filosofia", "geografia", "equação", "equacao", "raiz quadrada",
 ]
 
+# Conhecimento geral INEQUÍVOCO → vai direto ao LLM (atalho rápido da Camada 1).
+# Curado para NÃO colidir com torneios (por isso nada de "monte"/"rio" cru, que
+# fazem parte de "Monte Carlo"/"Rio Open").
+GENERAL_KNOWLEDGE_KEYWORDS = [
+    "prédio", "predio", "edifício", "edificio", "arranha-céu", "arranha ceu",
+    "montanha", "montanhas", "cordilheira", "everest", "vulcão", "vulcao",
+    "deserto", "oceano", "cachoeira", "catarata", "geleira", "terremoto",
+    "tsunami", "ponte", "torre",
+]
+
+# Superlativo de mundo ("… mais alto/longo/profundo do mundo/planeta/terra").
+# Apertado de propósito: exige o sufixo geográfico para NÃO pegar "partida mais
+# longa da história" nem "melhor jogador do mundo" (que usa "melhor", não "mais").
+SUPERLATIVE_WORLD_RE = re.compile(r'\bmais\s+\w+\s+(?:do\s+mundo|do\s+planeta|da\s+terra)\b')
+
+# Vocabulário INEQUÍVOCO de tênis. Note que palavras ambíguas/duais ("alto",
+# "país", "altura"/"mede" sozinhas) NÃO entram aqui — é justamente o que deixa o
+# Qwen (Camada 3) validar de fato os casos ambíguos.
+TENNIS_SIGNAL_WORDS = [
+    "tenis", "tênis", "atp", "wta", "jogador", "jogadora", "jogadores", "jogadoras",
+    "tenista", "tenistas", "raquete", "saque", "saca", "saibro", "grama", "quadra",
+    "superfície", "superficie", "piso", "set", "sets", "game", "games", "ace",
+    "tiebreak", "tie-break", "deuce", "break point", "slam", "grand slam", "masters",
+    "torneio", "torneios", "campeonato", "campeonatos", "ranking", "rank", "circuito",
+    "título", "titulo", "títulos", "titulos", "campeão", "campea", "campeã", "campeoes",
+    "campeões", "vencedor", "vencedores", "recorde", "recordes", "partida", "forehand",
+    "backhand", "voleio", "estilo", "curiosidade", "curiosidades",
+]
+
+# Mensagem única de bloqueio (o bot é FECHADO no tema tênis). Usada sempre que a
+# pergunta foge do tênis — seja pelas regras, pela validação do Qwen ou pela
+# sentinela FORA_DO_TEMA no fallback.
+OFF_TOPIC_BLOCK_MSG = (
+    "Desculpe, mas eu respiro apenas Tênis! 🎾\n"
+    "Posso te contar sobre o ranking da ATP/WTA, jogadores ou os campeões de Grand "
+    "Slam — mas sobre outros assuntos eu prefiro não comentar."
+)
+
 # Qualificadores de "maior de todos os tempos" (GOAT). Quando presentes, o
 # superlativo "melhor" NÃO deve devolver o #1 atual do ranking — deixamos o
 # intent goat_debate (ou o LLM) responder ao debate histórico.
@@ -93,7 +131,7 @@ PORTUGUESE_STOP_STEMS = {
     "de", "do", "da", "dos", "das", "o", "a", "os", "as",
     "um", "uma", "uns", "e", "ou", "em", "no", "na", "nos", "nas",
     "por", "para", "com", "se", "ao", "que", "é",
-    "quai", "qual", "como", "?", "!", ".",
+    "quai", "qual", "quem", "como", "?", "!", ".",
 }
 
 # Função que carrega a base de conhecimento (Intents) do arquivo JSON
@@ -171,6 +209,55 @@ def build_grounding(msg_lower):
         pass # Grounding é best-effort: qualquer erro aqui não pode quebrar o chat.
     return "\n".join(parts)
 
+# Heurística GENEROSA: a mensagem tem ALGUMA evidência de tênis? Usada para
+# decidir se pulamos a validação do Qwen (Camada 3) e para liberar superlativos
+# legítimos ("jogador mais alto do mundo"). Direção segura: na dúvida, True.
+def has_tennis_signal(msg_lower, msg_stems, focus=None):
+    # 1. Continuação real ("sim", "conta mais") — usa a checagem cuidadosa da árvore
+    #    (mensagem é/contém continuador E é curta), evitando o "mais" solto.
+    if decision_tree._is_continue(msg_lower):
+        return True
+    # 2. Vocabulário inequívoco de tênis
+    if any(kw in msg_lower for kw in TENNIS_SIGNAL_WORDS):
+        return True
+    # 3. Referência ao jogador em foco (pronome). Frases específicas ("país dele")
+    #    ou pronome solto quando HÁ um jogador em foco.
+    if any(kw in msg_lower for kw in PRONOUN_KEYWORDS):
+        return True
+    if focus and re.search(r'\b(?:dele|dela|deles|delas|ele|ela)\b', msg_lower):
+        return True
+    # 4. País reconhecido (ex.: "melhor da espanha")
+    if parse_query(msg_lower).get("country_filter"):
+        return True
+    # 5. Nome de torneio por substring direta
+    if any(t.lower() in msg_lower for t in tennis_engine.get_all_tournament_names()):
+        return True
+    # 6. Nome de jogador: exato (com guard de stem >= 4, como o pipeline) ou fuzzy
+    #    endurecido. Typos reais ("Alcaras") contam; "alto" já não (virou stop word).
+    players = tennis_engine.get_all_player_names()
+    cand = extract_entities(msg_stems, players)
+    if cand:
+        cand_stems = [stem(w) for w in tokenize(cand.lower()) if len(stem(w)) > 2]
+        if any(len(s) >= 4 and s in msg_stems for s in cand_stems):
+            return True
+    # Threshold alto (0.82): typos reais ("Alcaras"→"Alcaraz"=0.857) passam, mas
+    # palavras comuns ("mona"→"Simona", "alto"→"Walton") NÃO — é o que deixa o
+    # Qwen validar esses casos em vez de a base inventar um jogador.
+    if _fuzzy_match_player(msg_lower, players, threshold=0.82):
+        return True
+    return False
+
+
+# Conhecimento geral ÓBVIO (atalho rápido por regras da Camada 1). O que escapar
+# daqui é decidido "de fato" pelo Qwen na Camada 3.
+def looks_like_general_knowledge(msg_lower, msg_stems):
+    if any(kw in msg_lower for kw in GENERAL_KNOWLEDGE_KEYWORDS):
+        return True
+    if SUPERLATIVE_WORLD_RE.search(msg_lower) and not has_tennis_signal(msg_lower, msg_stems):
+        return True
+    return False
+
+
 # Rota principal que carrega a interface visual do nosso ChatBot
 @app.route('/') # Define que a URL raiz '/' chamará esta função
 def home(): # Define a função de carregamento da página inicial
@@ -226,12 +313,25 @@ def predict(): # Função principal de "predição" ou resposta
         llm_client.record("resolved_by_base") # Métrica: pergunta resolvida pela base de conhecimento
         return jsonify({"answer": enriched["response"], "logs": current_logs, "pipeline": pipeline_steps})
 
-    # Função auxiliar: aciona o LLM (LM Studio) como FALLBACK universal.
-    # Retorna um Response (resposta gerada pelo LLM) ou None quando o LLM está
-    # desligado/indisponível/falha — caso em que o chamador usa a resposta canned.
-    def try_llm_fallback(step_detail="Base não resolveu — acionando LLM"):
+    # Bloqueia uma pergunta fora de tênis: registra e devolve o aviso canned. O bot
+    # é fechado no tema; off-topic NUNCA é respondido pelo LLM.
+    def block_off_topic(detail):
+        add_step("Filtro Off-Topic", "fail", detail)
+        add_log(f"Bloqueado (fora de tênis): {detail}", "WARNING")
+        log_unrecognized_query(text)
+        session_mgr.update(session_id, "user", text)
+        llm_client.record("unresolved")
+        return jsonify({"answer": OFF_TOPIC_BLOCK_MSG, "logs": current_logs, "pipeline": pipeline_steps})
+
+    # Aciona o LLM (LM Studio) para perguntas de TÊNIS que a base local não cobre.
+    # Retorna:
+    #   - Response com a resposta de tênis gerada pelo Qwen; OU
+    #   - Response de BLOQUEIO se o Qwen classificar como fora de tênis (sentinela
+    #     FORA_DO_TEMA) — o bot é fechado no tema; OU
+    #   - None quando o LLM está desligado/indisponível (o chamador usa o canned).
+    def try_llm_fallback(step_detail="Base não resolveu (tênis) — acionando LLM"):
         add_step("LLM · LM Studio", "active", step_detail) # Acende a etapa LLM no pipeline visual
-        add_log("Acionando LLM de fallback (LM Studio)...", "SYSTEM")
+        add_log("Acionando LLM (LM Studio) para pergunta de tênis fora da base...", "SYSTEM")
         grounding = build_grounding(msg_lower) # Contexto factual (anti-alucinação)
         # NÃO enviamos histórico ao LLM: o contexto de tênis (ex.: a ficha de um jogador)
         # confunde modelos pequenos e dispara troca de idioma (chinês). Follow-ups de
@@ -243,6 +343,10 @@ def predict(): # Função principal de "predição" ou resposta
             add_log("LLM indisponível — usando resposta padrão.", "WARNING")
             return None
         answer = result["answer"]
+        # Sentinela: o Qwen confirmou que a pergunta NÃO é de tênis → bloquear.
+        if llm_client.OFF_TOPIC_SENTINEL in answer.upper().replace(" ", "_"):
+            add_step("LLM · LM Studio", "fail", "Qwen classificou como fora de tênis")
+            return block_off_topic("Validação Qwen: pergunta fora de tênis → bloqueada")
         lat = result.get("latency") or 0
         usage = result.get("usage") or {}
         comp = usage.get("completion_tokens")
@@ -319,25 +423,29 @@ def predict(): # Função principal de "predição" ou resposta
         resp_text = "Hmm, não entendi essa mensagem. 🤔\nTenta me perguntar sobre ranking ATP, jogadores ou torneios de Grand Slam!"
         return jsonify({"answer": resp_text, "logs": current_logs, "pipeline": pipeline_steps})
 
-    # Fora do contexto de tênis: a proposta do trabalho é "jogar para o LLM e
-    # retornar". Encaminhamos ao modelo; se ele estiver indisponível, mantemos a
-    # mensagem canned original ("respiro apenas Tênis").
-    if is_off_topic:
-        add_log("Assunto fora do contexto (Tênis) — encaminhando ao LLM.", "WARNING")
-        add_step("Filtro Off-Topic", "fail", "Pergunta fora do tema — fallback para o LLM")
-        log_unrecognized_query(text)
-        llm_resp = try_llm_fallback("Pergunta fora do contexto — acionando LLM")
-        if llm_resp is not None:
-            return llm_resp
-        session_mgr.update(session_id, "user", text)
-        llm_client.record("unresolved") # Métrica: não resolvida (LLM indisponível)
-        resp_text = "Desculpe, mas eu respiro apenas Tênis! 🎾\nPosso te contar sobre o ranking da ATP ou os campeões de Grand Slam, mas sobre esse assunto eu prefiro não comentar."
-        return jsonify({"answer": resp_text, "logs": current_logs, "pipeline": pipeline_steps})
+    # Fora do contexto de tênis → AVISAR E BLOQUEAR. O bot é fechado no tema; off-topic
+    # NÃO vai para o LLM (o LLM só responde perguntas DE tênis fora da base local).
+    # Camada 1 (atalho por regras): blocklist + conhecimento geral ÓBVIO
+    # ("prédio mais alto do mundo") — bloqueio instantâneo, sem custo de LLM.
+    if is_off_topic or looks_like_general_knowledge(msg_lower, msg_stems):
+        return block_off_topic("Pergunta fora do tema (regras) — bloqueada")
 
     # --- Passo 0.5: Resolução Contextual (Árvore de Decisão) ---
     add_step("Filtro Off-Topic", "success", "Mensagem permitida (contexto tênis)")
     pending_ctx = context.get("pending_follow_up")
     focus_ctx = context.get("focus_player")
+
+    # --- Camada 3: VALIDAÇÃO AUTORITATIVA VIA QWEN (BLOQUEIO) ---
+    # A blocklist nunca cobre todo assunto fora de tênis. Quando há contexto ativo
+    # (janela em que a árvore "sequestraria" a resposta com dados do jogador em foco)
+    # e a frase NÃO tem sinal de tênis, o Qwen decide "de fato" se é tênis. Se for
+    # off-topic → BLOQUEIA antes da árvore. Disparo estreito ⇒ não pesa nos turnos
+    # normais. Com LLM off, is_on_topic() retorna None e o fluxo segue idêntico ao de
+    # hoje (testes determinísticos).
+    if pending_ctx and not has_tennis_signal(msg_lower, msg_stems, focus_ctx):
+        if llm_client.is_on_topic(text) is False:  # Quem decidiu foi o Qwen
+            return block_off_topic("Validação Qwen: fora de tênis (contexto ativo) — bloqueada")
+
     contextual_result = decision_tree.try_contextual_response(msg_lower, msg_stems, context, add_log)
 
     # try_contextual_response retorna (resp, topic, action, players, trace) ou (None, trace)
@@ -600,7 +708,9 @@ def predict(): # Função principal de "predição" ou resposta
         if not any(len(s) >= 4 for s in _matched):
             target_player = None
     if not target_player:
-        target_player = _fuzzy_match_player(msg_lower, players_list, threshold=0.75)
+        # 0.82: tolera typos reais ("Alcaras"→"Alcaraz") sem deixar palavras comuns
+        # ("mona", "alto") se passarem por sobrenomes e sequestrarem off-topics.
+        target_player = _fuzzy_match_player(msg_lower, players_list, threshold=0.82)
         if target_player:
             add_log(f"Jogador detectado via fuzzy matching: {target_player}", "SUCCESS")
 

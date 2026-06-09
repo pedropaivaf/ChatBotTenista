@@ -54,7 +54,7 @@ except Exception:
 # -----------------------------------------------------------------------------
 # Configuração (lida do ambiente / .env)
 # -----------------------------------------------------------------------------
-LLM_BASE_URL    = os.getenv("LLM_BASE_URL", "http://localhost:1234/v1").rstrip("/")
+LLM_BASE_URL    = os.getenv("LLM_BASE_URL", "http://127.0.0.1:1234/v1").rstrip("/")
 LLM_MODEL       = os.getenv("LLM_MODEL", "qwen2.5-7b-instruct")
 LLM_TIMEOUT     = float(os.getenv("LLM_TIMEOUT", "30"))      # segundos por requisição
 LLM_MAX_TOKENS  = int(os.getenv("LLM_MAX_TOKENS", "350"))    # limite de saída
@@ -64,18 +64,19 @@ METRICS_FILE    = os.getenv("LLM_METRICS_FILE", "llm_metrics.json")
 # Persona do assistente. Mantém o foco em tênis, mas permite responder perguntas
 # gerais (é o que o fallback universal exige), pedindo honestidade para reduzir
 # alucinação.
+# O bot é FECHADO no tema tênis. O LLM só entra para perguntas de TÊNIS que a base
+# local não cobre (ex.: jogador fora do Top 100, fato histórico). Se a pergunta NÃO
+# for de tênis, o modelo devolve a sentinela FORA_DO_TEMA e o app bloqueia (avisa).
+# Prompt curto de propósito: cada token pesa no tempo de resposta em CPU.
+OFF_TOPIC_SENTINEL = "FORA_DO_TEMA"
 SYSTEM_PROMPT = (
-    "Você é o assistente do 'ChatBot Tenista', especialista em tênis (ATP/WTA). "
-    "REGRA ABSOLUTA DE IDIOMA: responda SEMPRE e EXCLUSIVAMENTE em português do Brasil. "
-    "É proibido usar chinês, inglês ou qualquer outro idioma — mesmo que a pergunta "
-    "venha em outra língua, sua resposta deve ser 100% em português do Brasil. "
-    "Responda de forma correta, objetiva e amigável. "
-    "Você domina tênis — jogadores, rankings, Grand Slams, história e regras — mas "
-    "também pode responder outras perguntas gerais de forma útil e concisa. "
-    "Quando a pergunta NÃO for sobre tênis, responda o fato corretamente e NÃO force "
-    "nenhuma relação com tênis (ex.: não diga que algo 'sustenta a vida no tênis'). "
-    "Se não tiver certeza de um fato, admita em vez de inventar. "
-    "Seja breve: no máximo 4 frases, a menos que peçam detalhes."
+    "Você é o assistente do 'ChatBot Tenista', especializado EXCLUSIVAMENTE em tênis "
+    "(ATP/WTA: jogadores, torneios, regras, história, estatísticas). "
+    "Responda SEMPRE em português do Brasil (nunca em chinês, inglês ou outro idioma). "
+    "Se a pergunta FOR sobre tênis, responda o fato de forma correta e MUITO direta "
+    "(1 a 2 frases); se não tiver certeza, admita. "
+    "Se a pergunta NÃO for sobre tênis, responda EXCLUSIVAMENTE com esta palavra, sem "
+    "mais nada: " + OFF_TOPIC_SENTINEL + "."
 )
 
 
@@ -164,6 +165,61 @@ def is_available():
         return r.status_code == 200
     except Exception:
         return False
+
+
+def is_on_topic(user_text):
+    """Validador AUTORITATIVO de tópico via Qwen (Camada 3 do roteamento off-topic).
+
+    A blocklist nunca cobre todos os assuntos fora de tênis; quando as regras não
+    decidem e há contexto ativo sem sinal de tênis, é ESTE classificador que diz,
+    "de fato", se a pergunta é sobre tênis. Mantém-se rápido: prompt mínimo e
+    saída de 1 token.
+
+    Retorna:
+        True  → o modelo respondeu um "sim" (é sobre tênis).
+        False → o modelo respondeu um "não" CONFIANTE (fora de tênis). Direção
+                segura: só tira da base com um "não" claro.
+        None  → LLM desligado, servidor fora, timeout ou resposta inconclusiva.
+                Nunca lança exceção.
+    """
+    if not _enabled():
+        return None
+
+    payload = {
+        "model": LLM_MODEL,
+        "messages": [
+            {"role": "system", "content": (
+                "Você é um classificador de tópico. Responda APENAS com uma única "
+                "palavra: 'sim' ou 'não'. A pergunta do usuário é sobre TÊNIS "
+                "(jogadores, torneios, regras, ATP/WTA, história ou estatísticas do "
+                "tênis)? Se for sobre qualquer outro assunto, responda 'não'."
+            )},
+            {"role": "user", "content": user_text},
+        ],
+        "temperature": 0.0,
+        "max_tokens": 2,
+        "stream": False,
+    }
+
+    try:
+        resp = requests.post(
+            f"{LLM_BASE_URL}/chat/completions",
+            json=payload,
+            timeout=min(LLM_TIMEOUT, 8.0),  # checagem precisa ser rápida
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        answer = (data["choices"][0]["message"]["content"] or "").strip().lower()
+    except Exception:
+        return None  # Indisponível → não bloqueia o fluxo normal.
+
+    # Normaliza acentos/pontuação e olha só o começo da resposta.
+    answer = answer.replace("ã", "a").replace("á", "a").lstrip("\"'` ")
+    if answer.startswith(("nao", "no")):
+        return False
+    if answer.startswith(("sim", "yes", "y")):
+        return True
+    return None  # Resposta inconclusiva → trata como indisponível.
 
 
 def query_llm(user_text, grounding=None, history=None):

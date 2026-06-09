@@ -694,6 +694,40 @@ expect('21.12', 'quem é o número 100 do ranking atp', 'pos12', ['100º'])
 # =====================================================================
 print()
 print('='*70)
+print('BATERIA 22: Off-topic → AVISAR E BLOQUEAR (bot fechado no tema tênis)')
+print('='*70)
+# O bot é fechado em tênis: pergunta fora do tema é BLOQUEADA com aviso, nunca
+# devolve dados do jogador em foco nem é respondida pelo LLM. Mensagem: "Tênis".
+chat('quem é o Alcaraz?', 'ot1')
+expect('22.01', 'qual o prédio mais alto do mundo?', 'ot1',
+       ['Tênis'], ['Alcaraz', 'Walton', 'altura', 'Espanha'])
+# "monte mais alto do mundo" (caso real do Monte Carlo) — superlativo de mundo
+chat('quem é o Sinner?', 'ot2')
+expect('22.02', 'qual é o monte mais alto do mundo?', 'ot2',
+       ['Tênis'], ['Sinner', 'Monte Carlo', 'Itália'])
+# "país mais populoso do mundo" não devolve o país do jogador em foco
+chat('quem é o Djokovic?', 'ot3')
+expect('22.03', 'qual o país mais populoso do mundo?', 'ot3',
+       ['Tênis'], ['Djokovic', 'Sérvia'])
+# Off-topic óbvio sem contexto também é bloqueado
+expect('22.04', 'qual o prédio mais alto do mundo?', 'ot4', ['Tênis'])
+# NÃO-REGRESSÃO: follow-up legítimo de altura ainda funciona
+chat('quem é o Alcaraz?', 'ot5')
+expect('22.05', 'qual a altura dele?', 'ot5', ['1,83m', 'Alcaraz'], ['fugiu'])
+# NÃO-REGRESSÃO: sobrenome após ranking ainda resolve o jogador
+chat('ranking atp', 'ot6')
+expect('22.06', 'Sinner', 'ot6', ['Jannik Sinner', 'Itália'])
+# "quem é o batman?" não pode casar com jogador (ex.: Terence Atmane) — fluxo real
+chat('quem é o melhor jogador do mundo?', 'ot7')
+chat('quais os campeonatos de tenis', 'ot7')
+expect('22.07', 'quem é o batman?', 'ot7', None, ['Atmane', 'Terence'])
+# Palavra comum não vira jogador nem sem contexto (batman/mona)
+expect('22.08', 'quem é o batman?', 'ot8', None, ['Atmane', 'Terence'])
+
+
+# =====================================================================
+print()
+print('='*70)
 total_pass = TOTAL - len(FAILS)
 print(f'RESULTADO FINAL: {total_pass}/{TOTAL} passaram ({len(FAILS)} falhas)')
 if FAILS:
