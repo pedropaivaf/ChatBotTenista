@@ -309,9 +309,10 @@ def _fuzzy_match_player(msg_lower, candidates, threshold=0.65):
     """
     # Remove pontuação da mensagem e divide em palavras individuais
     words = msg_lower.replace(',', ' ').replace('.', ' ').replace('?', ' ').replace('!', ' ').split()
-    # Filtra stop words e palavras muito curtas
-    # Mantém apenas palavras com mais de 2 caracteres que não sejam stop words
-    words = [w for w in words if len(w) > 2 and w not in _STOP_WORDS]
+    # Filtra stop words e palavras curtas. Exige 4+ caracteres: palavras de 3 letras
+    # são quase todas comuns (dar, ter, foi, com...) e geram falsos positivos com
+    # sobrenomes curtos (ex.: "dar"~"Dart"=0.86). Referências reais a jogador têm 4+.
+    words = [w for w in words if len(w) >= 4 and w not in _STOP_WORDS]
     # Se não sobrou nenhuma palavra válida após a filtragem, retorna None
     if not words:
         return None

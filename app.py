@@ -132,6 +132,10 @@ PORTUGUESE_STOP_STEMS = {
     "um", "uma", "uns", "e", "ou", "em", "no", "na", "nos", "nas",
     "por", "para", "com", "se", "ao", "que", "é",
     "quai", "qual", "quem", "como", "?", "!", ".",
+    # Palavra-domínio: "tênis"/"tenista" aparece em quase toda pergunta deste bot,
+    # então NÃO deve discriminar intent (senão "quem inventou o tênis?" casa qualquer
+    # intent curto que contenha "tênis", ex.: brasil_tenis, em 50%). Stems variam com acento.
+    "têni", "teni", "tenista", "tennis",
 }
 
 # Função que carrega a base de conhecimento (Intents) do arquivo JSON
@@ -791,7 +795,15 @@ def predict(): # Função principal de "predição" ou resposta
             if not meaningful_pattern: # Pula patterns sem stems significativos
                 continue
             matches = sum(1 for s in meaningful_msg if s in meaningful_pattern) # Conta coincidências significativas
-            score = (matches / len(meaningful_pattern)) * 100 # Calcula % de match
+            # Score estilo Jaccard (relativo ao lado MAIOR) — evita que um pattern curto
+            # infle o % com uma única palavra. Sem isso, qualquer frase casava intents
+            # curtos em 50%, "forçando" a base em vez de mandar a pergunta ao LLM.
+            denom = max(len(meaningful_pattern), len(meaningful_msg))
+            score = (matches / denom) * 100 if denom else 0
+            # Guarda anti-falso-positivo: 1 só stem em comum entre pergunta e pattern,
+            # ambos com 2+ stems, é fraco demais (ex.: "love no tênis" casando wta_explicacao).
+            if matches < 2 and len(meaningful_pattern) >= 2 and len(meaningful_msg) >= 2:
+                score = 0
 
             if score > max_match_score: # Se este match for o melhor até agora...
                 max_match_score = score # Atualiza a nota máxima
