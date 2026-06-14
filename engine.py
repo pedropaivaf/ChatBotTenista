@@ -191,8 +191,17 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
             h = player_data.get('height', 'N/A')
             return f"📏 {found_name} tem {h} de altura." if h != 'N/A' else None
         elif field == "age":
-            age = player_data.get('age', 'N/A')
-            return f"🎂 {found_name} tem {age} anos." if age != 'N/A' else None
+            age = player_data.get('age')
+            if isinstance(age, (int, float)):
+                return f"🎂 {found_name} tem {age} anos."
+            # Idade já em texto. Se tiver número (ex.: "Aposentado (43 anos)"), mostra como
+            # está; se não tiver (ex.: "Imortal"), usa frase neutra sem o "tem".
+            if isinstance(age, str) and age.strip() and age.strip().upper() != 'N/A':
+                s = age.strip()
+                return f"🎂 {found_name}: {s}." if any(c.isdigit() for c in s) else f"🎂 {found_name} — {s}."
+            # Idade não cadastrada → resposta honesta (em vez de exibir "N/A")
+            return (f"🎂 Ainda não tenho a idade de {found_name} cadastrada, "
+                    f"mas posso te contar sobre o estilo, o país ou os títulos! 🎾")
         elif field == "titles_count":
             tc = player_data.get('titles_count', None)
             titles = player_data.get('titles', 'N/A')
@@ -392,15 +401,23 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
         # Busca a bandeira emoji normalizada
         flag = self._get_flag(country_name)
 
-        # Dados estruturados com fallbacks para garantir que todos tenham os mesmos campos
-        age = player_data.get('age', 'N/A')
-        if age != 'N/A' and isinstance(age, (int, float)): age = f"{age} anos"
-        
-        style = player_data.get('style', 'N/A')
-        titles = player_data.get('titles', 'N/A')
-        fact = player_data.get('fact', 'N/A')
+        # Dados estruturados com fallbacks amigáveis — nunca exibir "N/A" cru na ficha.
+        def _ok(v):  # valor textual válido (não vazio e não "N/A")
+            return isinstance(v, str) and v.strip() and v.strip().upper() != 'N/A'
 
-        height = player_data.get('height', 'N/A')
+        age = player_data.get('age')
+        if isinstance(age, (int, float)):
+            age = f"{age} anos"                # idade numérica → "27 anos"
+        elif _ok(age):
+            age = age.strip()                  # idade já em texto (ex.: "25 anos (Est.)")
+        else:
+            age = "não informada"              # ausente/N/A → texto amigável
+
+        style = player_data.get('style') if _ok(player_data.get('style')) else "não informado"
+        titles = player_data.get('titles') if _ok(player_data.get('titles')) else "sem títulos listados"
+        fact = player_data.get('fact') if _ok(player_data.get('fact')) else "—"
+
+        height = player_data.get('height') if _ok(player_data.get('height')) else "não informada"
         titles_count = player_data.get('titles_count', None)
 
         # Cabeçalho da Ficha - Estrutura unificada e robusta

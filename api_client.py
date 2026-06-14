@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import time
 import requests
 from datetime import datetime
@@ -123,6 +124,20 @@ def _translate_country_code(code):
     return COUNTRY_CODE_TO_PT.get(code, code)
 
 
+def _age_from_dob(dob):
+    """Calcula a idade (anos completos) a partir de uma data de nascimento ISO
+    ('YYYY-MM-DD', como a API da WTA retorna em dateOfBirth). Retorna int ou None."""
+    if not isinstance(dob, str) or len(dob) < 10:
+        return None
+    try:
+        d = datetime.strptime(dob[:10], "%Y-%m-%d")
+    except (ValueError, TypeError):
+        return None
+    today = datetime.now()
+    age = today.year - d.year - ((today.month, today.day) < (d.month, d.day))
+    return age if 14 <= age <= 60 else None  # sanidade (descarta datas absurdas)
+
+
 def _http_get(url, headers, params=None, timeout=REQUEST_TIMEOUT, max_retries=MAX_RETRIES, label=""):
     """
     GET HTTP com retry automático em timeout/erro de rede.
@@ -224,11 +239,16 @@ class TennisAPIClient:
                     if not rank_text.isdigit():
                         continue
 
+                    # Link da página do jogador (usado p/ enriquecer a idade via dateOfBirth)
+                    link = cells[2].find("a")
+                    player_url = link.get("href") if link else None
+
                     all_players.append({
                         "position": int(rank_text),
                         "name": _flip_name(name_raw),
                         "country": _translate_country_en(country_en),
                         "points": points_text,
+                        "_url": player_url,  # temporário — removido após o enriquecimento
                     })
                 break  # Só processa a primeira tabela grande
 
@@ -291,12 +311,17 @@ class TennisAPIClient:
         for entry in data:
             player = entry.get("player", {})
             country_code = player.get("countryCode", "")
-            all_players.append({
+            rec = {
                 "position": entry.get("ranking", 0),
                 "name": _clean_name(NAME_CORRECTIONS.get(player.get("fullName", ""), player.get("fullName", ""))),
                 "country": _translate_country_code(country_code),
                 "points": str(entry.get("points", "0")),
-            })
+            }
+            # Idade real a partir da data de nascimento (vários nomes possíveis na API)
+            age = _age_from_dob(player.get("dateOfBirth") or player.get("birthDate") or player.get("dob"))
+            if age:
+                rec["age"] = age
+            all_players.append(rec)
 
         if all_players:
             print(f"[API_CLIENT] WTA: {len(all_players)} jogadoras obtidas com sucesso.")
@@ -371,6 +396,9 @@ class TennisAPIClient:
                 updated = True
                 if len(atp_ranking) < 100:
                     complete = False
+                # Enriquece player_details com a idade REAL (data de nascimento das
+                # páginas do tennisexplorer). Só busca quem não tem idade numérica.
+                self._enrich_ages_from_atp(data, atp_ranking)
             else:
                 complete = False
 
@@ -380,6 +408,8 @@ class TennisAPIClient:
                 updated = True
                 if len(wta_ranking) < 100:
                     complete = False
+                # Enriquece player_details com a idade REAL (dateOfBirth da API WTA)
+                self._enrich_ages_from_wta(data, wta_ranking)
             else:
                 complete = False
 
@@ -395,6 +425,9 @@ class TennisAPIClient:
         else:
             data["last_updated"] = ""
             print("[API_CLIENT] Dados incompletos — será feito novo refresh no próximo start.")
+        # Limpeza defensiva: nunca persistir a chave temporária '_url' no ranking ATP.
+        for p in data.get("ranking_atp", []):
+            p.pop("_url", None)
         self._save_data(data)
 
         if updated and complete:
@@ -405,6 +438,77 @@ class TennisAPIClient:
             print("[API_CLIENT] Nenhum ranking atualizado. Mantendo dados existentes.")
 
         return updated
+
+    def _enrich_ages_from_wta(self, data, wta_ranking):
+        """Preenche player_details[nome]['age'] com a idade REAL vinda da API WTA
+        (dateOfBirth). Só preenche quando a idade atual NÃO é numérica (ou seja,
+        'N/A' ou placeholder como '25 anos (Est.)') — assim correções manuais com
+        um número de verdade no JSON são PRESERVADAS em refreshes futuros."""
+        details = data.get("player_details", {})
+        filled = 0
+        for p in wta_ranking:
+            name = p.get("name")
+            pd_age = details.get(name, {}).get("age")
+            if isinstance(pd_age, (int, float)):
+                p["age"] = pd_age  # espelha a idade da bio (fonte do display) no ranking
+                continue
+            age = p.get("age")  # idade calculada do dateOfBirth
+            if age and name in details:
+                details[name]["age"] = age
+                filled += 1
+        if filled:
+            print(f"[API_CLIENT] Idades WTA enriquecidas via dateOfBirth: {filled} jogadoras.")
+
+    def _fetch_player_age_te(self, player_url):
+        """Busca a idade de um jogador na página dele no tennisexplorer.
+        Procura 'Age: NN (DD. M. YYYY)' e calcula a idade pela data de nascimento
+        (estável). Retorna int ou None."""
+        if not player_url:
+            return None
+        full = player_url if player_url.startswith("http") else "https://www.tennisexplorer.com" + player_url
+        resp = _http_get(full, BROWSER_HEADERS, timeout=12, max_retries=1, label="ATP idade")
+        if resp is None or resp.status_code != 200:
+            return None
+        txt = BeautifulSoup(resp.text, "html.parser").get_text(" ", strip=True)
+        m = re.search(r'Age:\s*\d{1,2}\s*\(\s*(\d{1,2})\s*\.\s*(\d{1,2})\s*\.\s*(\d{4})\s*\)', txt)
+        if m:
+            day, month, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
+            return _age_from_dob(f"{year:04d}-{month:02d}-{day:02d}")
+        m2 = re.search(r'Age:\s*(\d{1,2})\b', txt)
+        if m2:
+            a = int(m2.group(1))
+            return a if 14 <= a <= 60 else None
+        return None
+
+    def _enrich_ages_from_atp(self, data, atp_ranking):
+        """Preenche player_details[nome]['age'] com a idade REAL (data de nascimento
+        da página do tennisexplorer) para jogadores ATP sem idade numérica. Preserva
+        correções manuais (só preenche quando a idade NÃO é um número). Consome a
+        chave temporária '_url' das entradas do ranking."""
+        details = data.get("player_details", {})
+        filled = 0
+        fetched = 0
+        for p in atp_ranking:
+            name = p.get("name")
+            url = p.pop("_url", None)  # consome a chave temporária (não persiste no JSON)
+            # Já tem idade numérica na bio (real ou corrigida à mão)? Espelha no ranking
+            # e não busca de novo (preserva correções manuais).
+            pd_age = details.get(name, {}).get("age")
+            if isinstance(pd_age, (int, float)):
+                p["age"] = pd_age
+                continue
+            if not url:
+                continue
+            age = self._fetch_player_age_te(url)
+            fetched += 1
+            if not age:
+                continue
+            if name in details:
+                details[name]["age"] = age
+            p["age"] = age  # grava também na entrada do ranking (consistência/fallback)
+            filled += 1
+        if fetched:
+            print(f"[API_CLIENT] Idades ATP enriquecidas (tennisexplorer): {filled}/{fetched} buscadas.")
 
     def refresh_if_needed(self):
         """Verifica e atualiza os dados se necessário. Chamado no startup do servidor."""
