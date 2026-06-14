@@ -4,7 +4,7 @@ Um ChatBot de Inteligencia Artificial nichado em Tenis, construido com **Python*
 
 **170 testes automatizados | 12 baterias | 100% de aprovacao**
 
----
+----
 
 ## Funcionalidades
 
