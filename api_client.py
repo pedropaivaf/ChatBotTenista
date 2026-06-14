@@ -1,11 +1,17 @@
 import json
 import os
+import time
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
 
 # Intervalo mínimo entre refreshes (24 horas em segundos)
 CACHE_TTL = 86400
+
+# Configuração de requisições HTTP com retry (garante ranking completo no startup)
+REQUEST_TIMEOUT = 20        # timeout por tentativa (segundos)
+MAX_RETRIES = 3             # número de tentativas por requisição
+RETRY_BACKOFF = 2          # base de espera entre tentativas (segundos, cresce a cada retry)
 
 # Headers padrão para simular navegador real
 BROWSER_HEADERS = {
@@ -117,6 +123,26 @@ def _translate_country_code(code):
     return COUNTRY_CODE_TO_PT.get(code, code)
 
 
+def _http_get(url, headers, params=None, timeout=REQUEST_TIMEOUT, max_retries=MAX_RETRIES, label=""):
+    """
+    GET HTTP com retry automático em timeout/erro de rede.
+    Espera incremental (RETRY_BACKOFF * tentativa) entre tentativas.
+    Retorna o Response em caso de sucesso, ou None se todas as tentativas falharem.
+    """
+    last_error = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            return requests.get(url, headers=headers, params=params, timeout=timeout)
+        except requests.RequestException as e:
+            last_error = e
+            if attempt < max_retries:
+                wait = RETRY_BACKOFF * attempt
+                print(f"[API_CLIENT] {label} tentativa {attempt}/{max_retries} falhou ({e}). Retry em {wait}s...")
+                time.sleep(wait)
+    print(f"[API_CLIENT] {label} falhou após {max_retries} tentativas: {last_error}")
+    return None
+
+
 class TennisAPIClient:
     """
     Cliente que atualiza rankings ATP e WTA de fontes externas reais.
@@ -170,50 +196,47 @@ class TennisAPIClient:
 
         for page in [1, 2]:
             url = f"https://www.tennisexplorer.com/ranking/atp-men/?page={page}"
-            try:
-                response = requests.get(url, headers=BROWSER_HEADERS, timeout=15)
-                if response.status_code != 200:
-                    print(f"[API_CLIENT] ATP page {page}: HTTP {response.status_code}")
-                    continue
-
-                soup = BeautifulSoup(response.text, "html.parser")
-                # A tabela de ranking é a primeira <table class='result'> com mais de 10 linhas
-                for table in soup.find_all("table", class_="result"):
-                    rows = table.find_all("tr")
-                    if len(rows) < 10:
-                        continue
-
-                    for row in rows[1:]:  # Pula o header
-                        cells = row.find_all("td")
-                        if len(cells) < 5:
-                            continue
-
-                        rank_text = cells[0].get_text(strip=True).rstrip(".")
-                        name_raw = cells[2].get_text(strip=True)
-                        country_en = cells[3].get_text(strip=True)
-                        points_text = cells[4].get_text(strip=True)
-
-                        # Valida que é uma linha de ranking válida
-                        if not rank_text.isdigit():
-                            continue
-
-                        all_players.append({
-                            "position": int(rank_text),
-                            "name": _flip_name(name_raw),
-                            "country": _translate_country_en(country_en),
-                            "points": points_text,
-                        })
-                    break  # Só processa a primeira tabela grande
-
-            except requests.RequestException as e:
-                print(f"[API_CLIENT] ATP page {page} erro de rede: {e}")
+            response = _http_get(url, BROWSER_HEADERS, label=f"ATP page {page}")
+            if response is None:
+                continue
+            if response.status_code != 200:
+                print(f"[API_CLIENT] ATP page {page}: HTTP {response.status_code}")
                 continue
 
-        if len(all_players) >= 50:
-            print(f"[API_CLIENT] ATP: {len(all_players)} jogadores obtidos com sucesso.")
+            soup = BeautifulSoup(response.text, "html.parser")
+            # A tabela de ranking é a primeira <table class='result'> com mais de 10 linhas
+            for table in soup.find_all("table", class_="result"):
+                rows = table.find_all("tr")
+                if len(rows) < 10:
+                    continue
+
+                for row in rows[1:]:  # Pula o header
+                    cells = row.find_all("td")
+                    if len(cells) < 5:
+                        continue
+
+                    rank_text = cells[0].get_text(strip=True).rstrip(".")
+                    name_raw = cells[2].get_text(strip=True)
+                    country_en = cells[3].get_text(strip=True)
+                    points_text = cells[4].get_text(strip=True)
+
+                    # Valida que é uma linha de ranking válida
+                    if not rank_text.isdigit():
+                        continue
+
+                    all_players.append({
+                        "position": int(rank_text),
+                        "name": _flip_name(name_raw),
+                        "country": _translate_country_en(country_en),
+                        "points": points_text,
+                    })
+                break  # Só processa a primeira tabela grande
+
+        if len(all_players) >= 100:
+            print(f"[API_CLIENT] ATP: {len(all_players)} jogadores obtidos com sucesso (completo).")
             return all_players
         elif all_players:
-            print(f"[API_CLIENT] ATP: apenas {len(all_players)} jogadores (parcial).")
+            print(f"[API_CLIENT] ATP: apenas {len(all_players)} jogadores (parcial — top 100 incompleto).")
             return all_players
 
         print("[API_CLIENT] ATP: falha ao obter dados.")
@@ -247,31 +270,33 @@ class TennisAPIClient:
             "referer": "https://www.wtatennis.com/",
         }
 
-        try:
-            response = requests.get(url, params=params, headers=wta_headers, timeout=15)
-            if response.status_code != 200:
-                print(f"[API_CLIENT] WTA API: HTTP {response.status_code}")
-                # Fallback: tenta via tennisexplorer
-                return self._fetch_wta_ranking_fallback()
-
-            data = response.json()
-            if not isinstance(data, list):
-                print("[API_CLIENT] WTA API: resposta inesperada.")
-                return self._fetch_wta_ranking_fallback()
-
-            for entry in data:
-                player = entry.get("player", {})
-                country_code = player.get("countryCode", "")
-                all_players.append({
-                    "position": entry.get("ranking", 0),
-                    "name": _clean_name(NAME_CORRECTIONS.get(player.get("fullName", ""), player.get("fullName", ""))),
-                    "country": _translate_country_code(country_code),
-                    "points": str(entry.get("points", "0")),
-                })
-
-        except requests.RequestException as e:
-            print(f"[API_CLIENT] WTA API erro de rede: {e}")
+        response = _http_get(url, wta_headers, params=params, label="WTA API")
+        if response is None:
             return self._fetch_wta_ranking_fallback()
+        if response.status_code != 200:
+            print(f"[API_CLIENT] WTA API: HTTP {response.status_code}")
+            # Fallback: tenta via tennisexplorer
+            return self._fetch_wta_ranking_fallback()
+
+        try:
+            data = response.json()
+        except ValueError:
+            print("[API_CLIENT] WTA API: resposta não é JSON válido.")
+            return self._fetch_wta_ranking_fallback()
+
+        if not isinstance(data, list):
+            print("[API_CLIENT] WTA API: resposta inesperada.")
+            return self._fetch_wta_ranking_fallback()
+
+        for entry in data:
+            player = entry.get("player", {})
+            country_code = player.get("countryCode", "")
+            all_players.append({
+                "position": entry.get("ranking", 0),
+                "name": _clean_name(NAME_CORRECTIONS.get(player.get("fullName", ""), player.get("fullName", ""))),
+                "country": _translate_country_code(country_code),
+                "points": str(entry.get("points", "0")),
+            })
 
         if all_players:
             print(f"[API_CLIENT] WTA: {len(all_players)} jogadoras obtidas com sucesso.")
@@ -287,40 +312,36 @@ class TennisAPIClient:
 
         for page in [1, 2]:
             url = f"https://www.tennisexplorer.com/ranking/wta-women/?page={page}"
-            try:
-                response = requests.get(url, headers=BROWSER_HEADERS, timeout=15)
-                if response.status_code != 200:
+            response = _http_get(url, BROWSER_HEADERS, label=f"WTA fallback page {page}")
+            if response is None or response.status_code != 200:
+                continue
+
+            soup = BeautifulSoup(response.text, "html.parser")
+            for table in soup.find_all("table", class_="result"):
+                rows = table.find_all("tr")
+                if len(rows) < 10:
                     continue
 
-                soup = BeautifulSoup(response.text, "html.parser")
-                for table in soup.find_all("table", class_="result"):
-                    rows = table.find_all("tr")
-                    if len(rows) < 10:
+                for row in rows[1:]:
+                    cells = row.find_all("td")
+                    if len(cells) < 5:
                         continue
 
-                    for row in rows[1:]:
-                        cells = row.find_all("td")
-                        if len(cells) < 5:
-                            continue
+                    rank_text = cells[0].get_text(strip=True).rstrip(".")
+                    name_raw = cells[2].get_text(strip=True)
+                    country_en = cells[3].get_text(strip=True)
+                    points_text = cells[4].get_text(strip=True)
 
-                        rank_text = cells[0].get_text(strip=True).rstrip(".")
-                        name_raw = cells[2].get_text(strip=True)
-                        country_en = cells[3].get_text(strip=True)
-                        points_text = cells[4].get_text(strip=True)
+                    if not rank_text.isdigit():
+                        continue
 
-                        if not rank_text.isdigit():
-                            continue
-
-                        all_players.append({
-                            "position": int(rank_text),
-                            "name": _flip_name(name_raw),
-                            "country": _translate_country_en(country_en),
-                            "points": points_text,
-                        })
-                    break
-
-            except requests.RequestException:
-                continue
+                    all_players.append({
+                        "position": int(rank_text),
+                        "name": _flip_name(name_raw),
+                        "country": _translate_country_en(country_en),
+                        "points": points_text,
+                    })
+                break
 
         if all_players:
             print(f"[API_CLIENT] WTA fallback: {len(all_players)} jogadoras obtidas.")
@@ -341,27 +362,45 @@ class TennisAPIClient:
         print("[API_CLIENT] Iniciando refresh de rankings...")
         data = self._load_data()
         updated = False
+        complete = True  # vira False se algum circuito vier incompleto/falhar
 
         try:
             atp_ranking = self._fetch_atp_ranking()
             if atp_ranking:
                 data["ranking_atp"] = atp_ranking
                 updated = True
+                if len(atp_ranking) < 100:
+                    complete = False
+            else:
+                complete = False
 
             wta_ranking = self._fetch_wta_ranking()
             if wta_ranking:
                 data["ranking_wta"] = wta_ranking
                 updated = True
+                if len(wta_ranking) < 100:
+                    complete = False
+            else:
+                complete = False
 
         except Exception as e:
             print(f"[API_CLIENT] Erro inesperado no refresh: {e}")
+            complete = False
 
-        # Atualiza timestamp independente de sucesso (evita retry imediato)
-        data["last_updated"] = datetime.now().isoformat()
+        # Só grava o cache de 24h quando os rankings vierem COMPLETOS (top 100).
+        # Se vier parcial, mantém os dados desatualizados para forçar novo
+        # refresh no próximo start (em vez de travar dados incompletos por 24h).
+        if complete:
+            data["last_updated"] = datetime.now().isoformat()
+        else:
+            data["last_updated"] = ""
+            print("[API_CLIENT] Dados incompletos — será feito novo refresh no próximo start.")
         self._save_data(data)
 
-        if updated:
-            print("[API_CLIENT] Rankings atualizados e salvos com sucesso!")
+        if updated and complete:
+            print("[API_CLIENT] Rankings atualizados e salvos com sucesso (completo)!")
+        elif updated:
+            print("[API_CLIENT] Rankings atualizados parcialmente. Mantendo o que veio.")
         else:
             print("[API_CLIENT] Nenhum ranking atualizado. Mantendo dados existentes.")
 
