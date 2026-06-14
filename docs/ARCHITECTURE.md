@@ -1,141 +1,136 @@
-# Arquitetura do ChatBot de Tenis
+# Arquitetura do ChatBot Tenista
 
-## Visao Geral
+## Visão Geral
 
-Arquitetura Cliente-Servidor com Flask no backend, NLTK para processamento de linguagem natural, e um sistema hibrido de arvore de decisao + sessoes para manter contexto conversacional de ate 20 interacoes.
+Arquitetura **cliente-servidor** com Flask no backend, **PLN clássico (NLTK)** e uma
+**árvore de decisão contextual** (memória de até 20 turnos) para o núcleo do domínio, mais
+um **LLM local (Qwen2.5-7B via LM Studio)** como **fallback** para perguntas de tênis fora
+da base. O bot é **fechado no tema tênis** — off-topic é bloqueado.
 
-**Total: ~2.350 linhas de Python em 7 modulos + 349 linhas de testes.**
+**Total: ~3.470 linhas de Python em 8 módulos da aplicação + 765 linhas de testes (312 testes).**
 
 ---
 
 ## Componentes
 
-### 1. Servidor Flask (`app.py` — 415 linhas)
-- Gerencia as rotas HTTP (`/` e `/predict`).
-- Serve o frontend estatico.
-- Integra todos os modulos: session, query parser, decision tree e engine.
-- No startup, executa refresh automatico de rankings via `api_client.py`.
-- **Filtro off-topic**: 60+ keywords bloqueadas (futebol, bitcoin, politica...).
-- **Deteccao de gibberish**: Analisa ratio de vogais, consoantes consecutivas e bigramas para rejeitar texto sem sentido.
-- **Pipeline trace**: Cada etapa do processamento gera um step com nome, status e dados extras para o frontend.
+### 1. Servidor Flask (`app.py` — 860 linhas)
+- Rotas: `/` (frontend), `/predict` (pipeline) e `/metrics` (métricas do LLM).
+- Orquestra todos os módulos e gera o **pipeline trace** (cada etapa = um step para o frontend).
+- **Filtro off-topic** (Camada 1): `OFF_TOPIC_KEYWORDS` (60+) + `looks_like_general_knowledge`.
+- **Detecção de gibberish**: ratio de vogais, consoantes consecutivas, bigramas improváveis.
+- **Roteamento base→LLM**: aciona o LLM via `try_llm_fallback()` para tênis fora da base;
+  bloqueia off-topic via `block_off_topic()`.
+- No startup, executa `api_client.refresh_if_needed()`.
 
-### 2. Processador de Linguagem Natural (`nltk_utils.py` — 78 linhas)
-- **Tokenizacao**: Divide frases em palavras via `word_tokenize`.
-- **Stemming**: Reduz palavras ao radical com PorterStemmer.
-- **Extracao de Entidades**: Identifica nomes de jogadores e torneios via matching de stems, com validacao minima de 4 caracteres.
+### 2. Processador NLP (`nltk_utils.py` — 90 linhas)
+- `tokenize` (word_tokenize), `stem` (PorterStemmer), `bag_of_words`, `extract_entities`
+  (mín. 4 caracteres para evitar falsos positivos).
 
-### 3. Motor de Dados (`engine.py` — 266 linhas)
-- Classe `TennisEngine` que carrega `tennis_data.json` em memoria.
-- **Metodos principais**: `get_ranking_summary()`, `get_last_champions()`, `get_player_info()`, `get_player_country()`.
-- **Metodos de filtragem**: `get_filtered_ranking()` (por pais), `get_best_from_country()` (melhor de um pais).
-- **Bandeiras**: Emoji flags para 25+ paises com normalizacao de acentos.
-- `reload_data()` permite recarregar dados sem reiniciar o servidor.
+### 3. Motor de Dados (`engine.py` — 514 linhas)
+- `TennisEngine` carrega `tennis_data.json` em memória.
+- Rankings, fichas de jogador, campeões de Grand Slam, detalhes de torneios (Masters
+  1000/500/Finals), recordes, filtragem por país, posição no ranking, bandeiras emoji.
+- `reload_data()` recarrega sem reiniciar.
 
-### 4. Gerenciador de Sessoes (`session_manager.py` — 153 linhas)
-- Sessoes in-memory com UUID, TTL de 30 minutos.
-- Rastreia ate 20 turnos de conversa por sessao.
-- Armazena: topico atual, circuito (ATP/WTA), entidades mencionadas, jogador em foco, follow-up pendente.
-- Limpeza automatica de sessoes expiradas.
+### 4. Cliente LLM (`llm_client.py` — 330 linhas) — **camada híbrida**
+- `query_llm(user_text, grounding, history)`: chama o LM Studio (`/v1/chat/completions`),
+  monta `SYSTEM_PROMPT` + grounding, sanitiza CJK (anti *code-switching*), mede latência.
+- `is_on_topic(text)`: classificador autoritativo de tópico via Qwen (Camada 3).
+- Sentinela `FORA_DO_TEMA`: se o modelo julgar a pergunta fora de tênis, o app bloqueia.
+- Métricas em `llm_metrics.json` + endpoint `/metrics`. **Degradação graciosa**: tudo
+  retorna `None` quando `LLM_ENABLED!=1` ou o servidor está fora. Ver [LLM_HYBRID.md](LLM_HYBRID.md).
 
-### 5. Parser Inteligente de Queries (`query_parser.py` — 203 linhas)
-- Detecta modificadores na mensagem via string matching direto (sem stems).
-- **Pais**: 40+ paises + 50+ gentilicos ("brasileiro" → "Brasil").
-- **Temporal**: "atualmente", "hoje", "agora" → flag `is_current`.
-- **Superlativo**: "melhor", "top", "lider" → flag `wants_best`.
-- **Circuito**: "atp"/"masculino" ou "wta"/"feminino".
-- **Limite**: Detecta "top N" para limitar resultados.
-- **Protecao**: Remove nomes de torneios antes de detectar pais (evita "Australian Open" → Australia).
+### 5. Cliente de Dados (`api_client.py` — 416 linhas)
+- **ATP**: scraping `tennisexplorer.com` (2 páginas, Top 100).
+- **WTA**: API JSON `api.wtatennis.com` (fallback: tennisexplorer).
+- `_http_get` com **retry** (3 tentativas, timeout 20s, backoff) em timeout/erro de rede.
+- Cache 24h; `last_updated` só é gravado com rankings **completos** (ATP=100, WTA=100).
+- Traduz países (50+ EN→PT, 60+ ISO-3→PT), corrige nomes com acentos.
 
-### 6. Arvore de Decisao (`decision_tree.py` — 506 linhas)
-Maquina de estados contextual — o componente mais complexo do sistema.
+### 6. Parser de Queries (`query_parser.py` — 208 linhas)
+- País (40+ + gentílicos), temporal, superlativo, circuito (ATP/WTA, auto-feminino→WTA),
+  limite ("top N"). Remove nomes de torneios antes de detectar país.
 
-**Branches de decisao (em ordem de prioridade):**
-1. **Torneio no contexto**: Detecta nomes de torneios quando ha follow-up pendente.
-2. **Jogador do contexto**: Resolve nomes parciais ("Alcaraz" apos ranking → Carlos Alcaraz) via fuzzy matching.
-3. **Detalhes do jogador**: Quando ha `focus_player`, processa:
-   - Comparacoes ("comparar com Djokovic")
-   - Pais ("qual o pais dele")
-   - Estilo de jogo ("qual o estilo dele")
-   - **Reacoes empaticas** a 13 atributos tecnicos (forehand, saque, mental, etc.)
-   - **Elogios genericos** ("um dos melhores", "goat", "lenda")
-4. **Topico aberto**: Apos trivia, aceita jogador ou torneio como resposta.
+### 7. Árvore de Decisão (`decision_tree.py` — 899 linhas) — **componente mais complexo**
+Máquina de estados contextual. Branches em ordem de prioridade:
+1. **Pronome implícito** (focus + "dele/dela") → país/campo/info do jogador em foco.
+2. **Torneio no contexto** → detalhes ou campeões.
+3. **Jogador do contexto** (fuzzy match) → ficha.
+4. **Detalhe do jogador em foco** → comparação, país, estilo, **reação empática**, elogio.
+5. **Tópico aberto** (pós-trivia) → jogador ou torneio.
 
-**Subsistemas:**
-- **Fuzzy matching**: `difflib.SequenceMatcher` com threshold 0.75 e 100+ stop words.
-- **Follow-ups**: Mapa `(topico, acao)` → perguntas abertas que mudam de tema.
-- **Reacoes**: 13 atributos tecnicos com respostas empaticas e pronomes genero-corretos.
-- **Trace**: Cada branch gera um node (icone, nome, matched, detail) para visualizacao.
+Subsistemas: fuzzy matching (threshold 0.75, 100+ stop words), follow-ups abertos,
+reações empáticas (pronomes gênero-corretos), trace visual. **Guarda factual/recorde**:
+`_is_records_or_fact_question()` impede que perguntas factuais que apenas mencionam "slam"
+sejam tratadas como pedido genérico de campeões.
 
-### 7. Cliente de Dados (`api_client.py` — 377 linhas)
-- **ATP**: Scraping de `tennisexplorer.com` (2 paginas, Top 100).
-- **WTA**: API JSON oficial `api.wtatennis.com` (fallback: tennisexplorer).
-- Cache de 24h — atualiza no maximo 1x por dia no startup.
-- Traduz paises (50+ EN→PT, 60+ ISO-3→PT), corrige nomes com acentos (~15 correcoes).
+### 8. Gerenciador de Sessões (`session_manager.py` — 153 linhas)
+- Sessões in-memory (UUID, TTL 30min), até 20 turnos, limpeza automática.
 
-### 8. Base de Conhecimento (`knowledge_base.json`)
-- 15+ intents conversacionais com padroes, respostas e follow-ups.
-- Tags: saudacao, despedida, feedback_positivo, regras, superficies, equipamento, etc.
+### Dados
+- **`tennis_data.json`**: rankings ATP/WTA (100+100), `player_details` (290), `grand_slams`
+  (2024–2026), `tournament_details` (18), `records` (16).
+- **`knowledge_base.json`**: 49 intents conversacionais.
+- **`unrecognized_queries.json`**: log automático de não reconhecidas.
+- **`llm_metrics.json`**: métricas do LLM (runtime).
 
-### 9. Base de Dados (`tennis_data.json`)
-- Rankings ATP e WTA Top 100 (atualizados automaticamente).
-- Grand Slams historicos (2024-2026, masculino e feminino).
-- Biografias detalhadas de ~50 jogadores (idade, estilo, titulos, pais, curiosidade).
-
-### 10. Interface Web (Frontend)
-- HTML semantico, CSS Glassmorphism, JS vanilla com Fetch API.
-- Envia `session_id` (UUID) em cada request para manter contexto.
-- **Pipeline visual**: Painel lateral com animacao step-by-step mostrando cada etapa do processamento.
-- **Fluxograma da arvore**: Branches matched/missed com icones e detalhes.
-- **Token pills**: Visualizacao de tokens e stems da tokenizacao NLTK.
+### Frontend (`templates/`, `static/`)
+- HTML semântico, CSS Glassmorphism, JS vanilla (Fetch API com `session_id`).
+- **Pipeline visual** animado + fluxograma da árvore + token pills. Numa resposta de IA,
+  mostra requisição/resposta/métricas do LM Studio (latência, tokens, tok/s).
 
 ---
 
 ## Fluxo de Processamento Completo
 
 ```
-Mensagem do Usuario
+Mensagem do Usuário
         |
-  [1. Pre-processamento] Tokenize + Stem (NLTK)
+  [1] Tokenize + Stem (NLTK)
         |
-  [2. Filtro Off-Topic] 60+ keywords + gibberish detection
-        |           (vowel ratio, consecutive consonants, bigrams)
+  [2] Filtro Off-Topic — Camada 1 (regras)  ── off-topic? → BLOQUEIA (aviso)
         |
-  [3. Resolucao Contextual] Arvore de decisao
-        |    ├── Torneio no contexto?
-        |    ├── Jogador do contexto? (fuzzy match)
-        |    ├── Detalhe do jogador? (reacao, elogio, pais, estilo)
-        |    └── Topico aberto? (pos-trivia)
+  [3] Gibberish?  ── sim → BLOQUEIA (nunca vai ao LLM)
         |
-  [4. Query Parser] Detecta pais/temporal/superlativo/circuito
+  [4] Validação Qwen — Camada 3 (só com contexto ativo, sem sinal de tênis) ── "não"? → BLOQUEIA
         |
-  [5. Dados Tecnicos] Ranking, Campeoes, Jogadores
-        |    ├── Filtragem por pais
-        |    ├── Melhor de um pais
-        |    └── Fuzzy fallback para jogadores
+  [5] Árvore de Decisão (contexto, pronome, torneio, jogador, reação, open_topic)
+        |    └── guarda: pergunta factual/recorde mencionando torneio → segue (não vira campeões)
         |
-  [6. Deteccao de Torneio] Roland Garros, Wimbledon, etc.
+  [6] Query Parser (país/temporal/superlativo/circuito)
+        |    └── guarda: superlativo "primeiro a…" não vira #1 do ranking (Fix A)
         |
-  [7. Intents Conversacionais] knowledge_base.json (50% threshold)
+  [7] Motor de Dados (ranking, jogador, campeões, recordes, posição, país)
         |
-  [8. Fallback] Log em unrecognized_queries.json
+  [8] Roteador "quantos … slam/torneio" → LLM (Fix B)
         |
-  [9. Enrich] Adiciona follow-up aberto + atualiza sessao
+  [9] Intent Matching (knowledge_base.json, 50% / 65% com contexto)
+        |
+  [10] Fallback final → LLM (tênis fora da base)  ── FORA_DO_TEMA? → BLOQUEIA
+        |
+  [11] LLM indisponível → resposta canned (degradação graciosa)
+        |
+  [12] Enrich → follow-up aberto + atualiza sessão
         |
   Resposta JSON + Pipeline Trace → Frontend
+  (métrica: resolved_by_base | resolved_by_llm | unresolved)
 ```
 
 ---
 
-## Diagrama de Dependencias
+## Diagrama de Dependências
 
 ```
-                    app.py (Orchestrator)
-                   /    |    \      \
-        nltk_utils.py   |   engine.py  api_client.py
-                        |       |
-              decision_tree.py  tennis_data.json
-                        |
+                         app.py (Orquestrador, /predict, /metrics)
+        ┌────────────┬──────────┬───────────┬────────────┬───────────┐
+   nltk_utils.py  engine.py  llm_client.py  api_client.py  query_parser.py
+                     │            │              │
+              tennis_data.json  LM Studio   tennisexplorer / wtatennis
+                     │         (Qwen2.5)
+              decision_tree.py
+                     │
               session_manager.py
-                        |
-              query_parser.py
 ```
+
+`app.py` importa de `decision_tree`: `DecisionTree`, `_fuzzy_match_player`,
+`PRONOUN_KEYWORDS`, `TOURNAMENT_KEYWORDS`, `_is_records_or_fact_question`.
