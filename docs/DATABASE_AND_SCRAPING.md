@@ -51,7 +51,7 @@ Cada entrada representa um jogador no ranking:
 }
 ```
 
-### player_details (~50 jogadores)
+### player_details (290 jogadores)
 
 ```json
 {
@@ -59,11 +59,16 @@ Cada entrada representa um jogador no ranking:
     "age": 24,
     "style": "Destro",
     "titles": "AO 2024/2025, US Open 2024",
+    "titles_count": 20,
+    "height": "1,91m",
     "country": "Italia",
     "fact": "Primeiro italiano #1."
   }
 }
 ```
+
+> Também há `tournament_details` (18 torneios: 9 Masters 1000, 8 ATP 500, ATP Finals) e
+> `records` (16 recordes históricos) no mesmo `tennis_data.json`.
 
 ---
 
@@ -178,20 +183,27 @@ GET https://api.wtatennis.com/tennis/players/ranked
   Servidor pronto para receber requisicoes
 ```
 
-### Detalhes do Cache
+### Detalhes do Cache e Retry
 
 | Parametro | Valor |
 |-----------|-------|
-| TTL do cache | 24 horas (86400 segundos) |
+| TTL do cache | 24 horas (86400 segundos) — `CACHE_TTL` |
 | Campo de controle | `last_updated` (ISO 8601) |
-| Fallback se falhar | Mantem dados existentes, marca timestamp |
-| Re-tentativa | So no proximo startup apos 24h |
+| Retry por requisição | `MAX_RETRIES=3`, `REQUEST_TIMEOUT=20s`, backoff incremental (`_http_get`) |
+| Sucesso ATP | só com **100** jogadores (antes `>=50` mascarava fetch parcial da página 2) |
+| Gravação do cache | `last_updated` só é gravado com **ambos** rankings completos (ATP=100, WTA=100) |
+| Dados parciais | **não** travam o cache — o próximo startup tenta de novo (em vez de ficar 24h incompleto) |
+
+> **Correção (v3):** antes, um timeout na página 2 do ATP salvava só o Top 50 e gravava o
+> timestamp, travando meio ranking por 24h. Agora há retry e o cache só "fecha" quando os
+> dois rankings vêm completos. Ver [TESTS_AND_RESULTS.md](TESTS_AND_RESULTS.md).
 
 ### Tratamento de Erros
 
-- **Rede indisponivel**: O scraping/API falha silenciosamente, mantendo dados estaticos.
+- **Rede indisponivel**: `_http_get` re-tenta 3x; persistindo a falha, mantém dados estáticos.
 - **Site mudou estrutura**: BeautifulSoup nao encontra tabela -> retorna None -> fallback.
 - **API WTA fora**: Tenta automaticamente via tennisexplorer como fallback.
+- **Resposta não-JSON da API WTA**: tratada (`except ValueError`) → fallback.
 - **JSON corrompido**: `_load_data()` retorna `{}`, bot funciona sem rankings.
 
 ---

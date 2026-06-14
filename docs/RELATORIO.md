@@ -195,7 +195,7 @@ Mensagem
 > responde em milissegundos. Com o modelo padrão, o LLM responde em **uma única chamada**
 > (sem retry), tipicamente em 2–6 s.
 
-**Suíte de testes automatizados:** `run_tests.py` → **300/300** cenários (21 baterias). *(A
+**Suíte de testes automatizados:** `run_tests.py` → **312/312** cenários (23 baterias). *(A
 integração do LLM não altera o resultado: os testes rodam com `LLM_ENABLED=0`.)*
 
 **Robustez de contexto (20 turnos):** validado num fluxo de 20 turnos — o bot mantém o foco em

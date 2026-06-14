@@ -41,6 +41,34 @@ Siga estes passos simples no seu terminal:
 4.  **Acessar o ChatBot:**
     Abra o seu navegador e acesse: `http://127.0.0.1:5000`
 
+> O `punkt` do NLTK é baixado automaticamente na 1ª execução.
+
+---
+
+### 🤖 (Opcional) Ligar o LLM de fallback
+
+O bot funciona sem o LLM (**degradação graciosa**): responde tênis pela base e bloqueia
+off-topic. Para habilitar o complemento de IA (perguntas de tênis fora da base):
+
+1. Instale o **LM Studio** (https://lmstudio.ai) e baixe **`Qwen2.5-7B-Instruct`** (GGUF `Q4_K_M`).
+2. Aba *Developer / Local Server* → carregue o modelo → **Start Server** (porta 1234).
+3. Copie a configuração: `copy .env.example .env` (Windows) / `cp .env.example .env` (Linux/Mac).
+
+Detalhes e troubleshooting: [`COMO_RODAR.md`](../COMO_RODAR.md) e [LLM_HYBRID.md](LLM_HYBRID.md).
+
+> **Roteamento (bot fechado em tênis):** fora de tênis → bloqueado (nunca vai ao LLM);
+> tênis na base → base; tênis fora da base → Qwen (LM Studio).
+
+---
+
+### ✅ Rodar os testes
+
+```bash
+python run_tests.py
+```
+
+Esperado: **312/312** (os testes rodam com `LLM_ENABLED=0`, então não precisam do LM Studio).
+
 ---
 
 ### 🎙️ Dicas para a Apresentação

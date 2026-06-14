@@ -88,6 +88,30 @@ RECORDS_KEYWORDS = [
     "saque mais rapido", "golden slam",
 ]
 
+# Perguntas FACTUAIS/estatísticas que MENCIONAM um torneio (ex.: "grand slam",
+# "golden slam") mas NÃO são um pedido de "últimos campeões". Quando aparecem, a
+# árvore de decisão NÃO deve devolver o bloco genérico de campeões: a pergunta deve
+# seguir para os handlers de recordes (pipeline normal) ou para o LLM. Espelha a
+# guarda `has_records` do app.py e cobre contagem ("quantos") e "primeiro a ...".
+RECORDS_FACT_KEYWORDS = [
+    "quantos", "quantas",
+    "recorde", "recordes",
+    "mais grand slams", "mais slams", "mais títulos", "mais titulos",
+    "mais semanas", "mais vitórias", "mais vitorias",
+    "golden slam", "career slam", "grand slam de carreira",
+    "primeiro a", "primeira a", "primeiro tenista", "primeira tenista",
+    "primeiro jogador", "primeira jogadora",
+]
+
+
+def _is_records_or_fact_question(msg_lower):
+    """True se a mensagem MENCIONA um torneio mas é, na verdade, uma pergunta
+    factual/estatística/recorde (ex.: "quantos grand slams o X conquistou", "quem foi
+    o primeiro a completar o golden slam"). Nesses casos o bloco genérico de campeões
+    NÃO deve responder — a pergunta segue para os recordes (pipeline normal) ou o LLM."""
+    return any(kw in msg_lower for kw in RECORDS_FACT_KEYWORDS)
+
+
 # Keywords que indicam pedido de listar torneios (não detalhes de um específico)
 TOURNAMENT_LIST_KEYWORDS = [
     "quais são", "quais sao", "quais os", "listar", "lista de",
@@ -510,10 +534,15 @@ class DecisionTree:
                     trace.append({"branch": "Lista Torneios", "icon": "📋", "matched": True, "detail": "Listagem de torneios"})
                     result = self.engine.get_tournaments_list()
                     return (result, "tournament", "showed_tournament_list", [], trace)
-                trace.append({"branch": "Torneio (genérico)", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios"})
-                add_log("[CONTEXTO] Pedido genérico de torneios detectado!", "SUCCESS")
-                result = self.engine.get_last_champions()
-                return (result, "tournament", "showed_champions", [], trace)
+                # Pergunta factual/recorde que só MENCIONA "grand slam"/"slam" não é
+                # pedido de campeões → segue para recordes/LLM (não retorna aqui).
+                if _is_records_or_fact_question(msg_lower):
+                    trace.append({"branch": "Torneio (genérico)", "icon": "🏆", "matched": False, "detail": "Pergunta factual/recorde mencionando torneio → segue para recordes/LLM"})
+                else:
+                    trace.append({"branch": "Torneio (genérico)", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios"})
+                    add_log("[CONTEXTO] Pedido genérico de torneios detectado!", "SUCCESS")
+                    result = self.engine.get_last_champions()
+                    return (result, "tournament", "showed_champions", [], trace)
             else:
                 trace.append({"branch": "Torneio", "icon": "🏆", "matched": False, "detail": "Nenhum Grand Slam na mensagem"})
 
@@ -660,10 +689,14 @@ class DecisionTree:
                     trace.append({"branch": "Troca → Lista Torneios", "icon": "📋", "matched": True, "detail": "Listagem de torneios durante player_detail"})
                     result = self.engine.get_tournaments_list()
                     return (result, "tournament", "showed_tournament_list", [], trace)
-                trace.append({"branch": "Troca → Torneios", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios durante player_detail"})
-                add_log("[CONTEXTO] Troca de tópico: player_detail → torneios", "SUCCESS")
-                result = self.engine.get_last_champions()
-                return (result, "tournament", "showed_champions", [], trace)
+                # Pergunta factual/recorde que só MENCIONA torneio → recordes/LLM.
+                if _is_records_or_fact_question(msg_lower):
+                    trace.append({"branch": "Troca → Torneios", "icon": "🏆", "matched": False, "detail": "Pergunta factual/recorde mencionando torneio → segue para recordes/LLM"})
+                else:
+                    trace.append({"branch": "Troca → Torneios", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios durante player_detail"})
+                    add_log("[CONTEXTO] Troca de tópico: player_detail → torneios", "SUCCESS")
+                    result = self.engine.get_last_champions()
+                    return (result, "tournament", "showed_champions", [], trace)
 
             # Sub-branch: Continuação genérica ("sim", "conta mais", "quero saber")
             if self._is_continue(msg_lower) and focus:
@@ -712,10 +745,14 @@ class DecisionTree:
                     trace.append({"branch": "Lista Torneios (aberto)", "icon": "📋", "matched": True, "detail": "Listagem de torneios em open_topic"})
                     result = self.engine.get_tournaments_list()
                     return (result, "tournament", "showed_tournament_list", [], trace)
-                trace.append({"branch": "Torneios (genérico)", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios em open_topic"})
-                add_log("[CONTEXTO] Pedido genérico de torneios via open_topic!", "SUCCESS")
-                result = self.engine.get_last_champions()
-                return (result, "tournament", "showed_champions", [], trace)
+                # Pergunta factual/recorde que só MENCIONA torneio → recordes/LLM.
+                if _is_records_or_fact_question(msg_lower):
+                    trace.append({"branch": "Torneios (genérico)", "icon": "🏆", "matched": False, "detail": "Pergunta factual/recorde mencionando torneio → segue para recordes/LLM"})
+                else:
+                    trace.append({"branch": "Torneios (genérico)", "icon": "🏆", "matched": True, "detail": "Pedido genérico de torneios em open_topic"})
+                    add_log("[CONTEXTO] Pedido genérico de torneios via open_topic!", "SUCCESS")
+                    result = self.engine.get_last_champions()
+                    return (result, "tournament", "showed_champions", [], trace)
             else:
                 trace.append({"branch": "Torneio (aberto)", "icon": "🏆", "matched": False, "detail": "Nenhum torneio na mensagem"})
 

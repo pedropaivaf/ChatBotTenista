@@ -5,7 +5,11 @@ o ChatBot de Tenis. Ele descreve **todos os comportamentos esperados**, as regra
 de decisao, o sistema de reacoes empaticas, o pipeline de processamento e como adicionar
 novas funcionalidades sem quebrar o que ja funciona.
 
-**Antes de qualquer mudanca, rode `python run_tests.py` e garanta 297/297.**
+**Antes de qualquer mudanca, rode `python run_tests.py` e garanta 312/312.**
+
+> **Arquitetura híbrida (v3):** a base responde primeiro; o **LLM (Qwen via LM Studio)** é
+> fallback **só para tênis**. O bot é **fechado em tênis** (off-topic bloqueado). Ver
+> [LLM_HYBRID.md](LLM_HYBRID.md) e [AI_HANDOFF.md](AI_HANDOFF.md).
 
 ---
 
@@ -14,20 +18,22 @@ novas funcionalidades sem quebrar o que ja funciona.
 Cada mensagem do usuario passa por estas etapas, nesta ordem exata:
 
 ```
-[1] Tokenizacao + Stemming (NLTK)
-[2] Filtro Off-Topic (60+ keywords)
-[3] Deteccao de Gibberish (vogais, consoantes, bigramas)
-[4] Arvore de Decisao (contexto, follow-ups, reacoes)
-[5] Query Parser (pais, temporal, superlativo, circuito)
-[6] Dados Tecnicos (ranking, jogadores, campeoes)
-[7] Deteccao de Torneio direto
-[8] Intent Matching (knowledge_base.json, 50% threshold)
-[9] Fallback (log em unrecognized_queries.json)
-[10] Enrich (adiciona follow-up aberto + atualiza sessao)
+[1]  Tokenizacao + Stemming (NLTK)
+[2]  Filtro Off-Topic — Camada 1 (60+ keywords + conhecimento geral) → BLOQUEIA
+[3]  Deteccao de Gibberish → BLOQUEIA (nunca vai ao LLM)
+[4]  Validacao de topico via Qwen — Camada 3 (so com contexto ativo, sem sinal de tenis)
+[5]  Arvore de Decisao (contexto, follow-ups, reacoes)
+[6]  Query Parser (pais, temporal, superlativo, circuito)
+[7]  Dados Tecnicos (ranking, jogadores, campeoes, recordes, posicao)
+[8]  Roteador de contagem ("quantos ... slam/torneio") → LLM
+[9]  Intent Matching (knowledge_base.json, 50% / 65% com contexto)
+[10] Fallback final → LLM (perguntas de tenis fora da base) | log em unrecognized_queries.json
+[11] Degradacao graciosa → resposta canned (LLM off)
+[12] Enrich (adiciona follow-up aberto + atualiza sessao)
 ```
 
 **Regra de ouro**: Se uma etapa resolve a mensagem, as seguintes sao puladas.
-A arvore de decisao (etapa 4) tem prioridade sobre tudo exceto off-topic/gibberish.
+A arvore de decisao (etapa 5) tem prioridade sobre tudo exceto off-topic/gibberish/validacao Qwen.
 
 ---
 
@@ -346,7 +352,7 @@ Em `engine.py`:
 
 ## 12. Checklist de Testes Antes de Qualquer Commit
 
-1. `python run_tests.py` → **297/297 ZERO FALHAS**
+1. `python run_tests.py` → **312/312 ZERO FALHAS**
 2. Testar manualmente no navegador:
    - Fluxo de 20 turnos sem perder contexto
    - Typo de jogador (ex: "Medevedev")
@@ -445,7 +451,7 @@ Em `engine.py`:
 | `query_parser.py` | 52-70 | TEMPORAL/SUPERLATIVE/ATP/WTA markers |
 | `engine.py` | 10-40 | COUNTRY_FLAGS |
 | `session_manager.py` | 10-20 | SESSION_TTL, MAX_TURNS |
-| `run_tests.py` | 1-700+ | 297 testes em 21 baterias |
+| `run_tests.py` | 1-765 | 312 testes em 23 baterias |
 
 ---
 
@@ -511,9 +517,35 @@ Em `engine.py`:
 
 ---
 
+### Camada Híbrida — LLM de fallback (CONCLUIDO, v3)
+- `llm_client.py`: cliente do **Qwen2.5-7B-Instruct via LM Studio** (API compatível com OpenAI).
+- O bot é **fechado em tênis**: off-topic é **bloqueado** (Camada 1 por regras + Camada 3 via
+  `is_on_topic` do Qwen + sentinela `FORA_DO_TEMA`). O LLM só responde **tênis fora da base**.
+- *Grounding* leve (`build_grounding` em `app.py`) injeta ficha/Top 5/lendas no prompt (anti-alucinação).
+- Anti *code-switching*: lembrete de idioma por recência, sem histórico, retry limpo, sanitização CJK.
+- Configuração em `.env` (`LLM_ENABLED`, `LLM_MODEL`, ...). **Testes forçam `LLM_ENABLED=0`**.
+- Métricas em `/metrics` + `llm_metrics.json`. **Degradação graciosa** sem o LM Studio.
+- Detalhes completos: [LLM_HYBRID.md](LLM_HYBRID.md).
+
+### Roteamento de Perguntas Factuais/Recorde (CONCLUIDO, v3)
+Perguntas como "quantos Grand Slams o X conquistou" ou "quem foi o primeiro a completar o
+Golden Slam" **não** devem virar "campeões genéricos". Correção em 3 camadas:
+- `decision_tree.py`: `_is_records_or_fact_question()` + `RECORDS_FACT_KEYWORDS` + 3 guardas
+  nos branches de torneio (player_from_ranking, player_detail, open_topic).
+- `app.py` (Fix A): atalho "superlativo → #1" não dispara em pergunta factual ("primeiro a...").
+- `app.py` (Fix B): roteador "quantos/quantas + torneio/slam" → LLM antes do intent de definição.
+- Cobertura: **BATERIA 23** em `run_tests.py`.
+
+### Atualização de Rankings Robusta (CONCLUIDO, v3)
+- `api_client.py`: `_http_get` com retry (3x, timeout 20s, backoff); ATP só "completo" com 100;
+  `last_updated` (cache 24h) só grava com ambos rankings completos (parcial não trava o cache).
+
+---
+
 ## 17. Proximos Passos Sugeridos
 
-1. **Head-to-Head**: Confrontos diretos entre jogadores.
-2. **Estatisticas**: Aces, % primeiro servico, duplas faltas.
-3. **Mais reacoes**: Adicionar reacoes para "servico", "slice", "drop shot", "lob".
-4. **Noticias**: Scraping de sites de noticias de tenis em tempo real.
+1. **RAG vetorial**: substituir o *grounding* por keyword por embeddings/busca densa.
+2. **Head-to-Head**: Confrontos diretos entre jogadores.
+3. **Estatisticas**: Aces, % primeiro servico, duplas faltas.
+4. **Mais reacoes**: Adicionar reacoes para "servico", "slice", "drop shot", "lob".
+5. **Cache de respostas do LLM** + avaliacao automatica de alucinacao.
