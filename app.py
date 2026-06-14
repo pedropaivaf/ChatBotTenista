@@ -5,7 +5,7 @@ from engine import TennisEngine # Importa o nosso motor de dados técnicos de t�
 from nltk_utils import tokenize, stem, bag_of_words, extract_entities # Utilitários de Processamento de Linguagem Natural
 from session_manager import SessionManager # Gerenciador de sessões com contexto
 from query_parser import parse_query # Parser inteligente de queries (país/temporal/superlativo)
-from decision_tree import DecisionTree, _fuzzy_match_player, PRONOUN_KEYWORDS # Árvore de decisão contextual com follow-ups
+from decision_tree import DecisionTree, _fuzzy_match_player, PRONOUN_KEYWORDS, TOURNAMENT_KEYWORDS, _is_records_or_fact_question # Árvore de decisão contextual com follow-ups
 from api_client import TennisAPIClient # Cliente de atualização de rankings (ATP/WTA)
 import llm_client # Fallback híbrido: consulta um LLM (LM Studio) quando a base não resolve
 import json # Para manipular arquivos de dados estruturados
@@ -511,7 +511,7 @@ def predict(): # Função principal de "predição" ou resposta
             add_log("[PARSER] Pergunta histórica/GOAT → goat_debate", "SUCCESS")
             add_step("Base de Conhecimento", "success", "Intent: goat_debate (histórico)")
             return respond(random.choice(goat_intent["responses"]), topic="trivia", bot_action="showed_trivia")
-    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words) and not _has_specific_position and not _is_goat_query:
+    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words) and not _has_specific_position and not _is_goat_query and not _is_records_or_fact_question(msg_lower):
         # Detecta se é feminino → WTA
         circuit = parsed["circuit"] or ('WTA' if any(w in msg_lower for w in feminine_words) else 'ATP')
         ranking_data = tennis_engine.data.get(f"ranking_{circuit.lower()}", [])
@@ -763,6 +763,17 @@ def predict(): # Função principal de "predição" ou resposta
         if player_info:
             return respond(player_info, topic="player", bot_action="showed_player_info",
                            mentioned_players=[target_player])
+
+    # --- Roteamento ao LLM: pergunta de CONTAGEM sobre torneio/slam ---
+    # "quantos grand slams o X conquistou" é factual e a base não cobre (não há contagem
+    # de slams por jogador). Sem este desvio, o intent genérico "grand_slam" casa em 100%
+    # (pattern curto "grand slam") e devolve a DEFINIÇÃO em vez do fato. Vai ao LLM; se
+    # indisponível, segue o fluxo normal (degradação graciosa para a base/canned).
+    if any(q in msg_lower for q in ["quantos", "quantas"]) and any(kw in msg_lower for kw in TOURNAMENT_KEYWORDS):
+        add_log("[ROUTER] Pergunta de contagem sobre torneio/slam → LLM", "SYSTEM")
+        llm_resp = try_llm_fallback("Pergunta de contagem sobre torneio/slam → LLM")
+        if llm_resp is not None:
+            return llm_resp
 
     # --- Passo 2: Lógica Conversacional (Base de Conhecimento JSON) ---
     add_step("Motor de Dados", "skipped", "Nenhum ranking/jogador/torneio detectado")

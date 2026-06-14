@@ -728,6 +728,32 @@ expect('22.08', 'quem é o batman?', 'ot8', None, ['Atmane', 'Terence'])
 # =====================================================================
 print()
 print('='*70)
+print('BATERIA 23: Pergunta factual/recorde mencionando torneio → NÃO vira campeões')
+print('='*70)
+# Bug: "Grand Slams"/"Golden Slam" em contexto pendente caíam no bloco genérico de
+# campeões (showed_champions) em vez de seguir para recordes/LLM. Estas perguntas
+# são FACTUAIS (contagem / "primeiro a"), não um pedido de "últimos campeões".
+# Cenário #1 — após ranking (pending=player_from_ranking)
+chat('ranking atp', 'fact1')
+expect('23.01', 'Quantos Grand Slams o Boris Becker conquistou?', 'fact1',
+       None, ['Campeões de Grand Slam'])
+# Cenário #2 — após curiosidade (pending=open_topic). "primeiro tenista a completar"
+# NÃO é o #1 do ranking → não pode devolver o líder do ranking (Sinner).
+chat('me conta uma curiosidade', 'fact2')
+expect('23.02', 'Quem foi o primeiro tenista a completar o Golden Slam?', 'fact2',
+       None, ['Campeões de Grand Slam', 'Jannik Sinner'])
+# Cenário #3 — após detalhe de jogador (pending=player_detail)
+chat('quem é o Alcaraz?', 'fact3')
+expect('23.03', 'Quantos Grand Slams o Boris Becker conquistou?', 'fact3',
+       None, ['Campeões de Grand Slam'])
+# NÃO-REGRESSÃO: pedido LEGÍTIMO de campeões genéricos ainda funciona
+chat('ranking atp', 'fact4')
+expect('23.04', 'quem ganhou os grand slams', 'fact4', ['Campeões'])
+
+
+# =====================================================================
+print()
+print('='*70)
 total_pass = TOTAL - len(FAILS)
 print(f'RESULTADO FINAL: {total_pass}/{TOTAL} passaram ({len(FAILS)} falhas)')
 if FAILS:
