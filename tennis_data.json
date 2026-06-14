@@ -4249,6 +4249,7 @@
       "points": 500,
       "prize_money": "~CHF 2,3 milhões (2025)",
       "recent_champions": [
+        "2025: João Fonseca",
         "2024: Giovanni Mpetshi Perricard",
         "2023: Felix Auger-Aliassime"
       ],
@@ -4262,6 +4263,7 @@
       "points": 500,
       "prize_money": "~EUR 2,4 milhões (2025)",
       "recent_champions": [
+        "2025: Jannik Sinner",
         "2024: Alexander Zverev",
         "2023: Jannik Sinner"
       ],
@@ -4275,6 +4277,7 @@
       "points": 1500,
       "prize_money": "~USD 15 milhões (2025)",
       "recent_champions": [
+        "2025: Jannik Sinner",
         "2024: Jannik Sinner",
         "2023: Novak Djokovic",
         "2022: Novak Djokovic"
@@ -4285,8 +4288,8 @@
   "records": {
     "most_titles_male": {
       "name": "Novak Djokovic",
-      "count": 99,
-      "detail": "99 títulos ATP (recorde histórico masculino)"
+      "count": 100,
+      "detail": "100 títulos ATP (recorde histórico masculino)"
     },
     "most_titles_female": {
       "name": "Martina Navratilova",
