@@ -713,6 +713,21 @@ class DecisionTree:
                         response = f"{info_focus}\n\n{'─' * 30}\n\n{info_other}"
                         return (response, "player", "showed_player_info", [focus, other], trace)
 
+            # Guarda de jogador NOMEADO: se a mensagem cita explicitamente OUTRO jogador
+            # (nome real, stem >= 4) e não é uma comparação, o foco passa a ser esse
+            # jogador. Sem isto, "qual o país do Fonseca" com foco=Alcaraz respondia
+            # sobre o Alcaraz (as sub-branches país/estilo/campo usavam o foco às cegas).
+            # Pronomes ("país dele") não nomeiam ninguém → extract_entities devolve None
+            # → o foco é mantido (comportamento correto, coberto por testes de regressão).
+            if not has_comparison:
+                _named = extract_entities(msg_stems, self.engine.get_all_player_names())
+                if _named and _named != focus:
+                    _ns = [stem(w) for w in tokenize(_named.lower()) if len(stem(w)) > 2]
+                    if any(len(s) >= 4 and s in msg_stems for s in _ns):
+                        trace.append({"branch": "Troca de foco", "icon": "🔁", "matched": True, "detail": f"Jogador nomeado → {_named}"})
+                        focus = _named
+                        reaction = _build_reaction(msg_lower, focus, self.engine)
+
             # Sub-branch: País
             has_country = any(kw in msg_lower for kw in COUNTRY_KEYWORDS_CTX)
             if has_country and focus:

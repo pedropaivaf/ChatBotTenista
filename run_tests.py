@@ -1,9 +1,10 @@
 """
 Bateria EXAUSTIVA de testes do chatbot Tennis AI.
-297 cenários em 21 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
+328 cenários em 25 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
 ATP 500, último ganhador, países, edge cases, WTA, off-topic, typos, fluxos de 20 turnos,
 campos específicos (altura/títulos/idade), listagem de torneios, recordes, GOAT, lendas,
-posição no ranking, next gen, regras detalhadas.
+posição no ranking, next gen, regras detalhadas, curiosidade de jogador → IA,
+troca de foco por jogador nomeado em player_detail.
 """
 import sys, re, os
 sys.stdout.reconfigure(encoding='utf-8')
@@ -785,6 +786,35 @@ expect('24.09', 'o Sinner já jogou contra o Alcaraz?', 'cur9', ['indisponível'
 # 24.10 — NÃO-REGRESSÃO: comparação legítima (em contexto) ainda mostra fichas pela base
 chat('quem é o Sinner?', 'cur10')
 expect('24.10', 'comparar com o Alcaraz', 'cur10', ['Sinner', 'Alcaraz'])
+
+
+# =====================================================================
+print()
+print('='*70)
+print('BATERIA 25: Jogador NOMEADO durante player_detail troca o foco')
+print('='*70)
+# Bug: com um jogador em foco (pending=player_detail), perguntar sobre OUTRO jogador
+# citado pelo NOME (ex.: "qual o país do Fonseca") devolvia dados do FOCO antigo
+# (Alcaraz) porque as sub-branches país/estilo/campo usavam focus_player sem checar
+# um nome explícito na mensagem. Deve trocar o foco para o jogador nomeado.
+# 25.01 — país de OUTRO jogador nomeado (não o foco)
+chat('quem é o Alcaraz?', 'sw1')
+expect('25.01', 'qual é o país do joão fonseca', 'sw1', ['Fonseca', 'Brasil'], ['Espanha'])
+# 25.02 — país de outro jogador nomeado (typo-free), foco diferente
+chat('quem é o Alcaraz?', 'sw2')
+expect('25.02', 'qual o país do Medvedev', 'sw2', ['Medvedev', 'Rússia'], ['Espanha'])
+# 25.03 — campo específico (altura) de outro jogador nomeado
+chat('quem é o Alcaraz?', 'sw3')
+expect('25.03', 'qual a altura do Sinner?', 'sw3', ['Sinner'], ['Carlos Alcaraz'])
+# 25.04 — estilo de outro jogador nomeado
+chat('quem é o Alcaraz?', 'sw4')
+expect('25.04', 'qual o estilo do Medvedev?', 'sw4', ['Medvedev'], ['Carlos Alcaraz'])
+# 25.05 — NÃO-REGRESSÃO: pronome ("país dele") mantém o foco atual
+chat('quem é o Alcaraz?', 'sw5')
+expect('25.05', 'qual o país dele', 'sw5', ['Alcaraz', 'Espanha'])
+# 25.06 — NÃO-REGRESSÃO: campo do próprio foco por pronome ("altura dele")
+chat('quem é o Alcaraz?', 'sw6')
+expect('25.06', 'qual a altura dele?', 'sw6', ['Alcaraz'], ['fugiu'])
 
 
 # =====================================================================
