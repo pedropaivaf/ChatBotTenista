@@ -4,6 +4,7 @@ import random
 import difflib
 # Importa funções utilitárias de processamento de linguagem natural do módulo local nltk_utils
 from nltk_utils import tokenize, stem, extract_entities
+from query_parser import parse_query
 
 # Templates de follow-up abertos (nunca sim/não) organizados por (topic, bot_action)
 # Dicionário que mapeia tuplas (tópico, ação_do_bot) para listas de perguntas de acompanhamento
@@ -782,7 +783,16 @@ class DecisionTree:
                     return (f"{reaction}\n\n{info}", "player", "showed_player_info", [focus], trace)
 
             # Sub-branch: Elogio genérico ("um dos melhores", "lenda", "goat")
-            if any(p in msg_lower for p in GENERIC_PRAISE) and focus:
+            # Guarda: NÃO tratar como elogio quando a frase é uma PERGUNTA de "melhor
+            # jogador" (ex.: "qual o melhor jogador do brasil/mundo"). Isso é resolvido
+            # pelo pipeline normal (melhores do país / #1 do mundo), não é um elogio ao
+            # foco. Sem isto, "o melhor" ∈ GENERIC_PRAISE sequestrava a resposta.
+            _is_best_query = "melhor" in msg_lower and (
+                bool(parse_query(msg_lower).get("country_filter"))
+                or any(w in msg_lower for w in ("mundo", "ranking", "número 1", "numero 1",
+                                                "líder", "lider", "nº1", "número um", "numero um"))
+            )
+            if any(p in msg_lower for p in GENERIC_PRAISE) and focus and not _is_best_query:
                 pronouns = _get_pronoun(focus, self.engine)
                 pronouns_cap = {"Ele_Ela": pronouns["ele_ela"].capitalize(), **pronouns}
                 praise_reactions = [

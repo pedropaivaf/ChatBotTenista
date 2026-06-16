@@ -1,10 +1,11 @@
 """
 Bateria EXAUSTIVA de testes do chatbot Tennis AI.
-328 cenários em 25 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
+332 cenários em 26 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
 ATP 500, último ganhador, países, edge cases, WTA, off-topic, typos, fluxos de 20 turnos,
 campos específicos (altura/títulos/idade), listagem de torneios, recordes, GOAT, lendas,
 posição no ranking, next gen, regras detalhadas, curiosidade de jogador → IA,
-troca de foco por jogador nomeado em player_detail.
+troca de foco por jogador nomeado em player_detail,
+"melhor jogador do X" não vira elogio quando há foco ativo.
 """
 import sys, re, os
 sys.stdout.reconfigure(encoding='utf-8')
@@ -815,6 +816,30 @@ expect('25.05', 'qual o país dele', 'sw5', ['Alcaraz', 'Espanha'])
 # 25.06 — NÃO-REGRESSÃO: campo do próprio foco por pronome ("altura dele")
 chat('quem é o Alcaraz?', 'sw6')
 expect('25.06', 'qual a altura dele?', 'sw6', ['Alcaraz'], ['fugiu'])
+
+
+# =====================================================================
+print()
+print('='*70)
+print('BATERIA 26: "melhor jogador do X" NÃO vira elogio quando há foco ativo')
+print('='*70)
+# Bug: com um jogador em foco (pending=player_detail), perguntar "qual o melhor
+# jogador do brasil/mundo" caía na sub-branch de elogio genérico ("o melhor" ∈
+# GENERIC_PRAISE) e devolvia só uma reação, em vez do melhor do país / #1 do mundo.
+# 26.01 — melhor do PAÍS durante foco ativo → melhores do país (não elogio)
+chat('quem é o Alcaraz?', 'pr1')
+expect('26.01', 'qual o melhor jogador do brasil?', 'pr1', ['Brasil', 'Fonseca'])
+# 26.02 — melhor do MUNDO durante foco ativo → #1 do ranking (não elogio)
+chat('quem é o Alcaraz?', 'pr2')
+expect('26.02', 'quem é o melhor jogador do mundo?', 'pr2', ['Sinner'])
+# 26.03 — NÃO-REGRESSÃO: elogio legítimo ("fenomenal") ainda dispara reação
+chat('quem é o Sinner?', 'pr3')
+expect('26.03', 'ele é simplesmente fenomenal', 'pr3', None,
+       ['fugiu', 'não entend', 'Ranking ATP Oficial', 'Melhores jogadores'])
+# 26.04 — NÃO-REGRESSÃO: "um dos melhores" continua sendo elogio (não país/ranking)
+chat('quem é o Sinner?', 'pr4')
+expect('26.04', 'um dos melhores', 'pr4', None,
+       ['fugiu', 'não entend', 'Ranking ATP Oficial', 'Melhores jogadores'])
 
 
 # =====================================================================
