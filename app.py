@@ -13,7 +13,20 @@ import json # Para manipular arquivos de dados estruturados
 import os # Para verificar a existência de arquivos no sistema
 import re # Para limpar tags HTML do histórico antes de enviar ao LLM
 import random # Para escolher respostas variadas quando houver várias opções
+import sys # Para reconfigurar o stdout/stderr do servidor (UTF-8)
 from datetime import datetime # Para registrar a data/hora nos logs de aprendizado
+
+# No Windows o console padrão é cp1252 e NÃO encoda "→", acentos crus ou emojis.
+# Vários prints de debug usam esses caracteres — web_search ("[WEB_SEARCH] … →"),
+# app ("[PESQUISA] … →"), bandeiras (🇮🇹). Em cp1252 eles lançam UnicodeEncodeError;
+# como build_grounding engole exceções, isso DESATIVAVA silenciosamente a pesquisa
+# web (a IA caía na memória do modelo e alucinava). Forçar UTF-8 (errors=replace)
+# torna todo print seguro e mantém o "modo pesquisa" (Wikipedia/DuckDuckGo) funcional.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 # Regex simples para remover tags HTML (ex.: <span ...>) das respostas do bot
 # antes de reaproveitá-las como histórico de contexto para o LLM.
@@ -226,8 +239,14 @@ def build_grounding(msg_lower, player_name=None, force_web=False):
             if p.get("country"): campos.append(f"país: {p['country']}")
             if p.get("age"):     campos.append(f"idade: {p['age']}")
             if p.get("style"):   campos.append(f"estilo: {p['style']}")
-            if not retrieved:
+            # Perguntas de Grand Slam ("quantos/quais slams"): o títulos CURADO traz a
+            # divisão por torneio (ex.: "24 (10x Australian Open, 7x Wimbledon…)") que a
+            # Wikipedia não detalha — então incluímos mesmo quando há pesquisa web, para
+            # a IA poder dizer QUAIS, não só o total.
+            _slam_q = any(k in msg_lower for k in ("grand slam", "slam", "slams", "major", "majors"))
+            if (not retrieved) or _slam_q:
                 if p.get("titles"): campos.append(f"títulos: {p['titles']}")
+            if not retrieved:
                 if p.get("fact"):   campos.append(f"curiosidade: {p['fact']}")
             parts.append("Jogador(a) — " + "; ".join(campos) + ".")
 
@@ -830,7 +849,10 @@ def predict(): # Função principal de "predição" ou resposta
                      "NÃO invente dados (raquete, patrocínios, datas…). Se o contexto NÃO tiver a "
                      "resposta EXATA, diga isso brevemente E complemente com o dado mais relevante "
                      "que o contexto tiver sobre ele (ex.: se perguntarem a raquete e não houver, "
-                     "mas o contexto disser a mão ou o treinador, mencione isso). NÃO liste a ficha inteira.")
+                     "mas o contexto disser a mão ou o treinador, mencione isso). NÃO liste a ficha inteira. "
+                     "Se perguntarem QUANTOS/QUAIS Grand Slams e o contexto (títulos) trouxer a divisão "
+                     "por torneio (ex.: '10x Australian Open, 7x Wimbledon…'), informe o TOTAL E a "
+                     "divisão por torneio.")
         else:
             extra = on_topic_note + ("Responda à pergunta de tênis de forma direta. Se for uma LISTA "
                      "(ex.: jogadores canhotos, brasileiros, especialistas em saibro), cite APENAS "

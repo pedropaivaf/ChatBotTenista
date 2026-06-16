@@ -58,6 +58,20 @@ def enabled():
     return os.getenv("WEB_SEARCH_ENABLED", "1").strip() == "1"
 
 
+def _dbg(msg):
+    """Print de debug À PROVA DE FALHAS. No Windows o console é cp1252 e não encoda
+    '→'/emoji; sem isto, um print de debug lançava UnicodeEncodeError que era engolido
+    por build_grounding e DESATIVAVA a pesquisa web (a IA caía na memória e alucinava).
+    Aqui o print nunca derruba a pesquisa: cai para ASCII e, no pior caso, falha calado."""
+    try:
+        print(msg)
+    except Exception:
+        try:
+            print(str(msg).encode("ascii", "replace").decode("ascii"))
+        except Exception:
+            pass
+
+
 def _wiki_search_title(query, lang):
     """Acha o título da página mais provável para `query` na Wikipedia (idioma `lang`).
     Retorna o título (str) ou None."""
@@ -258,7 +272,7 @@ def search_tennis(query, player_hint=None):
                 "url": f"https://{lang}.wikipedia.org/wiki/" + requests.utils.quote(title.replace(" ", "_")),
                 "snippet": ((infobox + " ") if infobox else "") + extract[:200],
             })
-            print(f"[WEB_SEARCH] Wikipedia ({lang}): '{title}'")  # debug no terminal
+            _dbg(f"[WEB_SEARCH] Wikipedia ({lang}): '{title}'")  # debug no terminal
             break
 
     # (2) DUCKDUCKGO — fallback web p/ fatos específicos/atuais (raquete, patrocínio…).
@@ -269,10 +283,10 @@ def search_tennis(query, player_hint=None):
             parts.append("Resultados da web (DuckDuckGo):\n" + "\n".join(f"- {w['snippet']}" for w in web))
             for w in web:
                 sources.append({"engine": "DuckDuckGo", **w})
-            print(f"[WEB_SEARCH] DuckDuckGo '{ddg_q}' → {len(web)} resultado(s)")  # debug no terminal
+            _dbg(f"[WEB_SEARCH] DuckDuckGo '{ddg_q}' → {len(web)} resultado(s)")  # debug no terminal
 
     if not parts:
-        print(f"[WEB_SEARCH] Nada confiável para '{target}'")  # debug no terminal
+        _dbg(f"[WEB_SEARCH] Nada confiável para '{target}'")  # debug no terminal
         return None
 
     result = {"text": "\n\n".join(parts), "sources": sources, "query": (query or target)}

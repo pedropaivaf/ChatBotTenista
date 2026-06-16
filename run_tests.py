@@ -1,6 +1,6 @@
 """
 Bateria EXAUSTIVA de testes do chatbot Tennis AI.
-332 cenários em 26 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
+335 cenários em 27 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
 ATP 500, último ganhador, países, edge cases, WTA, off-topic, typos, fluxos de 20 turnos,
 campos específicos (altura/títulos/idade), listagem de torneios, recordes, GOAT, lendas,
 posição no ranking, next gen, regras detalhadas, curiosidade de jogador → IA,
@@ -840,6 +840,31 @@ expect('26.03', 'ele é simplesmente fenomenal', 'pr3', None,
 chat('quem é o Sinner?', 'pr4')
 expect('26.04', 'um dos melhores', 'pr4', None,
        ['fugiu', 'não entend', 'Ranking ATP Oficial', 'Melhores jogadores'])
+
+
+# =====================================================================
+print()
+print('='*70)
+print('BATERIA 27: Grounding de Grand Slam traz a divisão por torneio (quais slams)')
+print('='*70)
+# Melhoria: "quantos/quais Grand Slams o X" deve poder dizer QUAIS (divisão por
+# torneio), não só o total. O build_grounding passa o `titles` curado (com a divisão)
+# ao LLM nessas perguntas. Teste determinístico (LLM/web off): a divisão entra no grounding.
+def expect_grounding(tid, msg, player, must_have):
+    global TOTAL, FAILS
+    TOTAL += 1
+    g, _ = app_module.build_grounding(msg.lower(), player_name=player)
+    miss = [h for h in must_have if h.lower() not in g.lower()]
+    ok = not miss
+    print(f'  [{"OK" if ok else "FAIL"}] {tid}: grounding({player}) ⊇ {must_have}')
+    if not ok:
+        FAILS.append({'t': tid, 'm': msg, 'r': f'grounding sem {miss}', 'g': g[:90]})
+expect_grounding('27.01', 'quantos grand slams o djokovic conquistou', 'Novak Djokovic',
+                 ['24', '10x Australian Open', '7x Wimbledon', '4x US Open', '3x Roland Garros'])
+expect_grounding('27.02', 'quais grand slams o nadal ganhou', 'Rafael Nadal',
+                 ['22', '14x Roland Garros'])
+expect_grounding('27.03', 'quantos slams do federer', 'Roger Federer',
+                 ['20', '8x Wimbledon'])
 
 
 # =====================================================================

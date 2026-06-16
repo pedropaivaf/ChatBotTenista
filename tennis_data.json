@@ -18,49 +18,49 @@
       "position": 3,
       "name": "Alexander Zverev",
       "country": "Alemanha",
-      "points": "7305",
+      "points": "7190",
       "age": 29
     },
     {
       "position": 4,
       "name": "Félix Auger-Aliassime",
       "country": "Canadá",
-      "points": "4440",
+      "points": "4390",
       "age": 25
     },
     {
       "position": 5,
       "name": "Ben Shelton",
       "country": "EUA",
-      "points": "3920",
+      "points": "4070",
       "age": 23
     },
     {
       "position": 6,
       "name": "Alex De Minaur",
       "country": "Austrália",
-      "points": "3905",
+      "points": "4060",
       "age": 27
     },
     {
       "position": 7,
+      "name": "Daniil Medvedev",
+      "country": "Rússia",
+      "points": "3810",
+      "age": 30
+    },
+    {
+      "position": 8,
       "name": "Novak Djokovic",
       "country": "Sérvia",
       "points": "3760",
       "age": 39
     },
     {
-      "position": 8,
-      "name": "Daniil Medvedev",
-      "country": "Rússia",
-      "points": "3760",
-      "age": 30
-    },
-    {
       "position": 9,
       "name": "Taylor Fritz",
       "country": "EUA",
-      "points": "3720",
+      "points": "3635",
       "age": 28
     },
     {
@@ -74,14 +74,14 @@
       "position": 11,
       "name": "Alexander Bublik",
       "country": "Cazaquistão",
-      "points": "2930",
+      "points": "3020",
       "age": 28
     },
     {
       "position": 12,
       "name": "Jiří Lehečka",
       "country": "Rep. Tcheca",
-      "points": "2575",
+      "points": "2640",
       "age": 24
     },
     {
@@ -100,31 +100,31 @@
     },
     {
       "position": 15,
-      "name": "Karen Khachanov",
-      "country": "Rússia",
-      "points": "2320",
-      "age": 30
-    },
-    {
-      "position": 16,
       "name": "Lorenzo Musetti",
       "country": "Itália",
       "points": "2315",
       "age": 24
     },
     {
-      "position": 17,
+      "position": 16,
       "name": "Jakub Mensik",
       "country": "Rep. Tcheca",
       "points": "2300",
       "age": 20
     },
     {
-      "position": 18,
+      "position": 17,
       "name": "Luciano Darderi",
       "country": "Itália",
       "points": "2300",
       "age": 24
+    },
+    {
+      "position": 18,
+      "name": "Karen Khachanov",
+      "country": "Rússia",
+      "points": "2280",
+      "age": 30
     },
     {
       "position": 19,
@@ -137,7 +137,7 @@
       "position": 20,
       "name": "Valentin Vacherot",
       "country": "Mônaco",
-      "points": "2145",
+      "points": "2138",
       "age": 27
     },
     {
@@ -179,7 +179,7 @@
       "position": 26,
       "name": "Frances Tiafoe",
       "country": "EUA",
-      "points": "1705",
+      "points": "1730",
       "age": 28
     },
     {
@@ -228,7 +228,7 @@
       "position": 33,
       "name": "Ugo Humbert",
       "country": "França",
-      "points": "1370",
+      "points": "1360",
       "age": 27
     },
     {
@@ -256,7 +256,7 @@
       "position": 37,
       "name": "Alexander Blockx",
       "country": "Bélgica",
-      "points": "1280",
+      "points": "1275",
       "age": 21
     },
     {
@@ -275,38 +275,38 @@
     },
     {
       "position": 40,
-      "name": "Zizou Bergs",
-      "country": "Bélgica",
-      "points": "1150",
-      "age": 27
-    },
-    {
-      "position": 41,
       "name": "Tallon Griekspoor",
       "country": "Holanda",
-      "points": "1150",
+      "points": "1165",
       "age": 29
     },
     {
-      "position": 42,
+      "position": 41,
       "name": "Denis Shapovalov",
       "country": "Canadá",
       "points": "1130",
       "age": 27
     },
     {
-      "position": 43,
+      "position": 42,
       "name": "Tomas Machac",
       "country": "Rep. Tcheca",
       "points": "1120",
       "age": 25
     },
     {
-      "position": 44,
+      "position": 43,
       "name": "Jaume Munar",
       "country": "Espanha",
       "points": "1105",
       "age": 29
+    },
+    {
+      "position": 44,
+      "name": "Adrian Mannarino",
+      "country": "França",
+      "points": "1099",
+      "age": 37
     },
     {
       "position": 45,
@@ -317,38 +317,38 @@
     },
     {
       "position": 46,
-      "name": "Adrian Mannarino",
-      "country": "França",
-      "points": "1031",
+      "name": "Marin Cilic",
+      "country": "Croácia",
+      "points": "1036",
       "age": 37
     },
     {
       "position": 47,
-      "name": "Marin Cilic",
-      "country": "Croácia",
-      "points": "994",
-      "age": 37
+      "name": "Kamil Majchrzak",
+      "country": "Polônia",
+      "points": "1032",
+      "age": 30
     },
     {
       "position": 48,
+      "name": "Zizou Bergs",
+      "country": "Bélgica",
+      "points": "1010",
+      "age": 27
+    },
+    {
+      "position": 49,
       "name": "Matteo Berrettini",
       "country": "Itália",
       "points": "985",
       "age": 30
     },
     {
-      "position": 49,
+      "position": 50,
       "name": "Miomir Kecmanovic",
       "country": "Sérvia",
       "points": "980",
       "age": 26
-    },
-    {
-      "position": 50,
-      "name": "Nuno Borges",
-      "country": "Portugal",
-      "points": "970",
-      "age": 29
     },
     {
       "position": 51,
@@ -373,44 +373,44 @@
     },
     {
       "position": 54,
-      "name": "Gabriel Diallo",
-      "country": "Canadá",
-      "points": "935",
-      "age": 24
+      "name": "Nuno Borges",
+      "country": "Portugal",
+      "points": "945",
+      "age": 29
     },
     {
       "position": 55,
+      "name": "Martin Landaluce",
+      "country": "Espanha",
+      "points": "936",
+      "age": 20
+    },
+    {
+      "position": 56,
       "name": "Botic Van De Zandschulp",
       "country": "Holanda",
       "points": "935",
       "age": 30
     },
     {
-      "position": 56,
+      "position": 57,
       "name": "Sebastian Baez",
       "country": "Argentina",
       "points": "935",
       "age": 25
     },
     {
-      "position": 57,
+      "position": 58,
       "name": "Camilo Ugo Carabelli",
       "country": "Argentina",
       "points": "930",
       "age": 26
     },
     {
-      "position": 58,
-      "name": "Martin Landaluce",
-      "country": "Espanha",
-      "points": "919",
-      "age": 20
-    },
-    {
       "position": 59,
       "name": "Yannick Hanfmann",
       "country": "Alemanha",
-      "points": "906",
+      "points": "915",
       "age": 34
     },
     {
@@ -429,108 +429,108 @@
     },
     {
       "position": 62,
-      "name": "Zachary Svajda",
-      "country": "EUA",
-      "points": "875",
-      "age": 23
-    },
-    {
-      "position": 63,
       "name": "Roman Andrés Burruchaga",
       "country": "Argentina",
       "points": "875",
       "age": 24
     },
     {
-      "position": 64,
+      "position": 63,
       "name": "Holger Rune",
       "country": "Dinamarca",
       "points": "860",
       "age": 23
     },
     {
-      "position": 65,
+      "position": 64,
       "name": "Vit Kopriva",
       "country": "Rep. Tcheca",
       "points": "856",
       "age": 28
     },
     {
-      "position": 66,
+      "position": 65,
       "name": "Lorenzo Sonego",
       "country": "Itália",
       "points": "855",
       "age": 31
     },
     {
-      "position": 67,
+      "position": 66,
       "name": "Ethan Quinn",
       "country": "EUA",
       "points": "854",
       "age": 22
     },
     {
-      "position": 68,
+      "position": 67,
       "name": "Hamad Medjedovic",
       "country": "Sérvia",
       "points": "844",
       "age": 22
     },
     {
-      "position": 69,
+      "position": 68,
       "name": "Aleksandar Kovacevic",
       "country": "EUA",
       "points": "837",
       "age": 27
     },
     {
-      "position": 70,
-      "name": "Dino Prizmic",
-      "country": "Croácia",
+      "position": 69,
+      "name": "Zachary Svajda",
+      "country": "EUA",
       "points": "835",
-      "age": 20
+      "age": 23
     },
     {
-      "position": 71,
+      "position": 70,
       "name": "Pablo Carreno-Busta",
       "country": "Espanha",
-      "points": "835",
+      "points": "834",
       "age": 34
     },
     {
-      "position": 72,
+      "position": 71,
       "name": "Daniel Vallejo Adolfo",
       "country": "Paraguai",
       "points": "828",
       "age": 22
     },
     {
+      "position": 72,
+      "name": "Jesper De Jong",
+      "country": "Holanda",
+      "points": "821",
+      "age": 26
+    },
+    {
       "position": 73,
       "name": "Jenson Brooksby",
       "country": "EUA",
-      "points": "825",
+      "points": "817",
       "age": 25
     },
     {
       "position": 74,
-      "name": "Valentin Royer",
-      "country": "França",
-      "points": "823",
+      "name": "Mattia Bellucci",
+      "country": "Itália",
+      "points": "814",
       "age": 25
     },
     {
       "position": 75,
-      "name": "Marton Fucsovics",
-      "country": "Hungria",
-      "points": "819",
-      "age": 34
+      "name": "Valentin Royer",
+      "country": "França",
+      "points": "798",
+      "age": 25
     },
     {
       "position": 76,
-      "name": "Kamil Majchrzak",
-      "country": "Polônia",
-      "points": "782",
-      "age": 30
+      "name": "Marton Fucsovics",
+      "country": "Hungria",
+      "points": "781",
+      "age": 34
     },
     {
       "position": 77,
@@ -541,87 +541,87 @@
     },
     {
       "position": 78,
-      "name": "Mattia Bellucci",
-      "country": "Itália",
-      "points": "777",
-      "age": 25
-    },
-    {
-      "position": 79,
       "name": "James Duckworth",
       "country": "Austrália",
-      "points": "762",
+      "points": "776",
       "age": 34
     },
     {
-      "position": 80,
-      "name": "Marco Trungelliti",
-      "country": "Argentina",
-      "points": "758",
-      "age": 36
-    },
-    {
-      "position": 81,
+      "position": 79,
       "name": "Arthur Cazaux",
       "country": "França",
       "points": "757",
       "age": 23
     },
     {
-      "position": 82,
-      "name": "Daniel Merida Aguilar",
-      "country": "Espanha",
-      "points": "756",
-      "age": 21
-    },
-    {
-      "position": 83,
-      "name": "Jesper De Jong",
-      "country": "Holanda",
-      "points": "746",
-      "age": 26
-    },
-    {
-      "position": 84,
+      "position": 80,
       "name": "Stefanos Tsitsipas",
       "country": "Grécia",
       "points": "740",
       "age": 27
     },
     {
-      "position": 85,
+      "position": 81,
       "name": "Daniel Altmaier",
       "country": "Alemanha",
       "points": "740",
       "age": 27
     },
     {
-      "position": 86,
-      "name": "Reilly Opelka",
-      "country": "EUA",
-      "points": "718",
-      "age": 28
+      "position": 82,
+      "name": "Dino Prizmic",
+      "country": "Croácia",
+      "points": "735",
+      "age": 20
     },
     {
-      "position": 87,
+      "position": 83,
+      "name": "Daniel Merida Aguilar",
+      "country": "Espanha",
+      "points": "714",
+      "age": 21
+    },
+    {
+      "position": 84,
+      "name": "Gabriel Diallo",
+      "country": "Canadá",
+      "points": "710",
+      "age": 24
+    },
+    {
+      "position": 85,
       "name": "Emilio Nava",
       "country": "EUA",
       "points": "707",
       "age": 24
     },
     {
-      "position": 88,
+      "position": 86,
       "name": "Marcos Giron",
       "country": "EUA",
       "points": "705",
       "age": 32
     },
     {
-      "position": 89,
+      "position": 87,
+      "name": "Giovanni Mpetshi Perricard",
+      "country": "França",
+      "points": "695",
+      "age": 22
+    },
+    {
+      "position": 88,
       "name": "Francisco Comesana",
       "country": "Argentina",
       "points": "688",
       "age": 25
+    },
+    {
+      "position": 89,
+      "name": "Benjamin Bonzi",
+      "country": "França",
+      "points": "682",
+      "age": 30
     },
     {
       "position": 90,
@@ -639,24 +639,24 @@
     },
     {
       "position": 92,
-      "name": "Quentin Halys",
-      "country": "França",
-      "points": "678",
-      "age": 29
+      "name": "Marco Trungelliti",
+      "country": "Argentina",
+      "points": "670",
+      "age": 36
     },
     {
       "position": 93,
-      "name": "Giovanni Mpetshi Perricard",
-      "country": "França",
-      "points": "670",
-      "age": 22
-    },
-    {
-      "position": 94,
       "name": "Jaime Faria",
       "country": "Portugal",
       "points": "668",
       "age": 22
+    },
+    {
+      "position": 94,
+      "name": "Quentin Halys",
+      "country": "França",
+      "points": "666",
+      "age": 29
     },
     {
       "position": 95,
@@ -667,38 +667,38 @@
     },
     {
       "position": 96,
-      "name": "Hubert Hurkacz",
-      "country": "Polônia",
-      "points": "640",
-      "age": 29
-    },
-    {
-      "position": 97,
       "name": "Alexander Shevchenko",
       "country": "Cazaquistão",
-      "points": "633",
+      "points": "658",
       "age": 25
     },
     {
+      "position": 97,
+      "name": "Sho Shimabukuro",
+      "country": "Japão",
+      "points": "651",
+      "age": 28
+    },
+    {
       "position": 98,
-      "name": "Luca Van Assche",
-      "country": "França",
-      "points": "633",
-      "age": 22
-    },
-    {
-      "position": 99,
-      "name": "Benjamin Bonzi",
-      "country": "França",
-      "points": "629",
-      "age": 30
-    },
-    {
-      "position": 100,
       "name": "Aleksandar Vukic",
       "country": "Austrália",
       "points": "626",
       "age": 30
+    },
+    {
+      "position": 99,
+      "name": "Yibing Wu",
+      "country": "China",
+      "points": "626",
+      "age": 26
+    },
+    {
+      "position": 100,
+      "name": "Luca Van Assche",
+      "country": "França",
+      "points": "626",
+      "age": 22
     }
   ],
   "ranking_wta": [
@@ -732,17 +732,17 @@
     },
     {
       "position": 5,
-      "name": "Amanda Anisimova",
-      "country": "EUA",
-      "points": "5848",
-      "age": 24
-    },
-    {
-      "position": 6,
       "name": "Mirra Andreeva",
       "country": "Rússia",
       "points": "5751",
       "age": 19
+    },
+    {
+      "position": 6,
+      "name": "Amanda Anisimova",
+      "country": "EUA",
+      "points": "5631",
+      "age": 24
     },
     {
       "position": 7,
@@ -769,7 +769,7 @@
       "position": 10,
       "name": "Karolina Muchova",
       "country": "Rep. Tcheca",
-      "points": "3438",
+      "points": "3388",
       "age": 29
     },
     {
@@ -811,15 +811,15 @@
       "position": 16,
       "name": "Diana Shnaider",
       "country": "Rússia",
-      "points": "2506",
+      "points": "2458",
       "age": 22
     },
     {
       "position": 17,
-      "name": "Ekaterina Alexandrova",
-      "country": "Rússia",
-      "points": "2449",
-      "age": 31
+      "name": "Iva Jovic",
+      "country": "EUA",
+      "points": "2436",
+      "age": 18
     },
     {
       "position": 18,
@@ -830,10 +830,10 @@
     },
     {
       "position": 19,
-      "name": "Iva Jovic",
-      "country": "EUA",
-      "points": "2366",
-      "age": 18
+      "name": "Ekaterina Alexandrova",
+      "country": "Rússia",
+      "points": "2411",
+      "age": 31
     },
     {
       "position": 20,
@@ -851,52 +851,52 @@
     },
     {
       "position": 22,
-      "name": "Elise Mertens",
-      "country": "Bélgica",
-      "points": "1918",
-      "age": 30
-    },
-    {
-      "position": 23,
       "name": "Leylah Fernandez",
       "country": "Canadá",
       "points": "1844",
       "age": 23
     },
     {
-      "position": 24,
+      "position": 23,
       "name": "Clara Tauson",
       "country": "Dinamarca",
       "points": "1800",
       "age": 23
     },
     {
+      "position": 24,
+      "name": "Elise Mertens",
+      "country": "Bélgica",
+      "points": "1698",
+      "age": 30
+    },
+    {
       "position": 25,
       "name": "Emma Navarro",
       "country": "EUA",
-      "points": "1779",
+      "points": "1681",
       "age": 25
     },
     {
       "position": 26,
-      "name": "Madison Keys",
-      "country": "EUA",
-      "points": "1772",
-      "age": 31
-    },
-    {
-      "position": 27,
       "name": "Anastasia Potapova",
       "country": "Áustria",
-      "points": "1640",
+      "points": "1669",
       "age": 25
     },
     {
-      "position": 28,
+      "position": 27,
       "name": "Marie Bouzkova",
       "country": "Rep. Tcheca",
-      "points": "1631",
+      "points": "1659",
       "age": 27
+    },
+    {
+      "position": 28,
+      "name": "Madison Keys",
+      "country": "EUA",
+      "points": "1642",
+      "age": 31
     },
     {
       "position": 29,
@@ -914,157 +914,157 @@
     },
     {
       "position": 31,
+      "name": "Emma Raducanu",
+      "country": "Reino Unido",
+      "points": "1458",
+      "age": 23
+    },
+    {
+      "position": 32,
       "name": "Xinyu Wang",
       "country": "China",
       "points": "1431",
       "age": 24
     },
     {
-      "position": 32,
+      "position": 33,
+      "name": "Donna Vekic",
+      "country": "Croácia",
+      "points": "1431",
+      "age": 29
+    },
+    {
+      "position": 34,
       "name": "Katerina Siniakova",
       "country": "Rep. Tcheca",
       "points": "1422",
       "age": 30
     },
     {
-      "position": 33,
+      "position": 35,
       "name": "Alexandra Eala",
       "country": "Filipinas",
-      "points": "1416",
+      "points": "1422",
       "age": 21
     },
     {
-      "position": 34,
+      "position": 36,
       "name": "Cristina Bucsa",
       "country": "Espanha",
       "points": "1406",
       "age": 28
     },
     {
-      "position": 35,
+      "position": 37,
       "name": "Liudmila Samsonova",
       "country": "Rússia",
       "points": "1405",
       "age": 27
     },
     {
-      "position": 36,
+      "position": 38,
       "name": "Jelena Ostapenko",
       "country": "Letônia",
       "points": "1404",
       "age": 29
     },
     {
-      "position": 37,
-      "name": "Maria Sakkari",
-      "country": "Grécia",
-      "points": "1328",
+      "position": 39,
+      "name": "Barbora Krejcikova",
+      "country": "Rep. Tcheca",
+      "points": "1373",
       "age": 30
     },
     {
-      "position": 38,
+      "position": 40,
       "name": "Jaqueline Cristian",
       "country": "Romênia",
-      "points": "1294",
+      "points": "1324",
       "age": 28
     },
     {
-      "position": 39,
-      "name": "Mccartney Kessler",
-      "country": "EUA",
-      "points": "1289",
-      "age": 26
+      "position": 41,
+      "name": "Maria Sakkari",
+      "country": "Grécia",
+      "points": "1299",
+      "age": 30
     },
     {
-      "position": 40,
+      "position": 42,
+      "name": "Laura Siegemund",
+      "country": "Alemanha",
+      "points": "1289",
+      "age": 38
+    },
+    {
+      "position": 43,
       "name": "Janice Tjen",
       "country": "Indonésia",
       "points": "1267",
       "age": 24
     },
     {
-      "position": 41,
-      "name": "Elisabetta Cocciaretto",
-      "country": "Itália",
-      "points": "1260",
-      "age": 25
+      "position": 44,
+      "name": "Mccartney Kessler",
+      "country": "EUA",
+      "points": "1261",
+      "age": 26
     },
     {
-      "position": 42,
-      "name": "Emma Raducanu",
-      "country": "Reino Unido",
-      "points": "1241",
-      "age": 23
-    },
-    {
-      "position": 43,
+      "position": 45,
       "name": "Magdalena Frech",
       "country": "Polônia",
       "points": "1238",
       "age": 28
     },
     {
-      "position": 44,
-      "name": "Laura Siegemund",
-      "country": "Alemanha",
-      "points": "1230",
-      "age": 38
-    },
-    {
-      "position": 45,
-      "name": "Barbora Krejcikova",
-      "country": "Rep. Tcheca",
-      "points": "1211",
-      "age": 30
-    },
-    {
       "position": 46,
-      "name": "Sara Bejlek",
-      "country": "Rep. Tcheca",
-      "points": "1205",
-      "age": 20
+      "name": "Elisabetta Cocciaretto",
+      "country": "Itália",
+      "points": "1192",
+      "age": 25
     },
     {
       "position": 47,
-      "name": "Tereza Valentova",
+      "name": "Sara Bejlek",
       "country": "Rep. Tcheca",
-      "points": "1165",
-      "age": 19
+      "points": "1179",
+      "age": 20
     },
     {
       "position": 48,
+      "name": "Magda Linette",
+      "country": "Polônia",
+      "points": "1139",
+      "age": 34
+    },
+    {
+      "position": 49,
       "name": "Marketa Vondrousova",
       "country": "Rep. Tcheca",
       "points": "1133",
       "age": 26
     },
     {
-      "position": 49,
+      "position": 50,
       "name": "Dayana Yastremska",
       "country": "Ucrânia",
       "points": "1126",
       "age": 26
     },
     {
-      "position": 50,
-      "name": "Petra Marcinko",
-      "country": "Croácia",
-      "points": "1123",
-      "age": 20
-    },
-    {
       "position": 51,
       "name": "Oleksandra Oliynykova",
       "country": "Ucrânia",
-      "points": "1120",
+      "points": "1114",
       "age": 25
     },
     {
       "position": 52,
-      "name": "Tatjana Maria",
-      "country": "Alemanha",
-      "points": "1111",
-      "age": 38
+      "name": "Petra Marcinko",
+      "country": "Croácia",
+      "points": "1101",
+      "age": 20
     },
     {
       "position": 53,
@@ -1075,164 +1075,164 @@
     },
     {
       "position": 54,
+      "name": "Caty Mcnally",
+      "country": "EUA",
+      "points": "1095",
+      "age": 24
+    },
+    {
+      "position": 55,
       "name": "Jessica Bouzas Maneiro",
       "country": "Espanha",
       "points": "1080",
       "age": 23
     },
     {
-      "position": 55,
-      "name": "Diane Parry",
-      "country": "França",
-      "points": "1070",
-      "age": 23
-    },
-    {
       "position": 56,
-      "name": "Solana Sierra",
-      "country": "Argentina",
-      "points": "1064",
-      "age": 21
+      "name": "Katie Boulter",
+      "country": "Reino Unido",
+      "points": "1076",
+      "age": 29
     },
     {
       "position": 57,
+      "name": "Antonia Ruzic",
+      "country": "Croácia",
+      "points": "1071",
+      "age": 23
+    },
+    {
+      "position": 58,
+      "name": "Solana Sierra",
+      "country": "Argentina",
+      "points": "1067",
+      "age": 21
+    },
+    {
+      "position": 59,
       "name": "Yuliia Starodubtseva",
       "country": "Ucrânia",
       "points": "1063",
       "age": 26
     },
     {
-      "position": 58,
-      "name": "Antonia Ruzic",
-      "country": "Croácia",
-      "points": "1061",
+      "position": 60,
+      "name": "Diane Parry",
+      "country": "França",
+      "points": "1045",
       "age": 23
     },
     {
-      "position": 59,
-      "name": "Caty Mcnally",
-      "country": "EUA",
-      "points": "1056",
+      "position": 61,
+      "name": "Zeynep Sonmez",
+      "country": "Turquia",
+      "points": "1042",
       "age": 24
     },
     {
-      "position": 60,
-      "name": "Magda Linette",
-      "country": "Polônia",
-      "points": "1051",
-      "age": 34
-    },
-    {
-      "position": 61,
+      "position": 62,
       "name": "Nikola Bartunkova",
       "country": "Rep. Tcheca",
-      "points": "1048",
+      "points": "1041",
       "age": 20
     },
     {
-      "position": 62,
+      "position": 63,
+      "name": "Tereza Valentova",
+      "country": "Rep. Tcheca",
+      "points": "1040",
+      "age": 19
+    },
+    {
+      "position": 64,
       "name": "Peyton Stearns",
       "country": "EUA",
       "points": "1035",
       "age": 24
     },
     {
-      "position": 63,
+      "position": 65,
+      "name": "Kamilla Rakhimova",
+      "country": "Uzbequistão",
+      "points": "1023",
+      "age": 24
+    },
+    {
+      "position": 66,
       "name": "Talia Gibson",
       "country": "Austrália",
-      "points": "1029",
+      "points": "1023",
       "age": 21
     },
     {
-      "position": 64,
+      "position": 67,
       "name": "Shuai Zhang",
       "country": "China",
       "points": "1015",
       "age": 37
     },
     {
-      "position": 65,
+      "position": 68,
       "name": "Panna Udvardy",
       "country": "Hungria",
-      "points": "1012",
+      "points": "1015",
       "age": 27
     },
     {
-      "position": 66,
+      "position": 69,
       "name": "Daria Kasatkina",
       "country": "Austrália",
       "points": "1009",
       "age": 29
     },
     {
-      "position": 67,
-      "name": "Zeynep Sonmez",
-      "country": "Turquia",
-      "points": "1001",
-      "age": 24
-    },
-    {
-      "position": 68,
+      "position": 70,
       "name": "Camila Osorio",
       "country": "Colômbia",
       "points": "988",
       "age": 24
     },
     {
-      "position": 69,
+      "position": 71,
       "name": "Anhelina Kalinina",
       "country": "Ucrânia",
       "points": "965",
       "age": 29
     },
     {
-      "position": 70,
-      "name": "Viktorija Golubic",
-      "country": "Suíça",
-      "points": "961",
-      "age": 33
-    },
-    {
-      "position": 71,
+      "position": 72,
       "name": "Varvara Gracheva",
       "country": "França",
       "points": "959",
       "age": 25
     },
     {
-      "position": 72,
-      "name": "Sonay Kartal",
-      "country": "Reino Unido",
-      "points": "949",
-      "age": 24
-    },
-    {
       "position": 73,
-      "name": "Katie Boulter",
-      "country": "Reino Unido",
-      "points": "941",
-      "age": 29
-    },
-    {
-      "position": 74,
       "name": "Kimberly Birrell",
       "country": "Austrália",
-      "points": "940",
+      "points": "939",
       "age": 28
     },
     {
-      "position": 75,
+      "position": 74,
       "name": "Anna Bondar",
       "country": "Hungria",
       "points": "936",
       "age": 29
     },
     {
+      "position": 75,
+      "name": "Daria Snigur",
+      "country": "Ucrânia",
+      "points": "928",
+      "age": 24
+    },
+    {
       "position": 76,
-      "name": "Donna Vekic",
-      "country": "Croácia",
-      "points": "933",
-      "age": 29
+      "name": "Viktorija Golubic",
+      "country": "Suíça",
+      "points": "927",
+      "age": 33
     },
     {
       "position": 77,
@@ -1243,163 +1243,163 @@
     },
     {
       "position": 78,
-      "name": "Kamilla Rakhimova",
-      "country": "Uzbequistão",
-      "points": "920",
-      "age": 24
-    },
-    {
-      "position": 79,
       "name": "Tamara Korpatsch",
       "country": "Alemanha",
       "points": "919",
       "age": 31
     },
     {
-      "position": 80,
-      "name": "Elsa Jacquemot",
-      "country": "França",
-      "points": "911",
-      "age": 23
-    },
-    {
-      "position": 81,
+      "position": 79,
       "name": "Alycia Parks",
       "country": "EUA",
       "points": "905",
       "age": 25
     },
     {
-      "position": 82,
+      "position": 80,
       "name": "Eva Lys",
       "country": "Alemanha",
       "points": "901",
       "age": 24
     },
     {
-      "position": 83,
+      "position": 81,
       "name": "Taylor Townsend",
       "country": "EUA",
-      "points": "899",
+      "points": "898",
       "age": 30
     },
     {
-      "position": 84,
-      "name": "Daria Snigur",
-      "country": "Ucrânia",
+      "position": 82,
+      "name": "Elsa Jacquemot",
+      "country": "França",
+      "points": "897",
+      "age": 23
+    },
+    {
+      "position": 83,
+      "name": "Sonay Kartal",
+      "country": "Reino Unido",
       "points": "889",
       "age": 24
     },
     {
-      "position": 85,
-      "name": "Anastasia Zakharova",
-      "country": "Rússia",
-      "points": "886",
-      "age": 24
-    },
-    {
-      "position": 86,
+      "position": 84,
       "name": "Lilli Tagger",
       "country": "Áustria",
       "points": "866",
       "age": 18
     },
     {
-      "position": 87,
+      "position": 85,
       "name": "Yulia Putintseva",
       "country": "Cazaquistão",
       "points": "858",
       "age": 31
     },
     {
-      "position": 88,
-      "name": "Elena-Gabriela Ruse",
-      "country": "Romênia",
-      "points": "858",
-      "age": 28
-    },
-    {
-      "position": 89,
+      "position": 86,
       "name": "Veronika Erjavec",
       "country": "Eslovênia",
-      "points": "853",
+      "points": "841",
       "age": 26
     },
     {
-      "position": 90,
+      "position": 87,
+      "name": "Karolina Pliskova",
+      "country": "Rep. Tcheca",
+      "points": "838",
+      "age": 34
+    },
+    {
+      "position": 88,
       "name": "Simona Waltert",
       "country": "Suíça",
       "points": "836",
       "age": 25
     },
     {
-      "position": 91,
+      "position": 89,
       "name": "Oksana Selekhmeteva",
       "country": "Espanha",
       "points": "835",
       "age": 23
     },
     {
-      "position": 92,
-      "name": "Sinja Kraus",
-      "country": "Áustria",
-      "points": "820",
+      "position": 90,
+      "name": "Anastasia Zakharova",
+      "country": "Rússia",
+      "points": "828",
       "age": 24
     },
     {
-      "position": 93,
+      "position": 91,
       "name": "Maria Timofeeva",
       "country": "Uzbequistão",
       "points": "810",
       "age": 22
     },
     {
-      "position": 94,
+      "position": 92,
+      "name": "Sinja Kraus",
+      "country": "Áustria",
+      "points": "808",
+      "age": 24
+    },
+    {
+      "position": 93,
       "name": "Lanlana Tararudee",
       "country": "Tailândia",
       "points": "799",
       "age": 21
     },
     {
-      "position": 95,
+      "position": 94,
       "name": "Ella Seidel",
       "country": "Alemanha",
       "points": "798",
       "age": 21
     },
     {
+      "position": 95,
+      "name": "Ashlyn Krueger",
+      "country": "EUA",
+      "points": "798",
+      "age": 22
+    },
+    {
       "position": 96,
+      "name": "Ajla Tomljanovic",
+      "country": "Austrália",
+      "points": "797",
+      "age": 33
+    },
+    {
+      "position": 97,
       "name": "Alina Korneeva",
       "country": "Rússia",
       "points": "793",
       "age": 18
     },
     {
-      "position": 97,
+      "position": 98,
       "name": "Hanne Vandewinkel",
       "country": "Bélgica",
-      "points": "785",
+      "points": "784",
       "age": 22
     },
     {
-      "position": 98,
+      "position": 99,
       "name": "Francesca Jones",
       "country": "Reino Unido",
       "points": "776",
       "age": 25
     },
     {
-      "position": 99,
+      "position": 100,
       "name": "Emiliana Arango",
       "country": "Colômbia",
       "points": "773",
-      "age": 25
-    },
-    {
-      "position": 100,
-      "name": "Xiyu Wang",
-      "country": "China",
-      "points": "766",
       "age": 25
     }
   ],
@@ -1523,7 +1523,7 @@
     "Novak Djokovic": {
       "age": 39,
       "style": "Completo",
-      "titles": "Títulos ATP: 24 Grand Slams, 40 Masters 1000, 7 ATP Finals, Ouro olímpico 2024",
+      "titles": "Títulos ATP: 24 Grand Slams (10x Australian Open, 7x Wimbledon, 4x US Open, 3x Roland Garros), 40 Masters 1000, 7 ATP Finals, Ouro olímpico 2024",
       "country": "Sérvia",
       "fact": "GOAT (estatístico).",
       "height": "1,88m",
@@ -4358,5 +4358,5 @@
     "goat_debate": "O debate do GOAT (Greatest Of All Time) é um dos mais acalorados do esporte. Os principais candidatos são:\n\n🇷🇸 Novak Djokovic — 24 Grand Slams, 99 títulos, 428 semanas como #1. Domínio absoluto em números.\n\n🇪🇸 Rafael Nadal — 22 Grand Slams, 14x Roland Garros (recorde em um único Slam). Rei indiscutível do saibro.\n\n🇨🇭 Roger Federer — 20 Grand Slams, 8x Wimbledon. Considerado o mais elegante e revolucionário.\n\nCada um dominou uma era e possui argumentos válidos. Djokovic lidera em estatísticas brutas, Nadal no saibro e Federer no estilo e longevidade competitiva.",
     "big_three": "Os Big Three (Federer, Nadal e Djokovic) dominaram o tênis por quase duas décadas (2003-2023), conquistando juntos 66 dos 80 Grand Slams disputados nesse período. É considerada a maior rivalidade esportiva da história moderna."
   },
-  "last_updated": "2026-06-14T17:53:51.163771"
+  "last_updated": "2026-06-15T23:55:13.005744"
 }
