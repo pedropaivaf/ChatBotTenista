@@ -945,23 +945,54 @@ body.presentation-mode .fullscreen-btn {
     0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
     30%           { transform: translateY(-5px); opacity: 1; }
 }
-.typing-label {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.5px;
-    max-width: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    opacity: 0;
-    transition: max-width 0.5s ease, opacity 0.4s ease;
+/* Widget "pesquisando" (efeito DeepSeek/Claude/Gemini): só aparece quando a base
+   passa a vez para a IA (estado .consulting). Some quando a base resolve em ms. */
+.researching { display: none; align-items: center; gap: 11px; }
+.typing-indicator.consulting .typing-dots { display: none; }
+.typing-indicator.consulting .researching { display: flex; animation: research-in 0.35s ease both; }
+@keyframes research-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+/* Lente com "sonar" (anéis que pulsam para fora) — sensação de varredura ativa */
+.research-lens {
+    position: relative; width: 17px; height: 17px;
+    display: inline-grid; place-items: center; flex-shrink: 0;
 }
-.typing-indicator.consulting .typing-label { max-width: 220px; opacity: 1; }
-.typing-indicator.consulting .typing-dots span { background: var(--llm-violet); }
+.research-lens-glyph { font-size: 12px; animation: lens-bob 1.6s ease-in-out infinite; filter: drop-shadow(0 0 3px var(--llm-glow)); }
+.research-lens::before, .research-lens::after {
+    content: ''; position: absolute; inset: -2px; border-radius: 50%;
+    border: 1.5px solid var(--llm-cyan); animation: sonar 1.8s ease-out infinite;
+}
+.research-lens::after { animation-delay: 0.9s; }
+@keyframes sonar { 0% { transform: scale(0.45); opacity: 0.75; } 100% { transform: scale(1.7); opacity: 0; } }
+@keyframes lens-bob { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(1px, -1.5px); } }
+
+/* Rótulo iridescente que cicla as etapas (shimmer violeta→ciano) */
+.research-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.4px;
+    white-space: nowrap; background: linear-gradient(90deg, var(--llm-violet), var(--llm-cyan), var(--llm-violet));
+    background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: label-shimmer 2.4s linear infinite;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.research-label.swap { opacity: 0; transform: translateY(-4px); }
+@keyframes label-shimmer { to { background-position: -200% center; } }
+
+/* Barra de varredura: um brilho que corre da esquerda p/ a direita em loop */
+.research-scan {
+    position: relative; flex: 1; min-width: 36px; max-width: 110px; height: 2px;
+    border-radius: 2px; background: rgba(125, 211, 252, 0.14); overflow: hidden;
+}
+.research-scan::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 38%; border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--llm-cyan), transparent);
+    animation: scan-run 1.3s ease-in-out infinite;
+}
+@keyframes scan-run { 0% { transform: translateX(-130%); } 100% { transform: translateX(330%); } }
 
 /* Presentation mode: badge maior */
 body.presentation-mode .llm-badge { font-size: 0.78rem; padding: 6px 14px 6px 10px; }
-body.presentation-mode .typing-label { font-size: 0.95rem; }
+body.presentation-mode .research-label { font-size: 0.92rem; }
 
 /* =====================================================================
    AMBIÊNCIA & MOVIMENTO — orbes flutuantes, entrada cinematográfica,
@@ -1306,3 +1337,86 @@ details.search-chat:not([open]) .search-chat-sum::after { transform: rotate(-90d
 .search-chat-body { padding: 2px 11px 10px; border-top: 1px solid rgba(125, 211, 252, 0.12); }
 .search-chat .search-source { margin: 8px 0 0; }
 .search-chat .search-query { padding: 8px 2px 2px; border: none; }
+
+/* ----- Efeitos do painel "Pesquisou na web" (entrada + varredura + sonar) ----- */
+/* Entrada do painel: fade + leve subida, com um facho de luz varrendo o topo (scanline) */
+.search-chat { position: relative; animation: sc-panel-in 0.42s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes sc-panel-in { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+.search-chat::before {
+    content: ''; position: absolute; top: 0; left: -45%; width: 45%; height: 2px; z-index: 3;
+    background: linear-gradient(90deg, transparent, var(--llm-cyan), transparent);
+    animation: sc-sweep 1.15s ease-out 0.1s 1 both;
+}
+@keyframes sc-sweep { to { left: 100%; } }
+
+/* Lente "🔎" no cabeçalho com sonar lento (respira mesmo após concluir) */
+.search-chat-lens { position: relative; display: inline-grid; place-items: center; width: 16px; height: 16px; flex-shrink: 0; }
+.search-chat-lens-glyph { font-size: 0.82rem; line-height: 1; }
+.search-chat-lens::after {
+    content: ''; position: absolute; inset: -3px; border-radius: 50%;
+    border: 1.5px solid var(--accent-color); opacity: 0; animation: sonar 2.6s ease-out infinite;
+}
+
+/* Corpo abre com slide suave; as fontes entram escalonadas ("chegando" uma a uma) */
+.search-chat[open] .search-chat-body { animation: sc-body-down 0.4s ease both; transform-origin: top; }
+@keyframes sc-body-down { from { opacity: 0; transform: scaleY(0.96) translateY(-4px); } to { opacity: 1; transform: none; } }
+/* Timeline de fontes (Claude/DeepSeek): bolinhas conectadas por uma linha vertical;
+   cada bloco é revelado por vez via JS (classe .in) com um "ping" na bolinha (.pulse). */
+.search-timeline { position: relative; padding: 8px 2px 4px 2px; }
+.search-timeline::before {
+    content: ''; position: absolute; left: 9px; top: 13px; bottom: 13px; width: 2px; border-radius: 2px;
+    background: linear-gradient(180deg, rgba(125, 211, 252, 0.55), rgba(125, 211, 252, 0.10));
+}
+.stl-item {
+    position: relative; display: block; padding-left: 28px; margin: 0 0 9px; text-decoration: none;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.42s cubic-bezier(.22,.61,.36,1);
+}
+.stl-item:last-child { margin-bottom: 2px; }
+.stl-item.in { opacity: 1; transform: none; }
+/* saída sequencial: cada fonte some deslizando para a esquerda; a bolinha encolhe */
+.stl-item.out {
+    opacity: 0; transform: translateX(-18px) scale(0.96);
+    transition: opacity 0.4s ease, transform 0.45s cubic-bezier(.55, 0, .67, 0);
+}
+.stl-item.out .stl-dot { transform: scale(0.4); border-color: rgba(125, 211, 252, 0.2); box-shadow: none; }
+.stl-dot {
+    position: absolute; left: 4px; top: 6px; width: 12px; height: 12px; border-radius: 50%; z-index: 1;
+    background: #0b1622; border: 2px solid rgba(125, 211, 252, 0.4); transition: all 0.3s ease;
+}
+.stl-item.in .stl-dot {
+    border-color: var(--llm-cyan); background: radial-gradient(circle, #c8f6ff, var(--llm-cyan));
+    box-shadow: 0 0 8px rgba(34, 211, 238, 0.55);
+}
+.stl-item.pulse .stl-dot::after {
+    content: ''; position: absolute; inset: -2px; border-radius: 50%; animation: stl-ping 0.65s ease-out;
+}
+@keyframes stl-ping { 0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.55); } 100% { box-shadow: 0 0 0 11px rgba(34, 211, 238, 0); } }
+.stl-query .search-query { padding: 0; border: none; }
+.stl-card {
+    background: rgba(0, 0, 0, 0.30); border: 1px solid rgba(125, 211, 252, 0.14); border-radius: 8px;
+    padding: 7px 9px; transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+a.stl-item:hover .stl-card { border-color: rgba(125, 211, 252, 0.42); background: rgba(125, 211, 252, 0.06); transform: translateX(2px); }
+a.stl-item:hover .search-source-title { text-decoration: underline; }
+
+/* Recolher suave (auto, depois da coreografia) */
+.search-chat.closing .search-chat-body { animation: sc-body-up 0.42s ease forwards; overflow: hidden; }
+@keyframes sc-body-up {
+    from { opacity: 1; max-height: 640px; }
+    to   { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; }
+}
+
+.search-chat-sum:hover .search-chat-title {
+    background: linear-gradient(90deg, var(--llm-violet), var(--llm-cyan));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .research-lens::before, .research-lens::after, .research-scan::after,
+    .research-label, .research-lens-glyph, .search-chat::before, .search-chat-lens::after,
+    .search-chat[open] .search-chat-body, .search-chat, .stl-item, .stl-item.pulse .stl-dot::after { animation: none; }
+    .research-label { -webkit-text-fill-color: #cfe6f5; color: #cfe6f5; }
+    /* timeline visível de imediato (sem depender da transição) */
+    .stl-item { opacity: 1; transform: none; transition: none; }
+}

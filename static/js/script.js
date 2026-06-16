@@ -77,13 +77,51 @@ document.addEventListener('DOMContentLoaded', () => {
         dots.appendChild(createEl('span'));
         dots.appendChild(createEl('span'));
         ind.appendChild(dots);
-        ind.appendChild(createEl('span', 'typing-label', 'consultando o modelo de IA…'));
+
+        // Widget "pesquisando" (revelado quando a base passa a vez para a IA) — efeito
+        // estilo DeepSeek/Claude/Gemini: lente com "sonar", rótulo iridescente que cicla
+        // as etapas (Wikipedia → DuckDuckGo → análise…) e uma barra de varredura em loop.
+        const research = createEl('div', 'researching');
+        const lens = createEl('span', 'research-lens');
+        lens.appendChild(createEl('span', 'research-lens-glyph', '🔎'));
+        const label = createEl('span', 'research-label', 'Pesquisando na web…');
+        const scan = createEl('span', 'research-scan');
+        research.appendChild(lens);
+        research.appendChild(label);
+        research.appendChild(scan);
+        ind.appendChild(research);
+
         bubble.appendChild(ind);
         messageDiv.appendChild(bubble);
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        const timer = setTimeout(() => ind.classList.add('consulting'), 900);
-        return { messageDiv, timer };
+
+        const phrases = ['Pesquisando na web…', 'Lendo a Wikipedia…',
+                         'Consultando o DuckDuckGo…', 'Analisando as fontes…',
+                         'Compondo a resposta…'];
+        const handle = { messageDiv, timer: null, interval: null };
+        handle.timer = setTimeout(() => {
+            ind.classList.add('consulting');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            let pi = 0;
+            handle.interval = setInterval(() => {
+                pi = (pi + 1) % phrases.length;
+                label.classList.add('swap');           // fade-out
+                setTimeout(() => {                      // troca o texto e fade-in
+                    label.textContent = phrases[pi];
+                    label.classList.remove('swap');
+                }, 220);
+            }, 1500);
+        }, 900);
+        return handle;
+    };
+
+    // Remove o indicador de "pensando/pesquisando" e limpa os timers (evita vazamento).
+    const stopTyping = (h) => {
+        if (!h) return;
+        if (h.timer) clearTimeout(h.timer);
+        if (h.interval) clearInterval(h.interval);
+        if (h.messageDiv) h.messageDiv.remove();
     };
 
     // Constrói o "inspetor de API" da chamada ao LLM: requisição -> resposta -> métricas
@@ -195,31 +233,89 @@ document.addEventListener('DOMContentLoaded', () => {
     // resposta — "🔎 Pesquisou na web · N fontes ▾" que expande para ver o que a IA leu.
     const buildSearchChatPanel = (search) => {
         const det = createEl('details', 'search-chat');
+        det.open = true;  // começa ABERTO (mantém o toggle do summary para encolher)
         const sum = createEl('summary', 'search-chat-sum');
-        sum.appendChild(createEl('span', 'search-chat-title', '🔎 Pesquisou na web'));
+        const lens = createEl('span', 'search-chat-lens');     // lente com "sonar" suave
+        lens.appendChild(createEl('span', 'search-chat-lens-glyph', '🔎'));
+        sum.appendChild(lens);
+        sum.appendChild(createEl('span', 'search-chat-title', 'Pesquisou na web'));
         const n = (search.sources || []).length;
         sum.appendChild(createEl('span', 'search-chat-count', '· ' + n + (n === 1 ? ' fonte' : ' fontes')));
         det.appendChild(sum);
 
+        // Corpo = TIMELINE (estilo Claude/DeepSeek): bolinhas ligadas por uma linha; cada
+        // bloco (consulta + fontes) é revelado UM POR VEZ, mesmo já tendo a resposta.
         const wrap = createEl('div', 'search-chat-body');
+        const tl = createEl('div', 'search-timeline');
+        const items = [];
+
         if (search.query) {
+            const it = createEl('div', 'stl-item stl-query');
+            it.appendChild(createEl('span', 'stl-dot'));
             const q = createEl('div', 'search-query');
             q.appendChild(createEl('span', 'search-query-label', 'buscou por'));
             q.appendChild(createEl('span', 'search-query-text', '“' + search.query + '”'));
-            wrap.appendChild(q);
+            it.appendChild(q);
+            tl.appendChild(it); items.push(it);
         }
         (search.sources || []).forEach((s) => {
-            const row = createEl('a', 'search-source');
+            const row = createEl('a', 'stl-item');
             if (s.url) { row.href = s.url; row.target = '_blank'; row.rel = 'noopener noreferrer'; }
+            row.appendChild(createEl('span', 'stl-dot'));
+            const card = createEl('div', 'stl-card');
             const eng = (s.engine || '').toLowerCase().indexOf('wiki') >= 0 ? 'wiki' : 'ddg';
             const top = createEl('div', 'search-source-top');
             top.appendChild(createEl('span', 'search-engine se-' + eng, s.engine || 'web'));
             top.appendChild(createEl('span', 'search-source-title', s.title || s.url || ''));
-            row.appendChild(top);
-            if (s.snippet) row.appendChild(createEl('div', 'search-snippet', s.snippet));
-            wrap.appendChild(row);
+            card.appendChild(top);
+            if (s.snippet) card.appendChild(createEl('div', 'search-snippet', s.snippet));
+            row.appendChild(card);
+            tl.appendChild(row); items.push(row);
         });
+        wrap.appendChild(tl);
         det.appendChild(wrap);
+
+        // --- Coreografia (suave, à la Claude/DeepSeek): revela cada ponto POR VEZ com
+        // um respiro entre eles, segura para leitura, depois faz as fontes SUMIREM em
+        // sequência (de baixo p/ cima) e só então recolhe deixando só a resposta. ---
+        const STEP = 760, HOLD = 2200, OUT_STEP = 150;
+        const timers = [];
+        let cancelled = false;
+        const revealAll = () => items.forEach(it => { it.classList.remove('out'); it.classList.add('in'); });
+        // 1) entrada escalonada (bolinha acende com um "ping")
+        items.forEach((it, i) => {
+            timers.push(setTimeout(() => {
+                if (cancelled) return;
+                it.classList.add('in', 'pulse');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                setTimeout(() => it.classList.remove('pulse'), 700);
+            }, 320 + i * STEP));
+        });
+        const revealDone = 320 + items.length * STEP;
+        // 2) após segurar, saída sequencial das fontes (somem uma a uma, de baixo p/ cima)
+        timers.push(setTimeout(() => {
+            if (cancelled || !det.open) return;
+            const rev = items.slice().reverse();
+            rev.forEach((it, k) => {
+                timers.push(setTimeout(() => { if (!cancelled) it.classList.add('out'); }, k * OUT_STEP));
+            });
+            const outDone = rev.length * OUT_STEP + 380;
+            // 3) recolhe suave deixando só a resposta (resumo continua clicável p/ reabrir)
+            timers.push(setTimeout(() => {
+                if (cancelled || !det.open) return;
+                det.classList.add('closing');
+                setTimeout(() => {
+                    det.classList.remove('closing');
+                    det.open = false;
+                    items.forEach(it => it.classList.remove('out'));  // pronto p/ reabrir limpo
+                }, 440);
+            }, outDone));
+        }, revealDone + HOLD));
+        // Se o usuário interagir com o resumo, cancela a automação e mostra tudo na hora.
+        sum.addEventListener('click', () => {
+            cancelled = true; timers.forEach(clearTimeout); revealAll();
+        }, { once: true });
+
         return det;
     };
 
@@ -389,8 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
-            clearTimeout(typing.timer);
-            typing.messageDiv.remove();
+            stopTyping(typing);
 
             // Detecta se a resposta veio do LLM (passo "LLM · LM Studio" com sucesso)
             const llmStep = Array.isArray(data.pipeline)
@@ -416,8 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Erro:', error);
-            clearTimeout(typing.timer);
-            typing.messageDiv.remove();
+            stopTyping(typing);
             addMessage('Ops, algo deu errado no servidor. Tente novamente.', 'bot');
         } finally {
             userInput.disabled = false;
