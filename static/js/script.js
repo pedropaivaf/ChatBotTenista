@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const q = createEl('div', 'search-query');
             q.appendChild(createEl('span', 'search-query-label', 'buscou por'));
             q.appendChild(createEl('span', 'search-query-text', '“' + search.query + '”'));
+            if (search.context) q.appendChild(createEl('span', 'search-context', '🎯 ' + search.context));
             card.appendChild(q);
         }
 
@@ -255,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const q = createEl('div', 'search-query');
             q.appendChild(createEl('span', 'search-query-label', 'buscou por'));
             q.appendChild(createEl('span', 'search-query-text', '“' + search.query + '”'));
+            if (search.context) q.appendChild(createEl('span', 'search-context', '🎯 ' + search.context));
             it.appendChild(q);
             tl.appendChild(it); items.push(it);
         }

@@ -203,29 +203,39 @@ def _ddg_enabled():
     return os.getenv("WEB_DDG_ENABLED", "1").strip() == "1"
 
 
+def _parse_ddg_html(html, max_results=3):
+    """Extrai [{title, url, snippet}] do HTML do DuckDuckGo. Função PURA (sem rede) p/ ser
+    testável. ROBUSTEZ: o link primário vem pela classe `result__a`; se o DDG mudar a classe,
+    cai no fallback ESTRUTURAL (qualquer âncora com o redirect `uddg=`). O snippet é OPCIONAL
+    — um resultado entra com título+url mesmo sem snippet (antes, se a classe `result__snippet`
+    mudasse, TODOS os resultados eram descartados pela exigência de snippet)."""
+    from urllib.parse import unquote
+    links = re.findall(r'result__a"[^>]*href="(.*?)"[^>]*>(.*?)</a>', html, re.S)
+    if not links:  # fallback: âncoras com o redirect uddg= (independe do nome da classe CSS)
+        links = re.findall(r'href="([^"]*uddg=[^"]*)"[^>]*>(.*?)</a>', html, re.S)
+    snips = re.findall(r'result__snippet[^>]*>(.*?)</a>', html, re.S)
+    out = []
+    for i, (href, title) in enumerate(links[:max_results]):
+        t = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', title)).strip()
+        s = ""
+        if i < len(snips):
+            s = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', snips[i])).strip()
+        url = href
+        mu = re.search(r'uddg=([^&]+)', href)   # DDG usa redirect: extrai o URL real
+        if mu:
+            url = unquote(mu.group(1))
+        if t:   # título basta; snippet pode faltar se o DDG mudar a classe (degrada melhor)
+            out.append({"title": t, "url": url, "snippet": s[:280]})
+    return out
+
+
 def _ddg_search(query, max_results=3):
-    """Busca web no DuckDuckGo (HTML) → lista [{title, url, snippet}]. [] em falha."""
+    """Busca web no DuckDuckGo (HTML) → lista [{title, url, snippet}]. [] em falha/sem rede."""
     try:
-        from urllib.parse import unquote
         r = requests.post("https://html.duckduckgo.com/html/", data={"q": query},
                           headers=_DDG_HEADERS, timeout=WEB_SEARCH_TIMEOUT)
         r.raise_for_status()
-        html = r.text
-        links = re.findall(r'result__a"[^>]*href="(.*?)"[^>]*>(.*?)</a>', html, re.S)
-        snips = re.findall(r'result__snippet[^>]*>(.*?)</a>', html, re.S)
-        out = []
-        for i, (href, title) in enumerate(links[:max_results]):
-            t = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', title)).strip()
-            s = ""
-            if i < len(snips):
-                s = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', snips[i])).strip()
-            url = href
-            mu = re.search(r'uddg=([^&]+)', href)   # DDG usa redirect: extrai o URL real
-            if mu:
-                url = unquote(mu.group(1))
-            if t and s:
-                out.append({"title": t, "url": url, "snippet": s[:280]})
-        return out
+        return _parse_ddg_html(r.text, max_results)
     except Exception:
         return []
 
@@ -248,35 +258,52 @@ _FOOTWEAR_RE = re.compile(
     r'|t[êe]nis\s+(que|d[oae]|usad|nike|adidas|asics|nos\s+p[ée]s)',
     re.IGNORECASE)
 
-# (regex de gatilho, template de busca). ORDEM IMPORTA — mais específico primeiro.
-# 'raqueteira' é checado ANTES de 'raquete' (uma contém a outra como substring).
-CONTEXT_QUERY_RULES = [
+# Regras de EQUIPAMENTO: (regex, rótulo p/ exibir, termo canônico, template de busca).
+# ORDEM IMPORTA — mais específico primeiro. 'raqueteira' antes de 'raquete' (uma contém a
+# outra como substring; o \b já protege, mas a ordem reforça). O rótulo é mostrado no
+# painel ("contexto entendido"); o termo canônico é usado ao COMBINAR vários equipamentos.
+_EQUIP_RULES = [
+    (_FOOTWEAR_RE, "calçado", "tênis calçado", "tênis calçado que usa nos jogos"),
     (re.compile(r'\b(raqueteiras?|mochilas?|bolsas?|bag|malas?)\b', re.IGNORECASE),
-     "raqueteira bag mochila"),
+     "raqueteira", "raqueteira", "raqueteira bag mochila"),
     (re.compile(r'\b(cordas?|encordoamento|strings?)\b', re.IGNORECASE),
-     "cordas encordoamento tensão"),
+     "cordas", "cordas", "cordas encordoamento tensão"),
     (re.compile(r'\b(raquetes?)\b', re.IGNORECASE),
-     "raquete que usa"),
+     "raquete", "raquete", "raquete que usa"),
     (re.compile(r'\b(roupas?|vestu[áa]rio|camisas?|camisetas?|uniforme|outfit|'
                 r'patroc[íi]nio|patrocinador(?:es)?|patrocinad[ao]s?|patrocina|bon[ée])\b',
                 re.IGNORECASE),
-     "roupa vestuário patrocínio"),
+     "roupa/patrocínio", "roupa patrocínio", "roupa vestuário patrocínio"),
 ]
+
+
+def _match_equipment(raw):
+    """Equipamentos detectados na pergunta → lista de (rótulo, termo, template), na ordem
+    das regras (mais específico primeiro). Vazio = nenhum contexto de equipamento."""
+    return [(label, term, tmpl) for rx, label, term, tmpl in _EQUIP_RULES if rx.search(raw)]
+
+
+def _detected_context(query):
+    """Rótulo humano do(s) contexto(s) de equipamento detectado(s), p/ exibir no painel —
+    ou None quando a pergunta não é sobre equipamento (usa a busca crua)."""
+    m = _match_equipment((query or "").strip())
+    return " + ".join(label for label, _, _ in m) if m else None
 
 
 def _targeted_ddg_query(query, player_hint=None):
     """Monta a busca DDG direcionada ao contexto da pergunta, ancorada no jogador.
-    Sem jogador OU sem contexto reconhecido → devolve a query crua (comportamento atual,
-    que já acerta namorada/lesão/treinador/curiosidade/confronto)."""
+    Sem jogador OU sem equipamento reconhecido → query crua (já acerta namorada/lesão/
+    treinador/curiosidade/confronto). VÁRIOS equipamentos na mesma pergunta → combina os
+    termos (ex.: 'raquete e corda' → '{jogador} cordas raquete'), sem perder nenhum."""
     raw = (query or "").strip()
     if not player_hint:
         return raw
-    if _FOOTWEAR_RE.search(raw):
-        return f"{player_hint} tênis calçado que usa nos jogos"
-    for rule, template in CONTEXT_QUERY_RULES:
-        if rule.search(raw):
-            return f"{player_hint} {template}"
-    return raw
+    m = _match_equipment(raw)
+    if not m:
+        return raw
+    if len(m) == 1:
+        return f"{player_hint} {m[0][2]}"                        # template rico (1 contexto)
+    return f"{player_hint} " + " ".join(term for _, term, _ in m)  # combina (2+ contextos)
 
 
 def search_tennis(query, player_hint=None):
@@ -332,7 +359,8 @@ def search_tennis(query, player_hint=None):
             # Inclui o TÍTULO além do snippet: muitas vezes o fato decisivo vive no
             # título do resultado (ex.: "Sabalenka anunció que se casa con…") e o snippet
             # traz só contexto vago. Sem o título, o LLM dizia "não há informação".
-            parts.append("Resultados da web (DuckDuckGo):\n" + "\n".join(f"- {w['title']}: {w['snippet']}" for w in web))
+            parts.append("Resultados da web (DuckDuckGo):\n" + "\n".join(
+                (f"- {w['title']}: {w['snippet']}" if w['snippet'] else f"- {w['title']}") for w in web))
             for w in web:
                 sources.append({"engine": "DuckDuckGo", **w})
             _dbg(f"[WEB_SEARCH] DuckDuckGo '{ddg_q}' → {len(web)} resultado(s)")  # debug no terminal
@@ -341,6 +369,7 @@ def search_tennis(query, player_hint=None):
         _dbg(f"[WEB_SEARCH] Nada confiável para '{target}'")  # debug no terminal
         return None
 
-    result = {"text": "\n\n".join(parts), "sources": sources, "query": (query or target)}
+    result = {"text": "\n\n".join(parts), "sources": sources, "query": (query or target),
+              "context": _detected_context(query or target)}
     _CACHE[cache_key] = result
     return result

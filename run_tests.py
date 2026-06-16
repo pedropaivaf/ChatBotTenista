@@ -944,6 +944,53 @@ expect_query('29.12', 'qual a raquete?', None, ['qual a raquete?'], ['que usa'])
 # =====================================================================
 print()
 print('='*70)
+print('BATERIA 30: Combinação de equipamentos, rótulo de contexto e parser DDG robusto')
+print('='*70)
+# 30.01/30.02 — VÁRIOS equipamentos na mesma pergunta: combina os termos (não perde nenhum)
+expect_query('30.01', 'qual a raquete e a corda do sinner?', 'Jannik Sinner', ['raquete', 'cordas'])
+expect_query('30.02', 'me fala da raqueteira e do tênis do alcaraz', 'Carlos Alcaraz', ['raqueteira', 'calçado'])
+# 30.03-07 — rótulo de contexto exibido no painel (_detected_context)
+def expect_ctx(tid, question, expected):
+    global TOTAL, FAILS
+    TOTAL += 1
+    got = _ws._detected_context(question)
+    ok = (got == expected)
+    print(f'  [{"OK" if ok else "FAIL"}] {tid}: contexto("{question}") = {got!r} (esperado {expected!r})')
+    if not ok:
+        FAILS.append({'t': tid, 'm': question, 'r': f'esperado {expected!r}', 'g': str(got)})
+expect_ctx('30.03', 'qual o tênis do alcaraz?', 'calçado')
+expect_ctx('30.04', 'qual a raqueteira do sinner?', 'raqueteira')
+expect_ctx('30.05', 'qual a corda do sinner?', 'cordas')
+expect_ctx('30.06', 'qual a raquete do alcaraz?', 'raquete')
+expect_ctx('30.07', 'a sabalenka é casada?', None)   # sem equipamento → sem rótulo (busca crua)
+# 30.08-10 — parser DDG ROBUSTO (função pura, sem rede): tolera mudança de classe CSS
+def expect_parse(tid, html, n_expected, must_have_title=None):
+    global TOTAL, FAILS
+    TOTAL += 1
+    out = _ws._parse_ddg_html(html, max_results=3)
+    ok = (len(out) == n_expected)
+    if ok and must_have_title:
+        ok = any(must_have_title.lower() in r['title'].lower() for r in out)
+    print(f'  [{"OK" if ok else "FAIL"}] {tid}: parse -> {len(out)} resultado(s) {[r["title"][:24] for r in out]}')
+    if not ok:
+        FAILS.append({'t': tid, 'm': tid, 'r': f'n={n_expected} title~{must_have_title}', 'g': str(out)[:120]})
+# HTML normal (result__a + result__snippet)
+expect_parse('30.08',
+    '<a class="result__a" href="//duckduckgo.com/l/?uddg=https%3A%2F%2Fex.com%2Fa">Raquete do Sinner</a>'
+    '<a class="result__snippet" href="#">Head Speed MP</a>', 1, 'Raquete do Sinner')
+# Snippet SUMIU (classe mudou): antes descartava TUDO; agora mantém título+url
+expect_parse('30.09',
+    '<a class="result__a" href="//duckduckgo.com/l/?uddg=https%3A%2F%2Fex.com%2Fb">Tênis Nike do Alcaraz</a>',
+    1, 'Tênis Nike')
+# Classe result__a MUDOU: fallback estrutural pelo redirect uddg=
+expect_parse('30.10',
+    '<a class="x123" href="/l/?uddg=https%3A%2F%2Fex.com%2Fc">Raqueteira Head Pro</a>',
+    1, 'Raqueteira Head Pro')
+
+
+# =====================================================================
+print()
+print('='*70)
 total_pass = TOTAL - len(FAILS)
 print(f'RESULTADO FINAL: {total_pass}/{TOTAL} passaram ({len(FAILS)} falhas)')
 if FAILS:

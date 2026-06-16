@@ -230,7 +230,8 @@ def build_grounding(msg_lower, player_name=None, force_web=False):
         if (force_web or not grounded_player) and llm_client._enabled() and web_search.enabled():
             retrieved = web_search.search_tennis(msg_lower, player_hint=player_name)
             if retrieved:
-                search_meta = {"sources": retrieved.get("sources", []), "query": retrieved.get("query")}
+                search_meta = {"sources": retrieved.get("sources", []), "query": retrieved.get("query"),
+                               "context": retrieved.get("context")}
 
         # (a) Perfil LOCAL do jogador. Campos neutros (país/idade/estilo) sempre; títulos e
         # curiosidade SÓ quando NÃO temos a Wikipedia daquele jogador (evita texto stale).

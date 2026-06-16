@@ -1288,6 +1288,13 @@ body::before {
     flex-shrink: 0;
 }
 .search-query-text { font-size: 0.68rem; color: #cfe6f5; font-style: italic; }
+/* Chip do "contexto entendido" (🎯 calçado/raqueteira/cordas…) — mostra que a IA
+   compreendeu o tipo de equipamento e direcionou a busca, não só repetiu a pergunta. */
+.search-context {
+    margin-left: auto; flex-shrink: 0; font-size: 0.58rem; font-weight: 700;
+    color: #0b1118; background: #b6f24a; border-radius: 999px; padding: 1px 8px;
+    letter-spacing: 0.3px; white-space: nowrap;
+}
 .search-sec-title {
     font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
     color: #93c9ec; padding: 7px 10px; cursor: pointer; list-style: none; user-select: none;
