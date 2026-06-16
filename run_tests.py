@@ -7,10 +7,11 @@ posição no ranking, next gen, regras detalhadas.
 """
 import sys, re, os
 sys.stdout.reconfigure(encoding='utf-8')
-# Garante o fallback LLM DESLIGADO durante os testes (determinismo). Como o
-# python-dotenv não sobrescreve variáveis já presentes, isto vence qualquer .env
-# e mantém as respostas canned esperadas pelos testes. Meta: 170/170.
+# Garante o fallback LLM e a PESQUISA web DESLIGADOS durante os testes (determinismo,
+# sem rede). Como o python-dotenv não sobrescreve variáveis já presentes, isto vence
+# qualquer .env e mantém as respostas canned esperadas pelos testes.
 os.environ["LLM_ENABLED"] = "0"
+os.environ["WEB_SEARCH_ENABLED"] = "0"
 import app as app_module
 client = app_module.app.test_client()
 
@@ -749,6 +750,41 @@ expect('23.03', 'Quantos Grand Slams o Boris Becker conquistou?', 'fact3',
 # NÃO-REGRESSÃO: pedido LEGÍTIMO de campeões genéricos ainda funciona
 chat('ranking atp', 'fact4')
 expect('23.04', 'quem ganhou os grand slams', 'fact4', ['Campeões'])
+
+
+# =====================================================================
+print()
+print('='*70)
+print('BATERIA 24: Curiosidade/fato sobre JOGADOR → IA (sem despejar a ficha)')
+print('='*70)
+# Com LLM e WEB_SEARCH desligados (determinismo), a curiosidade de jogador roteia à IA
+# e cai no canned ("indisponível"). O que se testa aqui é o ROTEAMENTO: NÃO exibir a
+# ficha (sem "(ATP)"/"(WTA)"). Curiosidade GENÉRICA (sem jogador) segue na base.
+# 24.01 — fresco, jogador nomeado → curiosidade (canned), NÃO a ficha
+expect('24.01', 'me conta uma curiosidade sobre o Sinner', 'cur1',
+       ['indisponível'], ['(ATP)', '(WTA)'])
+# 24.02 — após a ficha (pending=player_detail), via PRONOME → NÃO re-exibe a ficha
+chat('quem é o Alcaraz?', 'cur2')
+expect('24.02', 'me conta uma curiosidade sobre ele', 'cur2',
+       ['indisponível'], ['(ATP)', '(WTA)'])
+# 24.03 — curiosidade GENÉRICA (sem jogador) → curiosidade da BASE (não-regressão)
+expect('24.03', 'me conta uma curiosidade', 'cur3', None, ['indisponível'])
+# 24.04 — NÃO-REGRESSÃO: "quem é o Sinner" (sem curiosidade) AINDA mostra a ficha
+expect('24.04', 'quem é o Sinner?', 'cur4', ['Jannik Sinner', '(ATP)'])
+# 24.05 — Pergunta sobre jogador ALÉM da base (raquete) → IA, NÃO a ficha
+expect('24.05', 'qual a raquete que o Sinner usa?', 'cur5', ['indisponível'], ['(ATP)', '(WTA)'])
+# 24.06 — Atributo fora da base SEM palavra-interrogativa ("tem namorada") → IA, NÃO ficha
+expect('24.06', 'o Alcaraz tem namorada?', 'cur6', ['indisponível'], ['(ATP)', '(WTA)'])
+# 24.07 — Pergunta-LISTA geral → IA, NÃO a ficha (mesmo em contexto de jogador)
+chat('quem é o Fonseca?', 'cur7')
+expect('24.07', 'cite 10 jogadores canhotos', 'cur7', ['indisponível'], ['(ATP)', '(WTA)'])
+# 24.08 — NÃO-REGRESSÃO: campo da base ("altura") AINDA é respondido pela base
+expect('24.08', 'qual a altura do Sinner?', 'cur8', ['Sinner'], ['indisponível'])
+# 24.09 — Head-to-head (confronto direto) → IA, NÃO a ficha de um jogador
+expect('24.09', 'o Sinner já jogou contra o Alcaraz?', 'cur9', ['indisponível'], ['(ATP)', '(WTA)'])
+# 24.10 — NÃO-REGRESSÃO: comparação legítima (em contexto) ainda mostra fichas pela base
+chat('quem é o Sinner?', 'cur10')
+expect('24.10', 'comparar com o Alcaraz', 'cur10', ['Sinner', 'Alcaraz'])
 
 
 # =====================================================================

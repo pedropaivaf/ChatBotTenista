@@ -5,9 +5,11 @@
 Arquitetura **cliente-servidor** com Flask no backend, **PLN clássico (NLTK)** e uma
 **árvore de decisão contextual** (memória de até 20 turnos) para o núcleo do domínio, mais
 um **LLM local (Qwen2.5-7B via LM Studio)** como **fallback** para perguntas de tênis fora
-da base. O bot é **fechado no tema tênis** — off-topic é bloqueado.
+da base. O fallback tem **"modo pesquisa"**: quando a base não cobre, o bot **busca o fato na
+Wikipedia** (`web_search.py`) e injeta como grounding (responde da fonte, não da memória). O bot
+é **fechado no tema tênis** — off-topic é bloqueado.
 
-**Total: ~3.470 linhas de Python em 8 módulos da aplicação + 765 linhas de testes (312 testes).**
+**Total: ~3.620 linhas de Python em 9 módulos da aplicação + ~810 linhas de testes (322 testes).**
 
 ---
 
@@ -39,6 +41,12 @@ da base. O bot é **fechado no tema tênis** — off-topic é bloqueado.
 - Sentinela `FORA_DO_TEMA`: se o modelo julgar a pergunta fora de tênis, o app bloqueia.
 - Métricas em `llm_metrics.json` + endpoint `/metrics`. **Degradação graciosa**: tudo
   retorna `None` quando `LLM_ENABLED!=1` ou o servidor está fora. Ver [LLM_HYBRID.md](LLM_HYBRID.md).
+
+### 4-B. Cliente de Pesquisa (`web_search.py` — ~150 linhas) — **modo pesquisa (v4)**
+- `search_tennis(query, player_hint=None)`: busca o fato de tênis na **Wikipedia** (MediaWiki
+  search + REST summary, PT→EN), com cache (só sucessos) e **desambiguação** (só aceita resumo
+  com sinal de tênis → senão `None`, honestidade). Acionado por `app.build_grounding` no
+  fallback/curiosidade. **Degradação graciosa** (`WEB_SEARCH_ENABLED=0` ou sem rede → `None`).
 
 ### 5. Cliente de Dados (`api_client.py` — 416 linhas)
 - **ATP**: scraping `tennisexplorer.com` (2 páginas, Top 100).
@@ -102,11 +110,13 @@ Mensagem do Usuário
         |
   [7] Motor de Dados (ranking, jogador, campeões, recordes, posição, país)
         |
+  [7.5] Curiosidade/fato sobre JOGADOR → IA (grounding perfil + PESQUISA Wikipedia), SEM ficha
+        |
   [8] Roteador "quantos … slam/torneio" → LLM (Fix B)
         |
   [9] Intent Matching (knowledge_base.json, 50% / 65% com contexto)
         |
-  [10] Fallback final → LLM (tênis fora da base)  ── FORA_DO_TEMA? → BLOQUEIA
+  [10] Fallback final → LLM (tênis fora da base, com grounding + PESQUISA Wikipedia) ── FORA_DO_TEMA? → BLOQUEIA
         |
   [11] LLM indisponível → resposta canned (degradação graciosa)
         |
@@ -122,11 +132,11 @@ Mensagem do Usuário
 
 ```
                          app.py (Orquestrador, /predict, /metrics)
-        ┌────────────┬──────────┬───────────┬────────────┬───────────┐
-   nltk_utils.py  engine.py  llm_client.py  api_client.py  query_parser.py
-                     │            │              │
-              tennis_data.json  LM Studio   tennisexplorer / wtatennis
-                     │         (Qwen2.5)
+        ┌────────────┬──────────┬───────────┬────────────┬───────────┬────────────┐
+   nltk_utils.py  engine.py  llm_client.py  web_search.py  api_client.py  query_parser.py
+                     │            │              │              │
+              tennis_data.json  LM Studio    Wikipedia   tennisexplorer / wtatennis
+                     │         (Qwen2.5)    (REST/MediaWiki)
               decision_tree.py
                      │
               session_manager.py

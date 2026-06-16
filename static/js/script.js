@@ -37,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
             bubble.appendChild(badge);
         }
 
+        // Painel "modo pesquisa" (Claude/DeepSeek): acima da resposta, se a IA pesquisou.
+        if (meta.search && meta.search.sources && meta.search.sources.length) {
+            bubble.appendChild(buildSearchChatPanel(meta.search));
+        }
+
         const content = document.createElement('div');
         if (sender === 'bot') {
             // Respostas do bot trazem HTML confiável do servidor (destaques, badges de jogador)
@@ -136,6 +141,86 @@ document.addEventListener('DOMContentLoaded', () => {
         card.appendChild(resp);
 
         return card;
+    };
+
+    // Constrói o painel "MODO PESQUISA": mostra o que a IA buscou e as fontes que leu
+    // (Wikipedia/DuckDuckGo), com título clicável e o trecho lido — estilo Claude/DeepSeek.
+    const buildSearchInspector = (search) => {
+        const card = createEl('div', 'search-card');
+
+        const head = createEl('div', 'search-card-head');
+        const chip = createEl('span', 'search-chip');
+        chip.appendChild(createEl('span', 'search-spin'));      // anel girando (efeito "pesquisando")
+        chip.appendChild(createEl('span', null, '🔎 Pesquisa na web'));
+        head.appendChild(chip);
+        const n = (search.sources || []).length;
+        head.appendChild(createEl('span', 'search-count', n + (n === 1 ? ' fonte' : ' fontes')));
+        card.appendChild(head);
+
+        if (search.query) {
+            const q = createEl('div', 'search-query');
+            q.appendChild(createEl('span', 'search-query-label', 'buscou por'));
+            q.appendChild(createEl('span', 'search-query-text', '“' + search.query + '”'));
+            card.appendChild(q);
+        }
+
+        const det = createEl('details', 'search-details');
+        det.open = true;
+        const sum = createEl('summary', 'search-sec-title');
+        sum.textContent = '📄 Fontes consultadas';
+        det.appendChild(sum);
+
+        (search.sources || []).forEach((s, i) => {
+            const row = createEl('a', 'search-source');
+            if (s.url) { row.href = s.url; row.target = '_blank'; row.rel = 'noopener noreferrer'; }
+            const eng = (s.engine || '').toLowerCase().indexOf('wiki') >= 0 ? 'wiki' : 'ddg';
+            const top = createEl('div', 'search-source-top');
+            top.appendChild(createEl('span', 'search-engine se-' + eng, s.engine || 'web'));
+            top.appendChild(createEl('span', 'search-source-title', s.title || s.url || ''));
+            row.appendChild(top);
+            if (s.snippet) row.appendChild(createEl('div', 'search-snippet', s.snippet));
+            // Revela as fontes em cascata (sensação de "lendo as fontes")
+            row.style.opacity = '0'; row.style.transform = 'translateY(4px)';
+            setTimeout(() => {
+                row.style.transition = 'all 0.3s ease';
+                row.style.opacity = '1'; row.style.transform = 'translateY(0)';
+            }, 140 + i * 120);
+            det.appendChild(row);
+        });
+        card.appendChild(det);
+        return card;
+    };
+
+    // Painel "modo pesquisa" DENTRO DO CHAT (estilo Claude/DeepSeek): colapsável acima da
+    // resposta — "🔎 Pesquisou na web · N fontes ▾" que expande para ver o que a IA leu.
+    const buildSearchChatPanel = (search) => {
+        const det = createEl('details', 'search-chat');
+        const sum = createEl('summary', 'search-chat-sum');
+        sum.appendChild(createEl('span', 'search-chat-title', '🔎 Pesquisou na web'));
+        const n = (search.sources || []).length;
+        sum.appendChild(createEl('span', 'search-chat-count', '· ' + n + (n === 1 ? ' fonte' : ' fontes')));
+        det.appendChild(sum);
+
+        const wrap = createEl('div', 'search-chat-body');
+        if (search.query) {
+            const q = createEl('div', 'search-query');
+            q.appendChild(createEl('span', 'search-query-label', 'buscou por'));
+            q.appendChild(createEl('span', 'search-query-text', '“' + search.query + '”'));
+            wrap.appendChild(q);
+        }
+        (search.sources || []).forEach((s) => {
+            const row = createEl('a', 'search-source');
+            if (s.url) { row.href = s.url; row.target = '_blank'; row.rel = 'noopener noreferrer'; }
+            const eng = (s.engine || '').toLowerCase().indexOf('wiki') >= 0 ? 'wiki' : 'ddg';
+            const top = createEl('div', 'search-source-top');
+            top.appendChild(createEl('span', 'search-engine se-' + eng, s.engine || 'web'));
+            top.appendChild(createEl('span', 'search-source-title', s.title || s.url || ''));
+            row.appendChild(top);
+            if (s.snippet) row.appendChild(createEl('div', 'search-snippet', s.snippet));
+            wrap.appendChild(row);
+        });
+        det.appendChild(wrap);
+        return det;
     };
 
     // Renderiza o pipeline visual de processamento no painel lateral
@@ -250,6 +335,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 addBadges(body, badges);
             }
 
+            // Painel "modo pesquisa": fontes que a IA consultou (Wikipedia/DuckDuckGo)
+            if (step.data && step.data.search) {
+                body.appendChild(buildSearchInspector(step.data.search));
+            }
+
             // Inspetor do LLM: requisi\u00E7\u00E3o enviada -> resposta -> m\u00E9tricas do LM Studio
             if (step.data && step.data.llm) {
                 body.appendChild(buildLlmInspector(step.data.llm));
@@ -312,7 +402,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (m) latency = m[1].replace(',', '.') + 's';
             }
 
-            addMessage(data.answer, 'bot', { fromLLM: !!llmStep, latency });
+            // Fontes da pesquisa web (para o painel "modo pesquisa" no chat)
+            const searchStep = Array.isArray(data.pipeline)
+                ? data.pipeline.find(s => s.data && s.data.search)
+                : null;
+            const searchMeta = searchStep ? searchStep.data.search : null;
+
+            addMessage(data.answer, 'bot', { fromLLM: !!llmStep, latency, search: searchMeta });
 
             if (data.pipeline && data.pipeline.length > 0) {
                 renderPipeline(data.pipeline);

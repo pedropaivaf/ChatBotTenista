@@ -5,9 +5,10 @@ from engine import TennisEngine # Importa o nosso motor de dados técnicos de t�
 from nltk_utils import tokenize, stem, bag_of_words, extract_entities # Utilitários de Processamento de Linguagem Natural
 from session_manager import SessionManager # Gerenciador de sessões com contexto
 from query_parser import parse_query # Parser inteligente de queries (país/temporal/superlativo)
-from decision_tree import DecisionTree, _fuzzy_match_player, PRONOUN_KEYWORDS, TOURNAMENT_KEYWORDS, _is_records_or_fact_question # Árvore de decisão contextual com follow-ups
+from decision_tree import DecisionTree, _fuzzy_match_player, PRONOUN_KEYWORDS, TOURNAMENT_KEYWORDS, _is_records_or_fact_question, is_general_list_query, player_question_beyond_base # Árvore de decisão contextual com follow-ups
 from api_client import TennisAPIClient # Cliente de atualização de rankings (ATP/WTA)
 import llm_client # Fallback híbrido: consulta um LLM (LM Studio) quando a base não resolve
+import web_search # Camada de pesquisa (retrieval Wikipedia) p/ grounding quando a base não cobre
 import json # Para manipular arquivos de dados estruturados
 import os # Para verificar a existência de arquivos no sistema
 import re # Para limpar tags HTML do histórico antes de enviar ao LLM
@@ -126,6 +127,28 @@ SLAM_DETAIL_KEYWORDS = [
     "premiação", "premiacao", "prize money", "quanto vale", "pontos do",
 ]
 
+# Palavras que indicam pedido de CURIOSIDADE/FATO sobre um jogador. Lista enxuta de
+# propósito (evita "fato" solto, que casaria "de fato"): só dispara o roteador de
+# curiosidade quando a intenção é clara E há um jogador-alvo (nome ou pronome→foco).
+PLAYER_CURIOSITY_KEYWORDS = [
+    "curiosidade", "curiosidades", "fato curioso", "fatos curiosos", "fato interessante",
+    "algo interessante", "alguma curiosidade", "conta uma curiosidade", "me conta um fato",
+]
+
+# Nota anexada ao prompt quando o roteamento JÁ decidiu que é tênis (jogador resolvido,
+# lista de jogadores, país/torneio de tênis). O Qwen às vezes erra e devolve a sentinela;
+# aqui ela é proibida.
+_ON_TOPIC_NOTE = ("IMPORTANTE: esta pergunta É sobre tênis — responda normalmente e NUNCA "
+                  "responda com a sentinela FORA_DO_TEMA. ")
+
+# Perguntas sobre um TORNEIO que a base (local, superfície, fundação, premiação, história,
+# campeões) NÃO cobre → vão à IA (ex.: preço de ingresso, diretor, transmissão).
+TOURNAMENT_BEYOND_KW = [
+    "ingresso", "ingressos", "custa", "custo", "preço", "preco", "bilhete", "diretor",
+    "presidente", "transmiss", "onde assistir", "como assistir", "onde comprar",
+    "como chegar", "hotel", "estacionamento", "credenciamento",
+]
+
 # Stop stems portugueses para filtrar do intent matching (evita falsos positivos)
 PORTUGUESE_STOP_STEMS = {
     "de", "do", "da", "dos", "das", "o", "a", "os", "as",
@@ -169,21 +192,44 @@ def log_unrecognized_query(query): # Define a função de log
 # Objetivo: reduzir alucinação ancorando o modelo nos dados reais do projeto
 # (perfil do jogador citado e/ou topo do ranking atual). Reaproveita os dados já
 # carregados em memória pelo TennisEngine. Retorna string (pode ser vazia).
-def build_grounding(msg_lower):
+def build_grounding(msg_lower, player_name=None, force_web=False):
+    # player_name: quando o chamador já resolveu o jogador-alvo (ex.: pronome
+    # "curiosidade sobre ele" → focus_player). Tem prioridade sobre o fuzzy do texto.
+    # force_web: se True, FAZ a pesquisa Wikipedia mesmo quando há perfil local
+    # (usado na rota de curiosidade — combina o fato curado da base + a fonte ao vivo,
+    # cobrindo jogadores cujo 'fact' local é genérico/curto).
     parts = [] # Acumula os trechos de contexto relevantes
+    grounded_player = None  # Jogador que já temos perfil LOCAL (evita pesquisa redundante)
+    search_meta = None      # Fontes da pesquisa web (p/ visualização "modo pesquisa" no front)
     try:
-        # (a) A mensagem cita um jogador conhecido? Injeta o perfil dele.
-        matched = _fuzzy_match_player(msg_lower, tennis_engine.get_all_player_names())
-        if matched:
-            p = tennis_engine.data.get("player_details", {}).get(matched)
-            if p:
-                campos = [f"{matched}"]
-                if p.get("country"): campos.append(f"país: {p['country']}")
-                if p.get("age"):     campos.append(f"idade: {p['age']}")
-                if p.get("style"):   campos.append(f"estilo: {p['style']}")
-                if p.get("titles"):  campos.append(f"títulos: {p['titles']}")
-                if p.get("fact"):    campos.append(f"curiosidade: {p['fact']}")
-                parts.append("Jogador(a) — " + "; ".join(campos) + ".")
+        # Fuzzy ENDURECIDO (0.85): evita injetar um perfil errado por match fraco numa pergunta
+        # geral/lista (ex.: "cite 10 jogadores canhotos" não pode virar contexto de um jogador).
+        matched = player_name or _fuzzy_match_player(msg_lower, tennis_engine.get_all_player_names(), threshold=0.85)
+        p = tennis_engine.data.get("player_details", {}).get(matched) if matched else None
+        if p:
+            grounded_player = matched
+
+        # PESQUISA Wikipedia PRIMEIRO (quando aplicável). Se ela trouxer a fonte autoritativa
+        # e atual, OMITIMOS os campos potencialmente desatualizados da base (títulos/curiosidade)
+        # para não confundir o modelo — ex.: a base diz "buscando o 1º título" mas a Wikipedia
+        # mostra que o jogador já é campeão. Pesquisa só com player-alvo (lista/geral = ruído).
+        retrieved = None
+        if (force_web or not grounded_player) and llm_client._enabled() and web_search.enabled():
+            retrieved = web_search.search_tennis(msg_lower, player_hint=player_name)
+            if retrieved:
+                search_meta = {"sources": retrieved.get("sources", []), "query": retrieved.get("query")}
+
+        # (a) Perfil LOCAL do jogador. Campos neutros (país/idade/estilo) sempre; títulos e
+        # curiosidade SÓ quando NÃO temos a Wikipedia daquele jogador (evita texto stale).
+        if p:
+            campos = [f"{matched}"]
+            if p.get("country"): campos.append(f"país: {p['country']}")
+            if p.get("age"):     campos.append(f"idade: {p['age']}")
+            if p.get("style"):   campos.append(f"estilo: {p['style']}")
+            if not retrieved:
+                if p.get("titles"): campos.append(f"títulos: {p['titles']}")
+                if p.get("fact"):   campos.append(f"curiosidade: {p['fact']}")
+            parts.append("Jogador(a) — " + "; ".join(campos) + ".")
 
         # (b) A mensagem é sobre ranking/melhor do mundo? Injeta o Top 5 atual.
         if any(k in msg_lower for k in ["ranking", "top ", "número 1", "numero 1",
@@ -209,9 +255,13 @@ def build_grounding(msg_lower):
                 "feminina do Brasil), Beatriz Haddad Maia (maior brasileira da atualidade) e "
                 "João Fonseca (jovem promessa). NÃO invente nomes fora desta lista."
             )
+
+        # (d) Anexa a PESQUISA web (Wikipedia + DuckDuckGo) já recuperada acima.
+        if retrieved:
+            parts.append(retrieved["text"])
     except Exception:
         pass # Grounding é best-effort: qualquer erro aqui não pode quebrar o chat.
-    return "\n".join(parts)
+    return "\n".join(parts), search_meta
 
 # Heurística GENEROSA: a mensagem tem ALGUMA evidência de tênis? Usada para
 # decidir se pulamos a validação do Qwen (Camada 3) e para liberar superlativos
@@ -333,15 +383,32 @@ def predict(): # Função principal de "predição" ou resposta
     #   - Response de BLOQUEIO se o Qwen classificar como fora de tênis (sentinela
     #     FORA_DO_TEMA) — o bot é fechado no tema; OU
     #   - None quando o LLM está desligado/indisponível (o chamador usa o canned).
-    def try_llm_fallback(step_detail="Base não resolveu (tênis) — acionando LLM"):
+    def try_llm_fallback(step_detail="Base não resolveu (tênis) — acionando LLM",
+                          grounding=None, search_meta=None, extra_system=None, temperature=None):
+        # grounding: contexto factual já pronto (ex.: perfil do jogador + pesquisa web).
+        #            Se None, montamos a partir da mensagem.
+        # search_meta: fontes da pesquisa web (Wikipedia/DuckDuckGo) p/ o painel "modo pesquisa".
+        # extra_system: instrução extra ao LLM (ex.: "modo curiosidade").
         add_step("LLM · LM Studio", "active", step_detail) # Acende a etapa LLM no pipeline visual
         add_log("Acionando LLM (LM Studio) para pergunta de tênis fora da base...", "SYSTEM")
-        grounding = build_grounding(msg_lower) # Contexto factual (anti-alucinação)
+        if grounding is None:
+            grounding, search_meta = build_grounding(msg_lower) # Contexto factual (anti-alucinação)
+        # Transparência ("modo pesquisa"): se a busca web entrou no grounding, mostra a etapa
+        # com as FONTES (engine + título + url + trecho) para o painel lateral do front.
+        if search_meta and search_meta.get("sources"):
+            engines = ", ".join(sorted({s.get("engine", "?") for s in search_meta["sources"]}))
+            add_step("🔎 Pesquisa na web", "success",
+                     f"{len(search_meta['sources'])} fonte(s) consultada(s): {engines}",
+                     data={"search": search_meta})
+            for s in search_meta["sources"]:
+                add_log(f"[PESQUISA] {s.get('engine')}: {s.get('title')} — {s.get('url')}", "SUCCESS")
+            print(f"[PESQUISA] '{search_meta.get('query')}' → {len(search_meta['sources'])} fonte(s): {engines}")
         # NÃO enviamos histórico ao LLM: o contexto de tênis (ex.: a ficha de um jogador)
         # confunde modelos pequenos e dispara troca de idioma (chinês). Follow-ups de
         # tênis já são resolvidos pela base (árvore de decisão); aqui o LLM responde a
         # pergunta isolada, o que deixa a resposta mais estável e mais rápida (sem retry).
-        result = llm_client.query_llm(text, grounding=grounding, history=None)
+        result = llm_client.query_llm(text, grounding=grounding, history=None,
+                                      extra_system=extra_system, temperature=temperature)
         if not result: # LLM indisponível ou sem resposta → deixa o canned assumir
             add_step("LLM · LM Studio", "fail", "LLM indisponível ou sem resposta")
             add_log("LLM indisponível — usando resposta padrão.", "WARNING")
@@ -515,7 +582,15 @@ def predict(): # Função principal de "predição" ou resposta
             add_log("[PARSER] Pergunta histórica/GOAT → goat_debate", "SUCCESS")
             add_step("Base de Conhecimento", "success", "Intent: goat_debate (histórico)")
             return respond(random.choice(goat_intent["responses"]), topic="trivia", bot_action="showed_trivia")
-    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words) and not _has_specific_position and not _is_goat_query and not _is_records_or_fact_question(msg_lower):
+    # Se a mensagem NOMEIA um jogador específico (ex.: "qual o melhor ranking do João
+    # Fonseca"), o "melhor" se refere A ELE — NÃO é "o #1 do mundo". Não dispara o atalho
+    # do líder (que mostraria o Sinner). Deixa seguir p/ o bloco de jogador (ficha) ou IA.
+    _sup_named = extract_entities(msg_stems, tennis_engine.get_all_player_names())
+    if _sup_named:
+        _sn_stems = [stem(w) for w in tokenize(_sup_named.lower()) if len(stem(w)) > 2]
+        if not any(len(s) >= 4 and s in msg_stems for s in _sn_stems):
+            _sup_named = None
+    if not parsed["country_filter"] and parsed["wants_best"] and any(w in msg_lower for w in player_context_words) and not _has_specific_position and not _is_goat_query and not _sup_named and not _is_records_or_fact_question(msg_lower):
         # Detecta se é feminino → WTA
         circuit = parsed["circuit"] or ('WTA' if any(w in msg_lower for w in feminine_words) else 'ATP')
         ranking_data = tennis_engine.data.get(f"ranking_{circuit.lower()}", [])
@@ -530,6 +605,17 @@ def predict(): # Função principal de "predição" ou resposta
 
     if parsed["country_filter"]:
         add_log(f"[PARSER] País detectado: {parsed['country_filter']}, Melhor: {parsed['wants_best']}, Atual: {parsed['is_current']}", "DEBUG")
+
+        # GUARDA: pergunta de país ALÉM da base (ex.: "tenista mais rico do brasil",
+        # "jogador brasileiro mais polêmico", "treinador brasileiro") → IA. A base só
+        # responde "melhores RANQUEADOS do país"; o resto não é premeditável.
+        if player_question_beyond_base(msg_lower):
+            add_log("[ROUTER] País + pergunta além da base → IA", "SYSTEM")
+            add_step("País → IA", "active", "Pergunta de país além da base → IA")
+            llm_resp = try_llm_fallback("Pergunta de país além da base → IA",
+                extra_system=_ON_TOPIC_NOTE + "Responda direto e curto; NÃO invente nomes/números; se não souber, admita.")
+            if llm_resp is not None:
+                return llm_resp
 
         # "melhor jogador do brasil atualmente" ou "jogadores brasileiros" → retorna melhores do país
         rank_keywords_local = ["ranking", "top", "melhores", "rank", "posição", "tabela"]
@@ -580,8 +666,11 @@ def predict(): # Função principal de "predição" ou resposta
     # Palavras que indicam desejo de ver definições (o que é/história)
     info_keywords = ["o que é", "o que significa", "como funciona", "história", "origem", "quem criou"]
 
-    # Lógica de Separação Inteligente: Se quer dados e NÃO quer apenas definição/história
-    if any(word in msg_lower for word in rank_keywords) and not any(info in msg_lower for info in info_keywords):
+    # Lógica de Separação Inteligente: Se quer dados e NÃO quer apenas definição/história.
+    # GUARDA: se a mensagem NOMEIA um jogador específico ("qual o melhor ranking do João
+    # Fonseca"), não despejamos o Top 10 — a pergunta é sobre ELE; segue p/ o bloco de
+    # jogador (ficha) ou para a IA. (_sup_named já validado com guard de stem >= 4.)
+    if any(word in msg_lower for word in rank_keywords) and not any(info in msg_lower for info in info_keywords) and not _sup_named:
         add_log(f"Requisição de dados técnicos detectada através de: {next(w for w in rank_keywords if w in msg_lower)}")
         circuit = parsed["circuit"] or ('WTA' if any(w in msg_lower for w in ['wta', 'feminino', 'mulheres']) else 'ATP')
         add_step("Motor de Dados", "success", f"Ranking {circuit} Top 10 solicitado")
@@ -627,7 +716,11 @@ def predict(): # Função principal de "predição" ou resposta
             add_step("Motor de Dados", "success", f"Recorde: {best_tag} ({best_score:.0f}%)")
             return respond(response, topic="trivia", bot_action="showed_trivia")
 
-    if any(token in winner_stems for token in msg_stems) and not has_records: # Se a frase tiver contexto de vitória
+    # GUARDA: se a mensagem NOMEIA um jogador e NÃO cita um torneio, "título/ganhou" é
+    # sobre ESSE jogador (ex.: "qual o título mais importante do Fonseca") — não é pedido
+    # de campeões genéricos. Deixa seguir para o roteamento de jogador (ficha/IA).
+    _winner_has_tourney = any(t.lower() in msg_lower for t in tennis_engine.get_all_tournament_names())
+    if any(token in winner_stems for token in msg_stems) and not has_records and not (_sup_named and not _winner_has_tourney): # Se a frase tiver contexto de vitória
         add_log("Contexto de 'Vencedores' identificado. Verificando especificidade...")
         all_tournaments = tennis_engine.get_all_tournament_names()
         target_tournament = None
@@ -665,6 +758,15 @@ def predict(): # Função principal de "predição" ou resposta
             break
     if target_tournament:
         add_log(f"Torneio detectado diretamente: {target_tournament}", "SUCCESS")
+        # GUARDA: pergunta sobre o torneio que a base NÃO cobre (ingresso, diretor,
+        # transmissão…) → IA. A base tem local/superfície/fundação/premiação/história/campeões.
+        if any(kw in msg_lower for kw in TOURNAMENT_BEYOND_KW):
+            add_log("[ROUTER] Torneio + pergunta além da base → IA", "SYSTEM")
+            add_step("Torneio → IA", "active", f"Pergunta sobre {target_tournament} além da base → IA")
+            llm_resp = try_llm_fallback(f"Pergunta sobre {target_tournament} além da base → IA",
+                extra_system=_ON_TOPIC_NOTE + "Responda direto e curto; NÃO invente; se não souber, admita.")
+            if llm_resp is not None:
+                return llm_resp
         # Verifica se o usuário quer detalhes/info sobre o torneio (não campeões)
         has_detail_intent = any(kw in msg_lower for kw in SLAM_DETAIL_KEYWORDS)
         if has_detail_intent or target_tournament not in grand_slams:
@@ -688,8 +790,97 @@ def predict(): # Função principal de "predição" ou resposta
             result = tennis_engine.get_tournaments_list()
             return respond(result, topic="tournament", bot_action="showed_tournament_list")
 
-    # --- Lógica de Jogadores DINÂMICA (NLTK) ---
+    # --- Passo 1.7: Pergunta que a base NÃO cobre → IA (sem despejar a ficha) ---
+    # Princípio reitor: a IA RESPONDE a pergunta (não "premedita" mostrando a tabela).
+    # Dois casos vão para a IA (grounding perfil local + PESQUISA Wikipedia):
+    #   (i)  Pergunta-LISTA/geral ("cite 10 jogadores canhotos") — a base não enumera.
+    #   (ii) Pergunta sobre um JOGADOR além da base (curiosidade, raquete, treinador…),
+    #        por nome explícito ou pronome ao foco.
+    # Campos da base (país/idade/altura/títulos/estilo/piso/ranking), reação, comparação,
+    # elogio e pedido de ficha continuam sendo respondidos pela base (blocos abaixo).
     players_list = tennis_engine.get_all_player_names()
+
+    # Função local: monta grounding + chama a IA e devolve a resposta (ou canned sem ficha).
+    def _route_to_ai(step_name, detail, *, player=None, curiosity=False, focus_after=None):
+        add_log(f"[ROUTER] {detail}", "SYSTEM")
+        add_step(step_name, "active", detail)
+        # Pesquisa web só com JOGADOR-alvo (página/consulta específica). Para listas/gerais
+        # (sem alvo), a recuperação por jogador vira ruído → não força.
+        grounding, search_meta = build_grounding(msg_lower, player_name=player, force_web=bool(player))
+        # Já decidimos que isto É tênis (jogador resolvido / lista de jogadores). O modelo
+        # às vezes erra e devolve a sentinela; aqui ela é proibida.
+        on_topic_note = ("IMPORTANTE: esta pergunta É sobre tênis — responda normalmente e "
+                         "NUNCA responda com a sentinela FORA_DO_TEMA. ")
+        if curiosity:
+            extra = on_topic_note + (f"Conte UMA curiosidade sobre {player} em 1 a 2 frases curtas. "
+                     "Se houver 'Contexto recuperado (Wikipedia)', ele é a fonte AUTORITATIVA e "
+                     "ATUAL — baseie-se NELE (o perfil local pode estar desatualizado). "
+                     "Use EXCLUSIVAMENTE fatos que aparecem LITERALMENTE no contexto acima. "
+                     "Escolha o fato MAIS NOTÁVEL "
+                     "disponível (um Grand Slam vencido, ser nº1 do mundo, ATP/WTA Finals, um "
+                     "recorde, um 'primeiro/mais jovem a...'). Se citar um título, local ou ano, "
+                     "ele PRECISA estar escrito no contexto — NÃO invente torneios, cidades ou "
+                     "datas, e NÃO troque o ano. Evite frases vagas ('consolidou-se no top 100'). "
+                     "NÃO liste a ficha (idade, ranking, lista de títulos). Se o contexto não tiver "
+                     "nada específico, admita que não encontrou uma curiosidade confiável.")
+        elif player:
+            extra = on_topic_note + (f"Responda em 1 a 2 frases curtas a pergunta sobre {player}, usando "
+                     "SOMENTE os fatos do contexto (perfil e 'Contexto recuperado (Wikipedia)', "
+                     "incluindo os 'Dados (Wikipedia infobox)' como mão/treinador/altura). "
+                     "NÃO invente dados (raquete, patrocínios, datas…). Se o contexto NÃO tiver a "
+                     "resposta EXATA, diga isso brevemente E complemente com o dado mais relevante "
+                     "que o contexto tiver sobre ele (ex.: se perguntarem a raquete e não houver, "
+                     "mas o contexto disser a mão ou o treinador, mencione isso). NÃO liste a ficha inteira.")
+        else:
+            extra = on_topic_note + ("Responda à pergunta de tênis de forma direta. Se for uma LISTA "
+                     "(ex.: jogadores canhotos, brasileiros, especialistas em saibro), cite APENAS "
+                     "jogadores dos quais você tem CERTEZA quanto ao critério pedido (ex.: Rafael "
+                     "Nadal é canhoto). É MELHOR citar poucos nomes corretos — ou dizer que não tem "
+                     "uma lista confiável — do que arriscar nomes errados. NUNCA invente nem chute "
+                     "(não complete o número pedido com nomes incertos). Use o contexto se houver.")
+        # Listas/gerais respondem melhor com um pouco mais de soltura (recall); jogador fica fiel a 0.2.
+        _temp = 0.2 if player else 0.4
+        llm_resp = try_llm_fallback(detail, grounding=grounding, search_meta=search_meta,
+                                    extra_system=extra, temperature=_temp)
+        if llm_resp is not None:
+            return llm_resp
+        # IA indisponível → canned curto, SEM ficha (degradação graciosa).
+        add_step(step_name, "fail", "IA indisponível — resposta curta sem ficha")
+        llm_client.record("unresolved")
+        session_mgr.update(session_id, "user", text)
+        if player:
+            canned = (f"Boa pergunta sobre {player}! 🎾 No momento a IA de pesquisa está "
+                      "indisponível, então não consigo trazer esse detalhe agora. "
+                      "Quer ver o ranking, um torneio de Grand Slam ou saber de outro jogador?")
+        else:
+            canned = ("Boa pergunta! 🎾 No momento a IA de pesquisa está indisponível para montar "
+                      "essa lista. Posso te mostrar o ranking, torneios ou a ficha de um jogador!")
+        session_mgr.update(session_id, "bot", canned, bot_action="ai_unavailable",
+                           topic=context.get("current_topic"),
+                           focus_player=(player or focus_after),
+                           pending_follow_up=("player_detail" if player else context.get("pending_follow_up")))
+        return jsonify({"answer": canned, "logs": current_logs, "pipeline": pipeline_steps})
+
+    # (i) Pergunta-LISTA / geral → IA (a base não enumera jogadores por atributo).
+    if is_general_list_query(msg_lower):
+        return _route_to_ai("Pergunta geral → IA", "Pergunta-lista/geral de tênis → IA")
+
+    # (ii) Pergunta sobre um JOGADOR além da base (curiosidade OU atributo não-coberto).
+    is_curiosity = any(k in msg_lower for k in PLAYER_CURIOSITY_KEYWORDS)
+    cur_player = extract_entities(msg_stems, players_list)
+    if cur_player:
+        _cp_stems = [stem(w) for w in tokenize(cur_player.lower()) if len(stem(w)) > 2]
+        if not any(len(s) >= 4 and s in msg_stems for s in _cp_stems):
+            cur_player = None
+    if not cur_player:
+        cur_player = _fuzzy_match_player(msg_lower, players_list, threshold=0.82)
+    if not cur_player and re.search(r'\b(dele|dela|deles|delas|ele|ela)\b', msg_lower) and context.get("focus_player"):
+        cur_player = context["focus_player"]
+    if cur_player and (is_curiosity or player_question_beyond_base(msg_lower)):
+        return _route_to_ai("Jogador → IA", f"Pergunta sobre {cur_player} além da base → IA",
+                            player=cur_player, curiosity=is_curiosity)
+
+    # --- Lógica de Jogadores DINÂMICA (NLTK) ---
     # GUARDA DE CONTEXTO: se a mensagem usa pronome ("dele/dela/seu/sua") e há um
     # jogador em FOCO, o pronome se refere ao foco — NUNCA trocar por um fuzzy match
     # fraco (ex.: "qual a mão dominante dele" não pode virar outro jogador). Só troca

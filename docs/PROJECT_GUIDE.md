@@ -4,7 +4,7 @@ Este documento explica o "porque" e o "como" de cada arquivo do projeto.
 
 ---
 
-## Estrutura do Projeto (~3.470 linhas de Python em 8 módulos)
+## Estrutura do Projeto (~3.620 linhas de Python em 9 módulos)
 
 ### 1. `app.py` — O Cerebro (860 linhas)
 Servidor principal Flask com logica hibrida de roteamento (base → LLM).
@@ -81,6 +81,13 @@ Cliente do **LLM de fallback** (Qwen2.5-7B via LM Studio). Ver [LLM_HYBRID.md](L
 - Sentinela `FORA_DO_TEMA`: pergunta fora de tênis → o app bloqueia.
 - Métricas (`record`, `metrics_snapshot`) + **degradação graciosa** (tudo retorna `None` sem o LLM).
 
+### 8-B. `web_search.py` — O Pesquisador (~150 linhas) — **modo pesquisa (v4)**
+Busca o fato na **Wikipedia** quando a base local não cobre, e devolve um trecho p/ grounding —
+é o que deixa a IA responder corretamente sobre jogadores/fatos fora dos 290 da base **sem
+inventar**. `search_tennis()` (MediaWiki search + REST summary, PT→EN, cache, desambiguação por
+sinal de tênis). Degradação graciosa (`WEB_SEARCH_ENABLED=0`/sem rede → `None`). Ver
+[LLM_HYBRID.md](LLM_HYBRID.md).
+
 ### 9. `knowledge_base.json` e `tennis_data.json` — Os Dados
 - **`knowledge_base.json`**: 49 intents conversacionais com padroes e respostas.
 - **`tennis_data.json`**: Rankings Top 100 (ATP+WTA), Grand Slams 2024-2026, 18 torneios ATP, 16 recordes, biografias de **290 jogadores**.
@@ -102,7 +109,7 @@ Cliente do **LLM de fallback** (Qwen2.5-7B via LM Studio). Ver [LLM_HYBRID.md](L
 6. **Filtro Off-Topic + Gibberish**: Rejeita futebol, politica, bitcoin E texto sem sentido como "asdfghjk".
 7. **Híbrido (Base + LLM)**: perguntas de tênis fora da base vão ao Qwen (LM Studio) com *grounding* anti-alucinação; off-topic é bloqueado.
 8. **Pipeline Visual**: Console tecnico lateral mostra cada etapa do processamento com animacoes, incluindo trace da arvore de decisao e a chamada ao LLM.
-9. **312 Testes**: 23 baterias cobrindo todos os cenarios, zero falhas.
+9. **322 Testes**: 24 baterias cobrindo todos os cenarios, zero falhas (+ `tools/llm_eval.py` ao vivo, 14/14).
 
 ---
 

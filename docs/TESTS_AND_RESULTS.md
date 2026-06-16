@@ -1,19 +1,21 @@
 # Testes e Resultados
 
-Suíte automatizada com **312 testes em 23 baterias**.
+Suíte automatizada com **322 testes em 24 baterias**.
 
-**Resultado atual: 312/312 — ZERO FALHAS.**
+**Resultado atual: 322/322 — ZERO FALHAS.**
 
 ```bash
-python run_tests.py
+python run_tests.py        # determinístico (LLM e pesquisa desligados)
+python tools/llm_eval.py   # OPCIONAL: avaliação factual ao vivo (LM Studio + Wikipedia) — 14/14
 ```
 
-> Os testes forçam `LLM_ENABLED=0` (determinismo) — **não dependem do LM Studio**.
-> **Regra de ouro:** rode e garanta 312/312 **antes de qualquer commit**.
+> Os testes forçam `LLM_ENABLED=0` **e `WEB_SEARCH_ENABLED=0`** (determinismo, sem rede) —
+> **não dependem do LM Studio nem da internet**.
+> **Regra de ouro:** rode e garanta 322/322 **antes de qualquer commit**.
 
 ---
 
-## As 23 baterias
+## As 24 baterias
 
 | # | Bateria | Foco |
 |---|---------|------|
@@ -40,6 +42,7 @@ python run_tests.py
 | 21 | Posição no ranking + recordes | "número 20 do mundo", "mais grand slams" → Djokovic |
 | 22 | Off-topic → AVISAR E BLOQUEAR | **bot fechado em tênis**: off-topic bloqueado, nunca vai ao LLM |
 | 23 | Pergunta factual/recorde mencionando torneio | NÃO vira "campeões genéricos" — segue para recordes/LLM |
+| 24 | Curiosidade/fato sobre jogador → IA | NÃO despeja a ficha; genérica segue na base; "quem é X" ainda mostra ficha |
 
 ---
 
@@ -63,6 +66,26 @@ mostrando campeões.
 | 23.02 | "Quem foi o primeiro tenista a completar o Golden Slam?" (após curiosidade) | NÃO campeões, NÃO #1 (Sinner) |
 | 23.03 | "Quantos Grand Slams o Boris Becker conquistou?" (após ficha de jogador) | NÃO "Campeões de Grand Slam" |
 | 23.04 | "quem ganhou os grand slams" (não-regressão) | mostra **Campeões** |
+
+---
+
+## Bateria 24 — Curiosidade/fato sobre jogador → IA (sem ficha)
+
+Com LLM e pesquisa **desligados** (determinismo), curiosidade de jogador roteia à IA e cai no
+canned ("indisponível"); o que se testa é o **roteamento** (não exibir a ficha). A **qualidade
+factual** (correção via base + Wikipedia) é validada à parte por `tools/llm_eval.py` (ao vivo).
+
+| # | Cenário | Esperado |
+|---|---------|----------|
+| 24.01 | "me conta uma curiosidade sobre o Sinner" (fresco) | NÃO é a ficha (sem "(ATP)") |
+| 24.02 | após a ficha → "uma curiosidade sobre ele" (pronome) | NÃO re-exibe a ficha |
+| 24.03 | "me conta uma curiosidade" (genérica, sem jogador) | curiosidade da **base** (não-regressão) |
+| 24.04 | "quem é o Sinner?" (não-regressão) | **ainda** mostra a ficha |
+
+**Avaliação ao vivo (`tools/llm_eval.py`, 14/14):** in-base (Alcaraz "#1 mais jovem", Sinner
+"1º italiano nº1", Sabalenka) e **fora da base via Wikipedia** (Seyboth Wild "campeão juvenil US
+Open 2018", Medvedev "nº1 em 28/02/2022", typo "Medevedev"→Medvedev), honestidade (não inventa),
+off-topic bloqueia, contexto preservado.
 
 ---
 

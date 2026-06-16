@@ -67,7 +67,7 @@ Detalhes e troubleshooting: [`COMO_RODAR.md`](../COMO_RODAR.md) e [LLM_HYBRID.md
 python run_tests.py
 ```
 
-Esperado: **312/312** (os testes rodam com `LLM_ENABLED=0`, então não precisam do LM Studio).
+Esperado: **322/322** (os testes rodam com `LLM_ENABLED=0` e `WEB_SEARCH_ENABLED=0`, então não precisam do LM Studio nem de internet).
 
 ---
 

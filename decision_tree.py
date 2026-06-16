@@ -148,8 +148,11 @@ REACTION_KEYWORDS = {
     "inteligencia": ["A inteligência tática {dele_dela} é de outro nível! 🧠", "{Ele_Ela} sempre lê o jogo do adversário!"],
     "tatica": ["A tática {dele_dela} é brilhante! 🧠", "{Ele_Ela} sempre encontra a jogada certa!"],
 }
-PLAYER_INFO_KEYWORDS = ["idade", "quantos anos", "titulo", "títulos", "titulos", "curiosidade",
-                         "fato", "carreira", "biografia", "ficha",
+# NOTA: "curiosidade"/"fato" foram REMOVIDOS desta lista de propósito — curiosidade
+# sobre um jogador não deve re-exibir a ficha; ela é roteada à IA (grounding + pesquisa)
+# pelo app.py (Passo 1.7). Curiosidade GENÉRICA continua no branch "Troca → Curiosidade".
+PLAYER_INFO_KEYWORDS = ["idade", "quantos anos", "titulo", "títulos", "titulos",
+                         "carreira", "biografia", "ficha",
                          "informação", "informacao", "perfil", "detalhes", "mais sobre",
                          "altura", "quantos titulos", "quantos títulos", "alto", "mede"]
 
@@ -392,6 +395,101 @@ def _resolve_player_from_context(msg_lower, msg_stems, context, engine):
     return _fuzzy_match_player(msg_lower, mentioned, threshold=0.82)
 
 
+# =============================================================================
+# Roteamento "base × IA" para perguntas sobre JOGADOR / perguntas-LISTA (v4.1)
+# -----------------------------------------------------------------------------
+# A base só responde um conjunto FINITO de coisas sobre um jogador: ficha, país,
+# idade, altura, títulos, estilo/mão, reação a atributo técnico, comparação, elogio,
+# piso e ranking. Se a pergunta é específica e NÃO cai em nenhum desses (ex.: "qual a
+# raquete do Fonseca", "quem treina o Sinner") — ou é uma pergunta-LISTA geral ("cite
+# 10 jogadores canhotos") — ela deve ir para a IA (grounding + pesquisa), em vez de
+# despejar a ficha. É o "discernimento de contexto" pedido: base × IA.
+# =============================================================================
+import re as _re_route
+
+# Sinais de que a mensagem é uma PERGUNTA específica (e não um nome solto).
+QUESTION_SIGNAL_RE = _re_route.compile(
+    r'\b(qual|quais|quanto|quantos|quantas|como|onde|quando|quem|cite|cita|'
+    r'liste|lista|listar|exempl|nomes?|que\s+raquete|que\s+marca)\b')
+
+# Pergunta-LISTA / GERAL (pede vários jogadores, não a ficha de um). Tem prioridade:
+# nunca deve ser "sequestrada" pelo contexto (foco) para virar a ficha do jogador.
+GENERAL_LIST_RE = _re_route.compile(
+    r'\b(cite|cita|liste|lista|listar|exempl|nomes?\s+de)\b'
+    r'|\b\d+\s+(jogador|jogadora|tenist)'
+    r'|\bquais\s+(?:s[ãa]o\s+)?(?:os\s+|as\s+)?(?:jogador|jogadora|tenist)')
+
+# Pedido de FICHA/apresentação (a base responde com a ficha — NÃO vai para a IA).
+FICHA_REQUEST_KW = [
+    "quem é", "quem e", "quem foi", "quem ele", "quem ela", "me fala", "me fale",
+    "fala sobre", "fale sobre", "fala um pouco", "conta sobre", "conte sobre",
+    "fala do", "fala da", "ficha", "perfil", "biografia", "apresenta", "me apresenta",
+]
+
+# Piso/superfície (a base tem get_player_surface_info).
+_SURFACE_KEYWORDS_DT = ["piso", "superfície", "superficie", "quadra", "grama",
+                        "saibro", "terra", "rápida", "rapida", "duro"]
+
+
+def is_general_list_query(msg_lower):
+    """A mensagem pede uma LISTA de jogadores (não a ficha de um)?"""
+    return bool(GENERAL_LIST_RE.search(msg_lower))
+
+
+def is_ficha_request(msg_lower):
+    """A mensagem é um pedido de ficha/apresentação do jogador?"""
+    return any(k in msg_lower for k in FICHA_REQUEST_KW)
+
+
+def base_handles_player_question(msg_lower):
+    """True se a BASE resolve essa pergunta sobre um jogador (ficha/campo/reação/
+    comparação/elogio/piso/ranking). Se False (e a pergunta é específica), vai à IA."""
+    sets = (
+        COUNTRY_KEYWORDS_CTX, AGE_KEYWORDS, HEIGHT_KEYWORDS, TITLES_COUNT_KEYWORDS,
+        STYLE_KEYWORDS, list(REACTION_KEYWORDS.keys()), COMPARISON_KEYWORDS,
+        GENERIC_PRAISE, _SURFACE_KEYWORDS_DT, PLAYER_INFO_KEYWORDS, RANKING_KEYWORDS_CTX,
+    )
+    return any(any(kw in msg_lower for kw in s) for s in sets)
+
+
+# Atributos que a base NÃO tem e que as pessoas perguntam — gatilho mesmo SEM uma
+# palavra interrogativa ("o Alcaraz tem namorada?", "o Sinner se lesionou?"). Mantém
+# typos de nome seguros: um nome solto não casa nada disto → continua indo à ficha.
+BEYOND_BASE_ATTR_KW = [
+    "namorada", "namorado", "esposa", "esposo", "casado", "casada", "noiva", "noivo",
+    "filho", "filhos", "treinador", "treinadora", "técnico", "tecnico", "coach",
+    "raquete", "raquetes", "patrocínio", "patrocinio", "patrocinador", "patrocina",
+    "marca", "equipamento", "corda", "lesão", "lesao", "lesionado", "lesionou",
+    "machucado", "contusão", "contusao", "religião", "religiao", "instagram",
+    "redes sociais", "fortuna", "patrimônio", "patrimonio", "salário", "salario",
+    "ganhos", "apelido", "documentário", "documentario", "aposentar", "aposentadoria",
+    "rico", "rica", "ricos", "fortuna", "famoso", "famosa", "popular", "polêmico",
+    "polemico", "bonito", "bonita", "carismático", "carismatico",
+]
+
+# Confronto direto (head-to-head): a base NÃO tem H2H → sempre IA. Tem prioridade sobre
+# "contra" (que também aparece em comparação) e sobre "jogo/jogou".
+HEAD_TO_HEAD_KW = [
+    "jogou contra", "já jogou contra", "ja jogou contra", "jogaram", "se enfrentaram",
+    "já enfrentou", "ja enfrentou", "enfrentou", "enfrentaram", "confronto", "confrontos",
+    "head to head", "head-to-head", "h2h", "retrospecto", "quem ganha mais", "quem leva a melhor",
+]
+
+
+def player_question_beyond_base(msg_lower):
+    """A mensagem é uma PERGUNTA específica sobre um jogador que a base NÃO cobre
+    (ex.: raquete, treinador, patrocínio, namorada, confronto direto)? Curiosidade é
+    tratada à parte. Typos de nome (sem sinal de pergunta nem atributo) NÃO entram aqui."""
+    if is_ficha_request(msg_lower):
+        return False               # "quem é X" → ficha (base)
+    if any(k in msg_lower for k in HEAD_TO_HEAD_KW):
+        return True                # confronto direto → IA (mesmo com 'contra'/'jogo')
+    if base_handles_player_question(msg_lower):
+        return False               # campo/intenção que a base resolve → base
+    # Pergunta específica = tem sinal interrogativo OU cita um atributo fora da base.
+    return bool(QUESTION_SIGNAL_RE.search(msg_lower)) or any(k in msg_lower for k in BEYOND_BASE_ATTR_KW)
+
+
 # Classe principal que implementa a árvore de decisão contextual do chatbot
 class DecisionTree:
     """Máquina de estados contextual que gera follow-ups abertos e resolve entidades."""
@@ -443,6 +541,39 @@ class DecisionTree:
         last_topic = context.get("current_topic")
         focus = context.get("focus_player")
         add_log(f"[CONTEXTO] Tentando resolver via contexto: pending={pending}, topic={last_topic}", "DEBUG")
+
+        # --- Defer PRIORITÁRIO: curiosidade/fato SOBRE um jogador → IA (sem ficha) ---
+        # Se a mensagem pede curiosidade/fato E se refere a um jogador (pronome ao foco OU
+        # nome explícito), NÃO resolvemos pela base aqui (qualquer branch abaixo — inclusive
+        # o pré-branch de pronome — mostraria a FICHA). Devolvemos None para o app.py
+        # (Passo 1.7) montar grounding (perfil local + pesquisa Wikipedia) e a IA responder
+        # a curiosidade em 1–2 frases. Curiosidade GENÉRICA (sem jogador) NÃO defere aqui —
+        # segue para os branches (curiosidade aleatória da base).
+        if any(k in msg_lower for k in CURIOSITY_KEYWORDS_CTX):
+            import re as _re_cur
+            _refers_focus = bool(focus) and bool(_re_cur.search(r'\b(dele|dela|deles|delas|ele|ela|seu|sua)\b', msg_lower))
+            _explicit_player = extract_entities(msg_stems, self.engine.get_all_player_names())
+            if _refers_focus or _explicit_player:
+                trace.append({"branch": "Curiosidade do jogador", "icon": "💡", "matched": False, "detail": "Curiosidade sobre jogador → IA (pipeline)"})
+                return None, trace
+
+        # Pergunta-LISTA / GERAL ("cite 10 jogadores canhotos") → defere ao pipeline (IA).
+        # O contexto (foco) NÃO deve transformar isto na ficha do jogador em foco.
+        if is_general_list_query(msg_lower):
+            trace.append({"branch": "Pergunta-lista geral", "icon": "📋", "matched": False, "detail": "Lista/geral de jogadores → IA (pipeline)"})
+            return None, trace
+
+        # Pergunta sobre JOGADOR ALÉM da base (raquete, treinador, patrocínio…), por
+        # pronome→foco OU nome explícito → defere ao pipeline (IA). Campos da base
+        # (país/idade/altura/títulos/estilo/piso/ranking), reação, comparação, elogio e
+        # pedido de ficha continuam sendo resolvidos pela base nos branches abaixo.
+        if player_question_beyond_base(msg_lower):
+            import re as _re_bb
+            _refers = (bool(focus) and bool(_re_bb.search(r'\b(dele|dela|deles|delas|ele|ela|seu|sua)\b', msg_lower))) \
+                      or bool(extract_entities(msg_stems, self.engine.get_all_player_names()))
+            if _refers:
+                trace.append({"branch": "Jogador além da base", "icon": "🤖", "matched": False, "detail": "Pergunta além da base → IA (pipeline)"})
+                return None, trace
 
         # --- Pré-branch: Resolução de pronome implícito ---
         if focus:

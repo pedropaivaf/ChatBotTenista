@@ -99,8 +99,9 @@ por uma base de conhecimento para reduzir alucinação e manter atualidade factu
 comerciais (ChatGPT, Gemini, Claude) usam LLMs de centenas de bilhões de parâmetros com
 ferramentas e recuperação. Comparado ao **estado da arte**, este projeto:
 - Usa um LLM **muito menor** (7B) e **local**, priorizando custo zero e privacidade;
-- Aplica uma forma **simplificada de RAG** (injeção de contexto factual do `tennis_data.json`
-  no *prompt* do modelo — *grounding* leve) em vez de busca vetorial densa;
+- Aplica **RAG** com *grounding* do `tennis_data.json` **e pesquisa ao vivo na Wikipedia**
+  (`web_search.py`): quando a base local não cobre, o bot recupera o trecho factual da Wikipedia
+  e o injeta no *prompt* (responde da fonte, não da memória) — sem ainda usar busca vetorial densa;
 - Mantém **controle total** do núcleo de respostas via base estruturada, o que assistentes
   generalistas não oferecem por padrão.
 
@@ -150,28 +151,33 @@ ferramentas e recuperação. Comparado ao **estado da arte**, este projeto:
   LLM).
 
 ### Desenvolvimento do Chatbot
-- **Construção do agente:** pipeline de 10 etapas em `app.py` (tokenização → filtros →
-  contexto → parser → motor de dados → intenções → fallback).
-- **Lógica de decisão (base → LLM):** a base é sempre consultada primeiro. O LLM é acionado em
-  dois pontos: (a) perguntas **fora do tema** e (b) o **fallback final**, quando nenhuma
-  intenção atinge o limiar de confiança. **Gibberish** (texto sem sentido) permanece bloqueado
-  e **não** aciona o LLM.
+- **Construção do agente:** pipeline de 12 etapas em `app.py` (tokenização → filtros
+  off-topic/gibberish → validação de tópico → contexto → parser → motor de dados → intenções →
+  fallback LLM).
+- **Lógica de decisão (bot fechado em tênis):** a base é sempre consultada primeiro. Perguntas
+  **fora do tema** são **bloqueadas** (aviso "respiro apenas Tênis"), em três camadas (regras,
+  *gibberish* e o Qwen como classificador autoritativo) — **nunca** vão ao LLM. O LLM é acionado
+  **apenas** no **fallback final**, para perguntas **de tênis** que a base não cobre (quando
+  nenhuma intenção atinge o limiar de confiança). **Gibberish** (texto sem sentido) permanece
+  bloqueado e também **não** aciona o LLM.
 - **Integração (LM Studio):** módulo `llm_client.py` encapsula a chamada HTTP ao servidor local
-  (`/v1/chat/completions`), monta `system prompt` + *grounding* + histórico recente e trata
-  erros retornando `None` (→ resposta padrão).
+  (`/v1/chat/completions`), monta `system prompt` + *grounding* (sem enviar histórico, para
+  evitar *code-switching*) e trata erros retornando `None` (→ resposta padrão).
 - **Configuração:** variáveis em `.env` (`LLM_ENABLED`, `LLM_BASE_URL`, `LLM_MODEL`, ...). Os
   testes forçam `LLM_ENABLED=0`, garantindo determinismo.
 
 ### Arquitetura do Sistema (fluxo)
 ```
 Mensagem
- ├─ Gibberish?  → bloqueia (mensagem padrão) — NÃO chama LLM
- ├─ Off-topic?  → LLM (fallback universal) → indisponível? mensagem padrão
+ ├─ Off-topic por regra (blocklist / conhecimento geral)  → BLOQUEIA (aviso) — NÃO chama LLM
+ ├─ Gibberish                                             → BLOQUEIA (mensagem padrão) — NÃO chama LLM
+ ├─ Contexto ativo + sem sinal de tênis → is_on_topic()   → "não"? BLOQUEIA (Qwen autoritativo)
  ├─ Base de conhecimento (NLTK + intenções + motor de dados + árvore de decisão)
- │     └─ resolveu? → resposta da BASE        [métrica: resolved_by_base]
+ │     └─ resolveu? → resposta da BASE                     [métrica: resolved_by_base]
  └─ Fallback final (base não resolveu)
-       └─ LLM (LM Studio) → respondeu? resposta do LLM   [métrica: resolved_by_llm]
-       └─ indisponível/falhou → mensagem padrão           [métrica: unresolved]
+       ├─ LLM responde tênis                              → resposta do LLM   [métrica: resolved_by_llm]
+       ├─ LLM devolve a sentinela FORA_DO_TEMA            → BLOQUEIA (era off-topic)
+       └─ LLM indisponível/desligado                      → mensagem padrão   [métrica: unresolved]
 ```
 
 ---
@@ -195,7 +201,7 @@ Mensagem
 > responde em milissegundos. Com o modelo padrão, o LLM responde em **uma única chamada**
 > (sem retry), tipicamente em 2–6 s.
 
-**Suíte de testes automatizados:** `run_tests.py` → **312/312** cenários (23 baterias). *(A
+**Suíte de testes automatizados:** `run_tests.py` → **322/322** cenários (24 baterias). *(A
 integração do LLM não altera o resultado: os testes rodam com `LLM_ENABLED=0`.)*
 
 **Robustez de contexto (20 turnos):** validado num fluxo de 20 turnos — o bot mantém o foco em

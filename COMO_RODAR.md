@@ -90,7 +90,7 @@ O app **não quebra** (**degradação graciosa**): responde tênis pela base e b
 ```bash
 python run_tests.py
 ```
-Esperado: **300/300** (os testes rodam com o LLM desligado, então **não** precisam do LM Studio).
+Esperado: **322/322** (os testes rodam com o LLM e a pesquisa desligados, então **não** precisam do LM Studio nem de internet).
 
 ---
 

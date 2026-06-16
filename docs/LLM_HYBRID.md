@@ -42,6 +42,10 @@ O `.env` **não é commitado** (está no `.gitignore`). Copie de `.env.example`:
 | `LLM_MAX_TOKENS` | `350` | Limite de tokens da resposta |
 | `LLM_TEMPERATURE` | `0.5` | Criatividade controlada |
 | `LLM_METRICS_FILE` | `llm_metrics.json` | Arquivo de métricas |
+| `WEB_SEARCH_ENABLED` | `1` | Liga (`1`) / desliga (`0`) a pesquisa Wikipedia |
+| `WEB_SEARCH_LANG` | `pt` | Idioma primário da busca (cai p/ EN se faltar) |
+| `WEB_SEARCH_TIMEOUT` | `8` | Timeout (s) por requisição à Wikipedia |
+| `WEB_DDG_ENABLED` | `1` | Liga (`1`) / desliga (`0`) o fallback de busca web (DuckDuckGo) |
 
 > **Os testes forçam `LLM_ENABLED=0`** antes de importar o `app` (determinismo). Por isso
 > `run_tests.py` nunca depende do LM Studio.
@@ -56,11 +60,12 @@ Mensagem
  ├─ Gibberish                                             → BLOQUEIA  (sem LLM)
  ├─ Contexto ativo + sem sinal de tênis → is_on_topic()   → "não"? BLOQUEIA  (Camada 3, Qwen)
  ├─ Base resolve (árvore / motor / intents)               → resposta da BASE   [resolved_by_base]
+ ├─ Curiosidade/fato SOBRE jogador (nome/pronome→foco)    → LLM  (Passo 1.7: grounding + PESQUISA, SEM ficha)
  ├─ "quantos … slam/torneio"                              → LLM  (Fix B, roteador de contagem)
- └─ Fallback final (base não resolveu)                    → LLM  (try_llm_fallback)
-        ├─ LLM responde tênis                             → resposta do LLM    [resolved_by_llm]
+ └─ Fallback final (base não resolveu)                    → LLM  (try_llm_fallback; grounding + PESQUISA Wikipedia)
+        ├─ LLM responde tênis (ancorado na fonte)         → resposta do LLM    [resolved_by_llm]
         ├─ LLM devolve sentinela FORA_DO_TEMA             → BLOQUEIA (era off-topic)
-        └─ LLM indisponível/desligado                     → resposta canned    [unresolved]
+        └─ LLM/pesquisa indisponível/desligado            → resposta canned    [unresolved]
 ```
 
 ### Três camadas de filtro off-topic
@@ -74,17 +79,29 @@ Mensagem
 
 ---
 
-## 5. Anti-alucinação: *grounding* leve (RAG simplificado)
+## 5. Anti-alucinação: *grounding* + **PESQUISA ao vivo** (modo pesquisa, v4)
 
-Antes de chamar o LLM, `app.py: build_grounding(msg_lower)` injeta **contexto factual** no
-system prompt (quando relevante):
-- **(a)** Ficha do jogador citado (se estiver no `player_details`).
+Antes de chamar o LLM, `app.py: build_grounding(msg_lower, player_name=None, force_web=False)`
+injeta **contexto factual** no system prompt (quando relevante):
+- **(a)** Ficha do jogador citado (se estiver no `player_details`), ou indicado via `player_name`
+  (cobre o pronome "curiosidade sobre ele" → `focus_player`).
 - **(b)** Top 5 ATP/WTA atual (se a pergunta for sobre ranking/melhor do mundo).
 - **(c)** Lendas reais (para "melhor de todos os tempos", "maior brasileiro" → Guga, Bia
   Haddad, Maria Esther Bueno) — evita nomes inventados.
+- **(d) PESQUISA web** (`web_search.search_tennis`): quando NÃO há perfil local (jogador fora da
+  base) **ou** o chamador força (`force_web`, rota de curiosidade/atributo), busca o fato em:
+  - **Wikipedia** — intro completa (MediaWiki `extracts`) **+ infobox** (mão/destro-canhoto,
+    treinador, altura — dados que a prosa não traz);
+  - **DuckDuckGo** (grátis, sem API key) como **fallback** para fatos específicos/ATUAIS que a
+    Wikipedia não tem (ex.: marca da raquete → "Yonex VCORE 98", patrocínios, notícias).
+  Cobre jogadores/fatos fora dos 290 da base **sem inventar**. As **fontes** (engine + título +
+  url + trecho) são enviadas ao front no passo "🔎 Pesquisa na web" → painel **"modo pesquisa"**
+  (no chat, colapsável à la Claude/DeepSeek) e no painel lateral. Debug no terminal (`[PESQUISA]`).
 
-O *grounding* foi decisivo: sem ele, o modelo alucinava tenistas brasileiros inexistentes;
-com ele, responde **Guga** corretamente.
+O *grounding* foi decisivo: sem ele, o modelo alucinava (até de jogador famoso — disse que
+Alcaraz venceu o AO 2022). Com perfil local + Wikipedia, responde o fato real (ex.: Seyboth Wild
+→ "campeão juvenil do US Open 2018"). A rota de curiosidade usa **temperatura 0.2** (fiel ao
+grounding) e um `extra_system` que exige o fato **mais notável e literal** do contexto.
 
 ---
 
@@ -126,7 +143,7 @@ sentinela e bloqueia (`block_off_topic`).
 
 Tudo na camada LLM é **opcional**. Sem o LM Studio (ou `LLM_ENABLED=0`), todas as funções
 retornam `None` silenciosamente e o `app.py` recai nas respostas da base/canned. É isso que
-mantém os **312 testes** verdes sem depender do LM Studio.
+mantém os **322 testes** verdes sem depender do LM Studio.
 
 ---
 
@@ -134,7 +151,9 @@ mantém os **312 testes** verdes sem depender do LM Studio.
 
 | Arquivo | Papel |
 |---|---|
-| [`llm_client.py`](../llm_client.py) | Cliente LLM: `query_llm`, `is_on_topic`, `record`, `metrics_snapshot`, sanitização CJK |
-| [`app.py`](../app.py) | `build_grounding`, `try_llm_fallback`, `block_off_topic`, roteador de contagem, `/metrics` |
-| [`.env.example`](../.env.example) | Configuração de exemplo |
+| [`llm_client.py`](../llm_client.py) | Cliente LLM: `query_llm` (`extra_system`/`temperature`), `is_on_topic`, métricas, sanitização CJK |
+| [`web_search.py`](../web_search.py) | **Pesquisa Wikipedia**: `search_tennis` (search + summary, cache, desambiguação) |
+| [`app.py`](../app.py) | `build_grounding` (perfil + Wikipedia), `try_llm_fallback`, Passo 1.7 (curiosidade de jogador), `block_off_topic`, `/metrics` |
+| [`tools/llm_eval.py`](../tools/llm_eval.py) | Harness de avaliação **ao vivo** (LLM + Wikipedia), fora do CI |
+| [`.env.example`](../.env.example) | Configuração de exemplo (inclui `WEB_SEARCH_*`) |
 | [`COMO_RODAR.md`](../COMO_RODAR.md) | Passo a passo do LM Studio + modelo |

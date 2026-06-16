@@ -3,7 +3,7 @@
 Documento de **contexto completo** para outra IA (ou dev) assumir o projeto em outra
 máquina **sem perder nada**. Leia isto primeiro; os demais docs aprofundam cada tópico.
 
-> Atualizado em: 2026-06. Estado: **v3 — arquitetura híbrida (Base + LLM)**.
+> Atualizado em: 2026-06. Estado: **v4 — arquitetura híbrida (Base + LLM + PESQUISA Wikipedia)**.
 
 ---
 
@@ -30,7 +30,8 @@ Frontend HTML/CSS/JS vanilla servido pelo Flask. LLM via LM Studio (API compatí
 ```bash
 pip install -r requirements.txt
 python app.py            # http://localhost:5000
-python run_tests.py      # OBRIGATÓRIO antes de commit — meta: 312/312
+python run_tests.py      # OBRIGATÓRIO antes de commit — meta: 322/322
+python tools/llm_eval.py # OPCIONAL (LM Studio ligado): avaliação factual ao vivo — meta: 14/14
 ```
 
 - O `punkt` do NLTK é baixado automaticamente na 1ª execução.
@@ -46,8 +47,8 @@ python run_tests.py      # OBRIGATÓRIO antes de commit — meta: 312/312
 
 | Item | Valor |
 |---|---|
-| Módulos Python da aplicação | **8** (~3.470 linhas) + `run_tests.py` (765) |
-| Testes automatizados | **312 em 23 baterias** (rodam com `LLM_ENABLED=0`) |
+| Módulos Python da aplicação | **9** (~3.620 linhas) + `run_tests.py` (~790) + `tools/llm_eval.py` |
+| Testes automatizados | **322 em 24 baterias** (rodam com `LLM_ENABLED=0` e `WEB_SEARCH_ENABLED=0`) |
 | Jogadores em `player_details` | **290** |
 | Rankings | ATP **100** + WTA **100** (atualizados automaticamente) |
 | Grand Slams | 2024–2026 (masculino + feminino) |
@@ -64,12 +65,14 @@ python run_tests.py      # OBRIGATÓRIO antes de commit — meta: 312/312
 | `app.py` | 860 | Servidor Flask, pipeline principal, filtros off-topic/gibberish, roteamento base→LLM, `/metrics` |
 | `decision_tree.py` | 899 | Contexto conversacional (20 turnos), follow-ups, reações empáticas, fuzzy matching |
 | `engine.py` | 514 | Consultas ao `tennis_data.json` (rankings, jogadores, campeões, torneios, recordes) |
-| `llm_client.py` | 330 | Cliente do LLM (LM Studio): `query_llm`, `is_on_topic`, métricas, sanitização CJK |
+| `llm_client.py` | 340 | Cliente do LLM (LM Studio): `query_llm` (`extra_system`/`temperature`), `is_on_topic`, métricas, CJK |
+| `web_search.py` | ~150 | **Pesquisa Wikipedia** (modo pesquisa): `search_tennis` (search + summary, cache, desambiguação) |
 | `api_client.py` | 416 | Atualização de rankings (scraping ATP + API WTA), retry e cache 24h |
 | `query_parser.py` | 208 | Detecta país, temporal, superlativo, circuito, limite |
 | `session_manager.py` | 153 | Sessões in-memory (UUID, TTL 30min, 20 turnos) |
 | `nltk_utils.py` | 90 | tokenize(), stem(), bag_of_words(), extract_entities() |
-| `run_tests.py` | 765 | 312 testes em 23 baterias |
+| `run_tests.py` | ~790 | 322 testes em 24 baterias |
+| `tools/llm_eval.py` | ~130 | Harness de avaliação **ao vivo** (LLM + Wikipedia), fora do CI |
 
 **Dados:** `tennis_data.json` (rankings, player_details, grand_slams, tournament_details,
 records), `knowledge_base.json` (intents), `unrecognized_queries.json` (log automático),
@@ -132,6 +135,8 @@ Configuração em `.env` (não commitado): `LLM_ENABLED` (default 0), `LLM_BASE_
 | `FOLLOW_UPS` | decision_tree.py | Mapa de follow-ups por (tópico, ação) |
 | `COUNTRY_MAP` / `DEMONYM_MAP` | query_parser.py | 80+ mapeamentos país/gentílico |
 | `CACHE_TTL` / `MAX_RETRIES` / `REQUEST_TIMEOUT` | api_client.py | Política de atualização de rankings |
+| `PLAYER_CURIOSITY_KEYWORDS` | app.py | Dispara o Passo 1.7 (curiosidade de jogador → IA, sem ficha) |
+| `_TENNIS_SIGNAL_RE` | web_search.py | Desambiguação: só aceita resumo da Wikipedia com sinal de tênis |
 
 ---
 
@@ -171,6 +176,23 @@ responder. Correções:
   intent genérico de definição (que casava "grand slam" em 100% por ser pattern curto).
 - Cobertura: **BATERIA 23** em `run_tests.py` (3 casos do bug + 1 não-regressão).
 
+### 9.3 "Modo pesquisa" (RAG Wikipedia) + curiosidade de jogador (v4)
+Sintoma: curiosidade/fato de jogador **mostrava a ficha** (tabela) e o LLM **alucinava** fatos
+(até de jogador famoso). Correções:
+- **`web_search.py`** (novo): busca o fato na **Wikipedia** e injeta como grounding (o LLM
+  responde da fonte). Só Wikipedia (grátis, sem key); desambiguação por sinal de tênis; cache só
+  de sucessos; degradação graciosa.
+- **`app.py` Passo 1.7**: curiosidade/fato sobre um jogador (nome ou pronome→foco) → IA com
+  grounding (perfil local **+** Wikipedia, `force_web=True`), `extra_system` (modo curiosidade,
+  fato mais notável e literal) e **temperatura 0.2**. **Sem exibir a ficha.**
+- **Guarda de jogador nomeado**: "melhor ranking do João Fonseca" não vira "#1 do mundo"
+  (`_sup_named`) nem Top 10 genérico — é sobre o jogador citado.
+- **`decision_tree.py`**: `curiosidade`/`fato` saíram de `PLAYER_INFO_KEYWORDS`; defer no topo de
+  `try_contextual_response` para curiosidade-de-jogador.
+- **`llm_client.py`**: `SYSTEM_PROMPT` anti-invenção; `query_llm(extra_system, temperature)`.
+- Cobertura: **BATERIA 24** (determinística, roteamento) + **`tools/llm_eval.py`** (qualidade
+  factual ao vivo, 14/14).
+
 ---
 
 ## 10. Como adicionar conteúdo (mapa rápido)
@@ -209,7 +231,7 @@ Detalhes de schema em [DATABASE_AND_SCRAPING.md](DATABASE_AND_SCRAPING.md) e [CL
 | [PROJECT_GUIDE.md](PROJECT_GUIDE.md) | Guia módulo a módulo (o "porquê" de cada arquivo) |
 | [CLAUDE.md](CLAUDE.md) | Manual de treino/aperfeiçoamento (branches, reações, follow-ups) |
 | [DATABASE_AND_SCRAPING.md](DATABASE_AND_SCRAPING.md) | Schema dos JSON + scraping/API + retry/cache |
-| [TESTS_AND_RESULTS.md](TESTS_AND_RESULTS.md) | 312 testes em 23 baterias + bugs corrigidos |
+| [TESTS_AND_RESULTS.md](TESTS_AND_RESULTS.md) | 322 testes em 24 baterias + bugs corrigidos |
 | [QUICK_START.md](QUICK_START.md) | Início rápido (base + LLM) |
 | [CODING_STANDARDS.md](CODING_STANDARDS.md) | Regras de codificação (comentários PT-BR, etc.) |
 | [RELATORIO.md](RELATORIO.md) | Relatório acadêmico do trabalho final |

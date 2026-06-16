@@ -79,6 +79,10 @@ SYSTEM_PROMPT = (
     "Responda SEMPRE em português do Brasil (nunca em chinês, inglês ou outro idioma). "
     "Se a pergunta FOR sobre tênis, responda o fato de forma correta e MUITO direta "
     "(1 a 2 frases); se não tiver certeza, admita. "
+    "NUNCA invente fatos, datas, números, títulos ou parentescos. Quando houver um 'Contexto "
+    "factual do sistema' ou 'Contexto recuperado' abaixo, baseie a resposta NELE; se a resposta "
+    "não estiver nesse contexto e você não tiver certeza, diga claramente que não encontrou um "
+    "dado confiável — JAMAIS invente. "
     "Use a sentinela APENAS quando a pergunta NÃO tiver QUALQUER relação com tênis "
     "(ex.: futebol, política, culinária): nesse caso responda EXCLUSIVAMENTE com esta "
     "palavra, sem mais nada: " + OFF_TOPIC_SENTINEL + "."
@@ -227,13 +231,16 @@ def is_on_topic(user_text):
     return None  # Resposta inconclusiva → trata como indisponível.
 
 
-def query_llm(user_text, grounding=None, history=None):
+def query_llm(user_text, grounding=None, history=None, extra_system=None, temperature=None):
     """Consulta o LLM (LM Studio) como fallback.
 
-    user_text: a pergunta do usuário.
-    grounding: contexto factual opcional (ex.: dados de um jogador) injetado no
-               system prompt para reduzir alucinação.
-    history:   lista opcional de mensagens anteriores [{"role","content"}, ...].
+    user_text:    a pergunta do usuário.
+    grounding:    contexto factual opcional (ex.: dados de um jogador, ou trecho
+                  recuperado da Wikipedia) injetado no system prompt p/ reduzir alucinação.
+    history:      lista opcional de mensagens anteriores [{"role","content"}, ...].
+    extra_system: instrução opcional adicional anexada ao system prompt (ex.: o
+                  "modo curiosidade": responder em 1–2 frases SÓ com o grounding,
+                  sem repetir a ficha inteira do jogador).
 
     Retorna {"answer": str, "latency": float} em caso de sucesso, ou None em
     QUALQUER falha (desligado, servidor fora, timeout, resposta vazia) — deixando
@@ -248,6 +255,8 @@ def query_llm(user_text, grounding=None, history=None):
             "\n\nContexto factual do sistema (use se for relevante, ignore se não for):\n"
             + grounding
         )
+    if extra_system:
+        system_content += "\n\n" + extra_system
 
     messages = [{"role": "system", "content": system_content}]
     if history:
@@ -261,10 +270,13 @@ def query_llm(user_text, grounding=None, history=None):
                                 "sem nenhuma palavra em chinês, japonês ou inglês.)",
     })
 
+    # Temperatura efetiva: o chamador pode pedir uma menor (ex.: rota de curiosidade
+    # usa 0.2 p/ ficar mais fiel ao grounding e menos "criativa"/vaga).
+    eff_temp = LLM_TEMPERATURE if temperature is None else temperature
     payload = {
         "model": LLM_MODEL,
         "messages": messages,
-        "temperature": LLM_TEMPERATURE,
+        "temperature": eff_temp,
         "max_tokens": LLM_MAX_TOKENS,
         "stream": False,
     }
@@ -319,7 +331,7 @@ def query_llm(user_text, grounding=None, history=None):
                 "method": "POST",
                 "endpoint": f"{LLM_BASE_URL}/chat/completions",
                 "model": LLM_MODEL,
-                "temperature": LLM_TEMPERATURE,
+                "temperature": eff_temp,
                 "max_tokens": LLM_MAX_TOKENS,
                 "messages": messages,
             },

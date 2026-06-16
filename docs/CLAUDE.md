@@ -5,11 +5,19 @@ o ChatBot de Tenis. Ele descreve **todos os comportamentos esperados**, as regra
 de decisao, o sistema de reacoes empaticas, o pipeline de processamento e como adicionar
 novas funcionalidades sem quebrar o que ja funciona.
 
-**Antes de qualquer mudanca, rode `python run_tests.py` e garanta 312/312.**
+**Antes de qualquer mudanca, rode `python run_tests.py` e garanta 322/322.**
 
-> **Arquitetura híbrida (v3):** a base responde primeiro; o **LLM (Qwen via LM Studio)** é
-> fallback **só para tênis**. O bot é **fechado em tênis** (off-topic bloqueado). Ver
-> [LLM_HYBRID.md](LLM_HYBRID.md) e [AI_HANDOFF.md](AI_HANDOFF.md).
+> **Arquitetura híbrida (v4):** a base responde primeiro; o **LLM (Qwen via LM Studio)** é
+> fallback **só para tênis**, agora com **"modo pesquisa"** — quando a base não cobre, o bot
+> **busca o fato na Wikipedia** (`web_search.py`) e injeta como grounding (responde da fonte,
+> não da memória). Curiosidade/fato **sobre um jogador** é respondida pela IA **sem exibir a
+> ficha**. O bot é **fechado em tênis** (off-topic bloqueado). Ver [LLM_HYBRID.md](LLM_HYBRID.md)
+> e [AI_HANDOFF.md](AI_HANDOFF.md).
+
+> **Princípio reitor — discernimento de contexto (base × IA):** (1) bateu na base local
+> (ranking/ficha/campeões/torneios/recordes/intents) → **responde direto**; (2) é tênis mas a
+> base não cobre → monta grounding só de tênis (perfil local + **pesquisa Wikipedia**) e **joga
+> para a IA**; (3) não é tênis → **bloqueia**; sem fonte confiável → **admite, não inventa**.
 
 ---
 
@@ -22,13 +30,14 @@ Cada mensagem do usuario passa por estas etapas, nesta ordem exata:
 [2]  Filtro Off-Topic — Camada 1 (60+ keywords + conhecimento geral) → BLOQUEIA
 [3]  Deteccao de Gibberish → BLOQUEIA (nunca vai ao LLM)
 [4]  Validacao de topico via Qwen — Camada 3 (so com contexto ativo, sem sinal de tenis)
-[5]  Arvore de Decisao (contexto, follow-ups, reacoes)
-[6]  Query Parser (pais, temporal, superlativo, circuito)
+[5]  Arvore de Decisao (contexto, follow-ups, reacoes; curiosidade-de-jogador → defere à IA)
+[6]  Query Parser (pais, temporal, superlativo, circuito; guarda de jogador nomeado)
 [7]  Dados Tecnicos (ranking, jogadores, campeoes, recordes, posicao)
+[7.5] Curiosidade/fato sobre JOGADOR → IA (grounding perfil local + PESQUISA Wikipedia), SEM ficha
 [8]  Roteador de contagem ("quantos ... slam/torneio") → LLM
 [9]  Intent Matching (knowledge_base.json, 50% / 65% com contexto)
-[10] Fallback final → LLM (perguntas de tenis fora da base) | log em unrecognized_queries.json
-[11] Degradacao graciosa → resposta canned (LLM off)
+[10] Fallback final → LLM (tenis fora da base) com grounding + pesquisa Wikipedia | log em unrecognized_queries.json
+[11] Degradacao graciosa → resposta canned (LLM/pesquisa off)
 [12] Enrich (adiciona follow-up aberto + atualiza sessao)
 ```
 
@@ -352,7 +361,8 @@ Em `engine.py`:
 
 ## 12. Checklist de Testes Antes de Qualquer Commit
 
-1. `python run_tests.py` → **312/312 ZERO FALHAS**
+1. `python run_tests.py` → **322/322 ZERO FALHAS** (LLM e pesquisa desligados no CI)
+   - Opcional (LM Studio ligado): `python tools/llm_eval.py` → **14/14** (qualidade factual ao vivo)
 2. Testar manualmente no navegador:
    - Fluxo de 20 turnos sem perder contexto
    - Typo de jogador (ex: "Medevedev")
@@ -451,7 +461,11 @@ Em `engine.py`:
 | `query_parser.py` | 52-70 | TEMPORAL/SUPERLATIVE/ATP/WTA markers |
 | `engine.py` | 10-40 | COUNTRY_FLAGS |
 | `session_manager.py` | 10-20 | SESSION_TTL, MAX_TURNS |
-| `run_tests.py` | 1-765 | 312 testes em 23 baterias |
+| `run_tests.py` | 1-790 | 322 testes em 24 baterias (Bateria 24 = curiosidade de jogador) |
+| `web_search.py` | 1-150 | Pesquisa Wikipedia (search + summary, cache, desambiguação) |
+| `app.py` | ~135 | PLAYER_CURIOSITY_KEYWORDS |
+| `app.py` | ~700 | Passo 1.7 — roteador de curiosidade de jogador → IA |
+| `tools/llm_eval.py` | 1-130 | Harness de avaliação ao vivo (LLM + Wikipedia) |
 
 ---
 
@@ -542,9 +556,72 @@ Golden Slam" **não** devem virar "campeões genéricos". Correção em 3 camada
 
 ---
 
+## 16-B. "Modo Pesquisa" (RAG Wikipedia) + Curiosidade de Jogador (CONCLUIDO, v4)
+
+### Por quê
+O Qwen 7B local **alucina fatos específicos** (testado: inventou que Alcaraz venceu o AO 2022;
+inventou parentesco de jogador obscuro). E o pipeline **mostrava a ficha** quando o usuário
+pedia *curiosidade de jogador*. Solução: a IA **pesquisa** a fonte e responde **a pergunta**,
+sem despejar a tabela.
+
+### Novo módulo `web_search.py` (fonte: **Wikipedia apenas**, grátis, sem API key)
+- `search_tennis(query, player_hint=None)`: MediaWiki search + REST summary (PT→EN fallback),
+  `User-Agent` próprio, timeouts, cache **só de sucessos** (falha transitória re-tenta).
+- **Desambiguação:** só aceita o resumo se tiver sinal de tênis (senão `None` → honestidade).
+- Config `.env`: `WEB_SEARCH_ENABLED` (default 1), `WEB_SEARCH_LANG=pt`, `WEB_SEARCH_TIMEOUT=8`.
+  **Testes forçam `WEB_SEARCH_ENABLED=0`** (CI sem rede).
+
+### Roteamento de curiosidade de jogador (Passo 1.7 em `app.py`)
+- `PLAYER_CURIOSITY_KEYWORDS` (enxuta: "curiosidade(s)", "fato curioso", "algo interessante"…).
+- Alvo = nome explícito (stem ≥ 4) → fuzzy 0.82 → **pronome + `focus_player`**.
+- Só dispara **com alvo**. Sem alvo ("me conta uma curiosidade") → curiosidade aleatória da base.
+- Monta grounding (`build_grounding(player_name=alvo, force_web=True)` = perfil local **+**
+  Wikipedia) e chama o LLM com `extra_system` (modo curiosidade) e **temperatura 0.2** (fiel ao
+  grounding). Responde 1–2 frases, **sem ficha**. LLM/pesquisa off → canned curto (degradação).
+- `decision_tree.py`: `curiosidade`/`fato` **saíram** de `PLAYER_INFO_KEYWORDS`; um **defer no
+  topo** de `try_contextual_response` devolve `None` (deixa o app.py/IA responder) quando a
+  curiosidade se refere a um jogador (pronome→foco ou nome).
+
+### Guarda de jogador nomeado (discernimento de contexto) em `app.py`
+- "qual o **melhor ranking do João Fonseca**" NÃO é "o #1 do mundo": se a mensagem **nomeia um
+  jogador** (`_sup_named`, guard stem ≥ 4), o atalho superlativo→#1 e o bloco de ranking
+  genérico (Top 10) **não disparam** — segue para a ficha do jogador / IA.
+
+### Auditoria dos blocos — quando a BASE dispara e quando vai ao LM Studio (IA)
+Princípio: cada bloco da base só dispara quando **realmente** responde; senão, **joga na IA**.
+
+| Bloco (app.py) | Dispara na BASE quando… | Vai à IA (LM Studio) quando… |
+|---|---|---|
+| Superlativo → #1 | "melhor jogador/do mundo" SEM nomear jogador | nomeia jogador (`_sup_named`) → ficha/IA |
+| Ranking Top 10 | "ranking atp", "top 10" SEM nomear jogador | nomeia jogador (`_sup_named`) |
+| Vencedores/Campeões | cita torneio ("quem ganhou Wimbledon") | nomeia jogador e NÃO cita torneio ("título mais importante do Fonseca") |
+| País (melhores do país) | "melhor brasileiro", "jogadores brasileiros" | atributo além da base ("mais **rico**/**polêmico** do brasil") → `player_question_beyond_base` |
+| Torneio (ficha/campeões) | "me fala sobre Wimbledon", "quem ganhou…" | `TOURNAMENT_BEYOND_KW` (ingresso, diretor, transmissão…) |
+| Jogador → ficha | nome solto, ficha-request, ou **campo da base** (país/idade/altura/títulos/estilo/piso/ranking), reação, comparação, elogio | curiosidade, **head-to-head**, ou atributo fora da base (raquete, treinador, namorada…) → `player_question_beyond_base` |
+| Pergunta-LISTA | — (a base não enumera) | "cite N jogadores…", "quais jogadores…" → `is_general_list_query` |
+
+Helpers centrais em `decision_tree.py`: `is_general_list_query`, `is_ficha_request`,
+`base_handles_player_question`, `player_question_beyond_base` (`QUESTION_SIGNAL_RE`,
+`BEYOND_BASE_ATTR_KW`, `HEAD_TO_HEAD_KW`). Os mesmos defers rodam no **contexto** (árvore) e no
+**fresh** (Passo 1.7), e com LLM/pesquisa off há **degradação graciosa** (cai na base/canned).
+
+### Anti-alucinação no LLM (`llm_client.py`)
+- `SYSTEM_PROMPT` ganhou cláusula: **não inventar** datas/números/títulos/parentescos; usar o
+  contexto factual/recuperado; **admitir** quando não houver — jamais inventar.
+- `query_llm(..., extra_system=None, temperature=None)`: instrução extra + temperatura por chamada.
+
+### Harness ao vivo `tools/llm_eval.py` (itera sem colar pipeline)
+- Sobe `app.test_client()` com `LLM_ENABLED=1`+`WEB_SEARCH_ENABLED=1`; bateria com PASS/FAIL
+  (in-base correto/sem ficha; **fora da base correto via Wikipedia**; honestidade; off-topic
+  bloqueia; contexto; typo→fuzzy). Sem servidor/rede, avisa e sai (**não** é CI). Estado atual:
+  **14/14 PASS** (Alcaraz/Sinner/Sabalenka/Medvedev/Seyboth Wild corretos e ancorados).
+
+---
+
 ## 17. Proximos Passos Sugeridos
 
-1. **RAG vetorial**: substituir o *grounding* por keyword por embeddings/busca densa.
+1. **RAG vetorial**: usar o modelo de embeddings (`nomic-embed`, já no LM Studio) p/ ranquear os
+   trechos recuperados da Wikipedia (hoje pegamos só o resumo da página mais provável).
 2. **Head-to-Head**: Confrontos diretos entre jogadores.
 3. **Estatisticas**: Aces, % primeiro servico, duplas faltas.
 4. **Mais reacoes**: Adicionar reacoes para "servico", "slice", "drop shot", "lob".

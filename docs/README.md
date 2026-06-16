@@ -4,7 +4,7 @@ ChatBot conversacional **nichado em tênis (ATP/WTA), em português**, com **arq
 híbrida**: base de conhecimento (Python · Flask · NLTK · árvore de decisão contextual) +
 **LLM local (Qwen2.5-7B via LM Studio)** como fallback. Memória de até 20 turnos.
 
-**312 testes automatizados | 23 baterias | 100% de aprovação**
+**322 testes automatizados | 24 baterias | 100% de aprovação**
 
 ----
 
@@ -19,7 +19,8 @@ híbrida**: base de conhecimento (Python · Flask · NLTK · árvore de decisão
 - **Filtragem por país**: "melhor jogador do brasil" → João Fonseca.
 - **Reações empáticas**: "o forehand dele é incrível" → reação com pronome correto.
 - **Fechado em tênis**: off-topic e gibberish bloqueados.
-- **LLM de fallback**: perguntas de tênis fora da base vão ao Qwen (com *grounding* anti-alucinação).
+- **LLM de fallback + modo pesquisa**: perguntas de tênis fora da base vão ao Qwen, que **pesquisa o fato na Wikipedia** (`web_search.py`) e responde da fonte — sem inventar.
+- **Curiosidade de jogador**: "uma curiosidade sobre o Alcaraz" / "sobre ele" → a IA responde o fato (base + Wikipedia), **sem despejar a ficha**.
 - **Pipeline visual**: painel técnico lateral mostra cada etapa do processamento + a chamada ao LLM.
 
 ---
@@ -51,7 +52,8 @@ python app.py            # http://127.0.0.1:5000
   [`COMO_RODAR.md`](../COMO_RODAR.md) e [LLM_HYBRID.md](LLM_HYBRID.md).
 
 ```bash
-python run_tests.py      # 312/312 — obrigatório antes de commit
+python run_tests.py      # 322/322 — obrigatório antes de commit (LLM e pesquisa desligados)
+python tools/llm_eval.py # opcional (LM Studio ligado): avaliação factual ao vivo — 14/14
 ```
 
 ---
@@ -63,12 +65,14 @@ ChatBotTenista/
 ├── app.py                  # Servidor Flask — pipeline + roteamento base→LLM (860)
 ├── decision_tree.py        # Árvore de decisão contextual (899)
 ├── engine.py               # Motor de dados técnico (514)
-├── llm_client.py           # Cliente do LLM (LM Studio / Qwen) (330)
+├── llm_client.py           # Cliente do LLM (LM Studio / Qwen) (340)
+├── web_search.py           # Modo pesquisa: retrieval Wikipedia (grounding) (~150)
 ├── api_client.py           # Scraping ATP + API WTA, retry + cache 24h (416)
 ├── query_parser.py         # Parser de queries (país/temporal/superlativo) (208)
 ├── session_manager.py      # Sessões in-memory (153)
 ├── nltk_utils.py           # Tokenização, stemming, entidades (90)
-├── run_tests.py            # 312 testes, 23 baterias (765)
+├── run_tests.py            # 322 testes, 24 baterias (~790)
+├── tools/llm_eval.py       # Harness de avaliação ao vivo (LLM + Wikipedia)
 ├── tennis_data.json        # Rankings + 290 jogadores + Grand Slams + torneios + recordes
 ├── knowledge_base.json     # 49 intents conversacionais
 ├── .env.example            # Configuração do LLM (copiar para .env)
@@ -78,7 +82,7 @@ ChatBotTenista/
 └── docs/                   # Documentação completa (ver índice abaixo)
 ```
 
-**Total: ~3.470 linhas de Python na aplicação (8 módulos) + 765 de testes.**
+**Total: ~3.620 linhas de Python na aplicação (9 módulos) + ~790 de testes.**
 
 ---
 
@@ -92,7 +96,7 @@ ChatBotTenista/
 | [PROJECT_GUIDE.md](PROJECT_GUIDE.md) | Guia módulo a módulo |
 | [CLAUDE.md](CLAUDE.md) | Manual de treino/aperfeiçoamento da IA |
 | [DATABASE_AND_SCRAPING.md](DATABASE_AND_SCRAPING.md) | Schema dos JSON + scraping/API + retry/cache |
-| [TESTS_AND_RESULTS.md](TESTS_AND_RESULTS.md) | 312 testes em 23 baterias + bugs corrigidos |
+| [TESTS_AND_RESULTS.md](TESTS_AND_RESULTS.md) | 322 testes em 24 baterias + bugs corrigidos |
 | [QUICK_START.md](QUICK_START.md) | Início rápido |
 | [CODING_STANDARDS.md](CODING_STANDARDS.md) | Regras de codificação |
 | [RELATORIO.md](RELATORIO.md) | Relatório acadêmico do trabalho final |
@@ -108,4 +112,4 @@ ChatBotTenista/
 4. **Dados reais**: rankings atualizados de fontes oficiais (ATP/WTA) com retry e cache.
 5. **Anti-alucinação**: *grounding* leve injeta fatos no prompt do LLM.
 6. **Degradação graciosa**: funciona 100% mesmo sem o LM Studio.
-7. **Testado exaustivamente**: 312 testes em 23 baterias, zero falhas.
+7. **Testado exaustivamente**: 322 testes em 24 baterias, zero falhas (+ avaliação factual ao vivo, 14/14).
