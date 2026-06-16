@@ -230,6 +230,55 @@ def _ddg_search(query, max_results=3):
         return []
 
 
+# -----------------------------------------------------------------------------
+# Busca DIRECIONADA por CONTEXTO. A pergunta crua faz o DuckDuckGo devolver "raquete"
+# para quase todo equipamento (raquete domina a indexação desses jogadores e "tênis" é
+# a palavra do ESPORTE). Quando reconhecemos o contexto com confiança, montamos uma
+# busca ancorada no jogador: "{jogador} {termos do contexto}". Sem reconhecimento →
+# devolvemos a query crua (preserva os contextos que já funcionam: namorada, lesão,
+# treinador, curiosidade, confronto…). Regex com \b evita falsos positivos por substring
+# (ex.: "concorda"/"recorda" NÃO casam "corda").
+# -----------------------------------------------------------------------------
+
+# "tênis" = CALÇADO (e não o esporte) quando vem como objeto possuído ("o tênis do X",
+# "que tênis ele usa") OU quando há palavra explícita de calçado.
+_FOOTWEAR_RE = re.compile(
+    r'\b(cal[çc]ados?|sapatos?|sapat[êe]nis|chuteiras?|sapatilhas?)\b'
+    r'|\b(o|os|que|qual|um|seu)\s+t[êe]nis\b'
+    r'|t[êe]nis\s+(que|d[oae]|usad|nike|adidas|asics|nos\s+p[ée]s)',
+    re.IGNORECASE)
+
+# (regex de gatilho, template de busca). ORDEM IMPORTA — mais específico primeiro.
+# 'raqueteira' é checado ANTES de 'raquete' (uma contém a outra como substring).
+CONTEXT_QUERY_RULES = [
+    (re.compile(r'\b(raqueteiras?|mochilas?|bolsas?|bag|malas?)\b', re.IGNORECASE),
+     "raqueteira bag mochila"),
+    (re.compile(r'\b(cordas?|encordoamento|strings?)\b', re.IGNORECASE),
+     "cordas encordoamento tensão"),
+    (re.compile(r'\b(raquetes?)\b', re.IGNORECASE),
+     "raquete que usa"),
+    (re.compile(r'\b(roupas?|vestu[áa]rio|camisas?|camisetas?|uniforme|outfit|'
+                r'patroc[íi]nio|patrocinador(?:es)?|patrocinad[ao]s?|patrocina|bon[ée])\b',
+                re.IGNORECASE),
+     "roupa vestuário patrocínio"),
+]
+
+
+def _targeted_ddg_query(query, player_hint=None):
+    """Monta a busca DDG direcionada ao contexto da pergunta, ancorada no jogador.
+    Sem jogador OU sem contexto reconhecido → devolve a query crua (comportamento atual,
+    que já acerta namorada/lesão/treinador/curiosidade/confronto)."""
+    raw = (query or "").strip()
+    if not player_hint:
+        return raw
+    if _FOOTWEAR_RE.search(raw):
+        return f"{player_hint} tênis calçado que usa nos jogos"
+    for rule, template in CONTEXT_QUERY_RULES:
+        if rule.search(raw):
+            return f"{player_hint} {template}"
+    return raw
+
+
 def search_tennis(query, player_hint=None):
     """Pesquisa um fato de TÊNIS (Wikipedia + DuckDuckGo) e devolve grounding + fontes.
 
@@ -277,10 +326,13 @@ def search_tennis(query, player_hint=None):
 
     # (2) DUCKDUCKGO — fallback web p/ fatos específicos/atuais (raquete, patrocínio…).
     if _ddg_enabled():
-        ddg_q = (query or target).strip()
+        ddg_q = _targeted_ddg_query(query or target, player_hint)
         web = _ddg_search(ddg_q)
         if web:
-            parts.append("Resultados da web (DuckDuckGo):\n" + "\n".join(f"- {w['snippet']}" for w in web))
+            # Inclui o TÍTULO além do snippet: muitas vezes o fato decisivo vive no
+            # título do resultado (ex.: "Sabalenka anunció que se casa con…") e o snippet
+            # traz só contexto vago. Sem o título, o LLM dizia "não há informação".
+            parts.append("Resultados da web (DuckDuckGo):\n" + "\n".join(f"- {w['title']}: {w['snippet']}" for w in web))
             for w in web:
                 sources.append({"engine": "DuckDuckGo", **w})
             _dbg(f"[WEB_SEARCH] DuckDuckGo '{ddg_q}' → {len(web)} resultado(s)")  # debug no terminal

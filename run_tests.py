@@ -902,6 +902,48 @@ expect('28.05', 'o Nadal é canhoto?', 'hd5', None, ['Jogadores(as) canhotos'])
 # =====================================================================
 print()
 print('='*70)
+print('BATERIA 29: Busca web direcionada por CONTEXTO (_targeted_ddg_query, sem rede)')
+print('='*70)
+# A pergunta crua faz o DuckDuckGo cair sempre em "raquete"; o refinador monta a busca
+# certa por contexto (calçado, raqueteira, cordas, roupa) ANCORADA no jogador, SEM regredir
+# os contextos que já funcionam (namorada, lesão, treinador) — esses usam a query CRUA.
+import web_search as _ws
+def expect_query(tid, question, player, must_have=None, must_not=None):
+    global TOTAL, FAILS
+    TOTAL += 1
+    q = _ws._targeted_ddg_query(question, player)
+    ok, reason = True, ''
+    for h in (must_have or []):
+        if h.lower() not in q.lower():
+            ok, reason = False, f'FALTA: "{h}"'; break
+    if ok:
+        for n in (must_not or []):
+            if n.lower() in q.lower():
+                ok, reason = False, f'INDEVIDO: "{n}"'; break
+    print(f'  [{"OK" if ok else "FAIL"}] {tid}: "{question}" -> "{q}"')
+    if not ok:
+        FAILS.append({'t': tid, 'm': question, 'r': reason, 'g': q})
+# Equipamentos: monta a busca DIRECIONADA (não cai em raquete)
+expect_query('29.01', 'qual o tênis do alcaraz?', 'Carlos Alcaraz', ['Carlos Alcaraz', 'calçado'], ['raquete'])
+expect_query('29.02', 'que tênis o sinner usa nos jogos?', 'Jannik Sinner', ['Jannik Sinner', 'calçado'])
+expect_query('29.03', 'qual o calçado do nadal?', 'Rafael Nadal', ['calçado'])
+expect_query('29.04', 'qual a raqueteira do sinner?', 'Jannik Sinner', ['raqueteira', 'bag'], ['que usa'])
+expect_query('29.05', 'qual a corda do sinner?', 'Jannik Sinner', ['cordas', 'encordoamento'])
+expect_query('29.06', 'qual a raquete do alcaraz?', 'Carlos Alcaraz', ['raquete que usa'])
+expect_query('29.07', 'qual a roupa do alcaraz?', 'Carlos Alcaraz', ['roupa', 'patrocínio'])
+# NÃO-REGRESSÃO: contextos que já funcionam usam a query CRUA (sem termo de equipamento)
+expect_query('29.08', 'a sabalenka é casada?', 'Aryna Sabalenka', ['casada'], ['calçado', 'raqueteira', 'cordas', 'que usa'])
+expect_query('29.09', 'o sinner se lesionou?', 'Jannik Sinner', ['lesionou'], ['calçado', 'raqueteira', 'cordas'])
+expect_query('29.10', 'quem é o treinador da sabalenka?', 'Aryna Sabalenka', ['treinador'], ['calçado', 'raqueteira'])
+# GUARDA de substring: "concorda" NÃO pode casar "cordas" (regex com \b)
+expect_query('29.11', 'o federer concorda com o saque?', 'Roger Federer', ['concorda'], ['encordoamento'])
+# Sem jogador resolvido → query CRUA (nunca inventa âncora)
+expect_query('29.12', 'qual a raquete?', None, ['qual a raquete?'], ['que usa'])
+
+
+# =====================================================================
+print()
+print('='*70)
 total_pass = TOTAL - len(FAILS)
 print(f'RESULTADO FINAL: {total_pass}/{TOTAL} passaram ({len(FAILS)} falhas)')
 if FAILS:
