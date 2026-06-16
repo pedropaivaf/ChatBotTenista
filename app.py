@@ -883,6 +883,36 @@ def predict(): # Função principal de "predição" ou resposta
                            pending_follow_up=("player_detail" if player else context.get("pending_follow_up")))
         return jsonify({"answer": canned, "logs": current_logs, "pipeline": pipeline_steps})
 
+    # (i-bis) Lista de CANHOTOS/DESTROS → respondida DIRETO da base (mão dominante curada
+    # em player_details). É um caso em que o LLM erra muito (chuta handedness), então a
+    # base curada é mais confiável que o Qwen+Wikipedia/DuckDuckGo. Só dispara em pergunta
+    # de LISTA que cite mão dominante; o resto das listas segue para a IA (item (i)).
+    HAND_LEFT_KW = ("canhoto", "canhotos", "canhota", "canhotas", "esquerdino", "esquerdina",
+                    "mão esquerda", "mao esquerda", "com a esquerda", "de esquerda")
+    HAND_RIGHT_KW = ("destro", "destros", "destra", "destras", "mão direita", "mao direita",
+                     "com a direita", "de direita")
+    _hand = None
+    if is_general_list_query(msg_lower):
+        if any(k in msg_lower for k in HAND_LEFT_KW):
+            _hand = "left"
+        elif any(k in msg_lower for k in HAND_RIGHT_KW):
+            _hand = "right"
+    if _hand:
+        nomes = tennis_engine.get_players_by_handedness(_hand)
+        if nomes:
+            _num = re.search(r'\b(\d{1,2})\b', msg_lower)
+            _lim = max(1, min(int(_num.group(1)), 30)) if _num else 12
+            sel = nomes[:_lim]
+            rotulo = "canhotos(as) — mão esquerda" if _hand == "left" else "destros(as) — mão direita"
+            body = f"🎾 <span class='msg-highlight'>Jogadores(as) {rotulo}:</span>\n\n"
+            body += "".join(f"<span class='msg-highlight'>•</span> {n}\n" for n in sel)
+            if len(nomes) > len(sel):
+                body += f"\n<span class='msg-highlight'>(+{len(nomes) - len(sel)} outros(as) na base)</span>"
+            add_log(f"[BASE] Lista de {'canhotos' if _hand=='left' else 'destros'} respondida pela base curada ({len(sel)} de {len(nomes)})", "SUCCESS")
+            add_step("Motor de Dados", "success", f"Mão dominante ({_hand}) — base curada")
+            return respond(body.strip(), topic="player", bot_action="showed_handedness_list",
+                           mentioned_players=sel)
+
     # (i) Pergunta-LISTA / geral → IA (a base não enumera jogadores por atributo).
     if is_general_list_query(msg_lower):
         return _route_to_ai("Pergunta geral → IA", "Pergunta-lista/geral de tênis → IA")

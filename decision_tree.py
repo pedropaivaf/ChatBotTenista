@@ -31,6 +31,9 @@ FOLLOW_UPS = {
     ("player", "showed_country_best"): [
         "Quer ver a ficha de algum desses ou explorar outro tema?",
     ],
+    ("player", "showed_handedness_list"): [
+        "Quer ver a ficha de algum desses jogadores ou explorar outro tema?",
+    ],
     # Torneio — abre para jogador ou outro torneio
     ("tournament", "showed_champions"): [
         "Quer saber sobre algum desses jogadores ou ver outro torneio?",
@@ -1021,7 +1024,7 @@ class DecisionTree:
         if bot_action in ("showed_ranking",):
             pending = "player_from_ranking"
         # Se mostrou ranking por país ou melhores do país, espera jogador do ranking por país
-        elif bot_action in ("showed_country_ranking", "showed_country_best"):
+        elif bot_action in ("showed_country_ranking", "showed_country_best", "showed_handedness_list"):
             pending = "player_from_country_ranking"
         # Se mostrou info de jogador, espera mais detalhes sobre esse jogador
         elif bot_action in ("showed_player_info", "showed_player_from_context",

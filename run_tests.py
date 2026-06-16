@@ -1,6 +1,6 @@
 """
 Bateria EXAUSTIVA de testes do chatbot Tennis AI.
-335 cenários em 27 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
+340 cenários em 28 baterias cobrindo: contexto, fuzzy, reações, trivia, Grand Slams, Masters 1000,
 ATP 500, último ganhador, países, edge cases, WTA, off-topic, typos, fluxos de 20 turnos,
 campos específicos (altura/títulos/idade), listagem de torneios, recordes, GOAT, lendas,
 posição no ranking, next gen, regras detalhadas, curiosidade de jogador → IA,
@@ -777,9 +777,11 @@ expect('24.04', 'quem é o Sinner?', 'cur4', ['Jannik Sinner', '(ATP)'])
 expect('24.05', 'qual a raquete que o Sinner usa?', 'cur5', ['indisponível'], ['(ATP)', '(WTA)'])
 # 24.06 — Atributo fora da base SEM palavra-interrogativa ("tem namorada") → IA, NÃO ficha
 expect('24.06', 'o Alcaraz tem namorada?', 'cur6', ['indisponível'], ['(ATP)', '(WTA)'])
-# 24.07 — Pergunta-LISTA geral → IA, NÃO a ficha (mesmo em contexto de jogador)
+# 24.07 — Pergunta-LISTA geral → IA, NÃO a ficha (mesmo em contexto de jogador).
+# (Listas de canhotos/destros agora são respondidas pela BASE — ver Bateria 28 —, então
+# aqui usamos uma lista por atributo NÃO-handedness, que continua indo à IA.)
 chat('quem é o Fonseca?', 'cur7')
-expect('24.07', 'cite 10 jogadores canhotos', 'cur7', ['indisponível'], ['(ATP)', '(WTA)'])
+expect('24.07', 'cite 10 jogadores agressivos', 'cur7', ['indisponível'], ['(ATP)', '(WTA)'])
 # 24.08 — NÃO-REGRESSÃO: campo da base ("altura") AINDA é respondido pela base
 expect('24.08', 'qual a altura do Sinner?', 'cur8', ['Sinner'], ['indisponível'])
 # 24.09 — Head-to-head (confronto direto) → IA, NÃO a ficha de um jogador
@@ -865,6 +867,36 @@ expect_grounding('27.02', 'quais grand slams o nadal ganhou', 'Rafael Nadal',
                  ['22', '14x Roland Garros'])
 expect_grounding('27.03', 'quantos slams do federer', 'Roger Federer',
                  ['20', '8x Wimbledon'])
+
+
+# =====================================================================
+print()
+print('='*70)
+print('BATERIA 28: Canhotos/Destros respondidos pela BASE curada (não pelo LLM)')
+print('='*70)
+# O LLM erra muito handedness; a mão dominante é dado CURADO em player_details (style).
+# A base lista canhotos/destros com 100% de precisão (sem falsos positivos).
+def expect_hand(tid, hand, must_have, must_not):
+    global TOTAL, FAILS
+    TOTAL += 1
+    names = app_module.tennis_engine.get_players_by_handedness(hand)
+    miss = [h for h in must_have if h not in names]
+    intr = [m for m in must_not if m in names]
+    ok = not miss and not intr
+    print(f'  [{"OK" if ok else "FAIL"}] {tid}: handedness({hand}) tem {must_have} e não {must_not}')
+    if not ok:
+        FAILS.append({'t': tid, 'm': hand, 'r': f'faltou {miss} / indevido {intr}', 'g': str(names[:6])})
+# 28.01/28.02 — engine: classificação correta e completa (inclui aposentados e EN 'left-handed')
+expect_hand('28.01', 'left', ['Rafael Nadal', 'Martina Navratilova', 'Denis Shapovalov', 'Ben Shelton'],
+            ['Roger Federer', 'Novak Djokovic', 'Carlos Alcaraz'])
+expect_hand('28.02', 'right', ['Jannik Sinner', 'Carlos Alcaraz', 'Novak Djokovic', 'Roger Federer'],
+            ['Rafael Nadal', 'Martina Navratilova'])
+# 28.03 — HTTP: "cite 5 canhotos" vem da BASE (mão esquerda), NÃO do LLM ('indisponível')
+expect('28.03', 'cite 5 jogadores canhotos', 'hd3', ['mão esquerda'], ['indisponível', 'Djokovic', 'Federer'])
+# 28.04 — HTTP: "quais jogadores destros" vem da BASE (mão direita), NÃO do LLM
+expect('28.04', 'quais jogadores são destros', 'hd4', ['mão direita'], ['indisponível'])
+# 28.05 — NÃO-REGRESSÃO: pergunta SINGULAR ("o Nadal é canhoto?") não vira lista da base
+expect('28.05', 'o Nadal é canhoto?', 'hd5', None, ['Jogadores(as) canhotos'])
 
 
 # =====================================================================

@@ -526,6 +526,25 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
 
         return result.strip()
 
+    def get_players_by_handedness(self, hand):
+        """Nomes dos jogadores(as) CANHOTOS ('left') ou DESTROS ('right'), a partir do
+        campo `style` CURADO em player_details — determinístico e factual (sem depender do
+        LLM/web, que erram handedness). Aceita marcadores PT e EN ('canhoto/a', 'esquerd…',
+        'left-handed', 'lefty'; 'destro/a', 'direit…', 'right-handed'). Ordena por relevância
+        (posição no ranking primeiro, depois alfabético). Retorna lista (pode ser vazia)."""
+        import re as _re
+        left = _re.compile(r'canhot|esquerd|left[\s\-]?hand|lefty', _re.I)
+        right = _re.compile(r'destr|direit|right[\s\-]?hand', _re.I)
+        rx = left if hand == 'left' else right
+        pos = {}
+        for key in ('ranking_atp', 'ranking_wta'):
+            for p in self.data.get(key, []):
+                pos.setdefault(p['name'], p['position'])
+        nomes = [n for n, d in self.data.get('player_details', {}).items()
+                 if rx.search(d.get('style') or '')]
+        nomes.sort(key=lambda n: (pos.get(n, 9999), n))
+        return nomes
+
     def reload_data(self):
         """Recarrega os dados do JSON sem reiniciar o servidor."""
         self.data = self._load_data()

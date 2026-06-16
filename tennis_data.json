@@ -1513,7 +1513,7 @@
     },
     "Carlos Alcaraz": {
       "age": 23,
-      "style": "Agressivo",
+      "style": "Agressivo, destro",
       "titles": "Títulos ATP: 7 Grand Slams (RG 2024-25, Wimbledon 2023-24, US Open 2022-25, AO 2026), 8 Masters 1000, 9 ATP 500",
       "country": "Espanha",
       "fact": "#1 mais jovem.",
@@ -1522,7 +1522,7 @@
     },
     "Novak Djokovic": {
       "age": 39,
-      "style": "Completo",
+      "style": "Completo, destro",
       "titles": "Títulos ATP: 24 Grand Slams (10x Australian Open, 7x Wimbledon, 4x US Open, 3x Roland Garros), 40 Masters 1000, 7 ATP Finals, Ouro olímpico 2024",
       "country": "Sérvia",
       "fact": "GOAT (estatístico).",
@@ -1532,7 +1532,7 @@
     "João Fonseca": {
       "age": 19,
       "surface": "Saibro",
-      "style": "Agressivo, forehand potente",
+      "style": "Agressivo, forehand potente, destro",
       "titles": "Buenos Aires 2025 (ATP 250),Basileia 2025(ATP 500), Next Gen Finals 2024, US Open Juvenil 2023",
       "country": "Brasil",
       "fact": "Em 2024, tornou-se o mais jovem brasileiro a vencer uma partida de ATP 500 no Rio Open. É considerado a maior promessa do tênis nacional.",
@@ -1550,7 +1550,7 @@
     },
     "Iga Swiatek": {
       "age": 25,
-      "style": "Agitadora (saibro)",
+      "style": "Agitadora (saibro), destra",
       "titles": "22 títulos WTA: 5 Grand Slams (4x Roland Garros, US Open 2022), 8 WTA 1000",
       "country": "Polônia",
       "fact": "Dominante no saibro moderno.",
@@ -1559,7 +1559,7 @@
     },
     "Aryna Sabalenka": {
       "age": 28,
-      "style": "Potência pura",
+      "style": "Potência pura, destra",
       "titles": "15 títulos WTA: 3 Grand Slams (AO 2023-24, US Open 2024), 4 WTA 1000",
       "country": "Bielorrússia",
       "fact": "Conhecida como a Tigresa da Bielorrússia.",
@@ -1569,7 +1569,7 @@
     "Roger Federer": {
       "age": 44,
       "country": "Suíça",
-      "style": "Completo, elegante, saque-e-voleio",
+      "style": "Completo, elegante, saque-e-voleio, destro",
       "titles": "103 títulos ATP, 20 Grand Slams (6x Australian Open, 1x Roland Garros, 8x Wimbledon, 5x US Open)",
       "fact": "Considerado o jogador mais elegante da história. Aposentou-se em 2022 na Laver Cup. Deteve o recorde de semanas como #1 (310) antes de Djokovic ultrapassá-lo.",
       "height": "1,85m",
@@ -1587,7 +1587,7 @@
     "Serena Williams": {
       "age": 44,
       "country": "EUA",
-      "style": "Potência pura, saque devastador",
+      "style": "Potência pura, saque devastador, destra",
       "titles": "73 títulos WTA, 23 Grand Slams (7x Australian Open, 3x Roland Garros, 7x Wimbledon, 6x US Open)",
       "fact": "Maior vencedora de Grand Slams da era aberta. Dominou o tênis feminino por mais de duas décadas. Aposentou-se em 2022.",
       "height": "1,75m",
@@ -1596,7 +1596,7 @@
     "Pete Sampras": {
       "age": 54,
       "country": "EUA",
-      "style": "Saque-e-voleio, agressivo",
+      "style": "Saque-e-voleio, agressivo, destro",
       "titles": "64 títulos ATP, 14 Grand Slams (2x Australian Open, 7x Wimbledon, 5x US Open)",
       "fact": "Dominou os anos 90 e deteve o recorde de Grand Slams (14) até Federer ultrapassá-lo em 2009.",
       "height": "1,85m",
@@ -1605,7 +1605,7 @@
     "Andre Agassi": {
       "age": 56,
       "country": "EUA",
-      "style": "Devolução agressiva, fundo de quadra",
+      "style": "Devolução agressiva, fundo de quadra, destro",
       "titles": "60 títulos ATP, 8 Grand Slams, Career Golden Slam",
       "fact": "Único homem a conquistar o Career Golden Slam (todos os 4 Grand Slams + ouro olímpico). Casado com Steffi Graf.",
       "height": "1,80m",
@@ -1613,28 +1613,28 @@
     },
     "Maria Sharapova": {
       "age": 38,
-      "style": "Agressiva",
+      "style": "Agressiva, destra",
       "titles": "5 Grand Slams",
       "country": "Rússia",
       "fact": "Única russa a completar o Career Slam."
     },
     "Gustavo Kuerten": {
       "age": 49,
-      "style": "Saibrista (Backhand)",
+      "style": "Saibrista (Backhand), destro",
       "titles": "3x Roland Garros",
       "country": "Brasil",
       "fact": "O nosso Guga, o Labrador Humano."
     },
     "Maria Esther Bueno": {
       "age": "Imortal",
-      "style": "Elegante",
+      "style": "Elegante, destra",
       "titles": "19 Grand Slams (7 simples)",
       "country": "Brasil",
       "fact": "A Bailarina do Tênis, maior lenda brasileira."
     },
     "Taylor Fritz": {
       "age": 28,
-      "style": "Saque e Forehand",
+      "style": "Saque e Forehand, destro",
       "titles": "10 títulos ATP, incluindo Indian Wells 2022 (Masters 1000), Tóquio 2022 (500) e Eastbourne (3x, grama)",
       "country": "EUA",
       "fact": "Destaque americano com um dos saques mais potentes do circuito.",
@@ -1643,7 +1643,7 @@
     },
     "Alexander Zverev": {
       "age": 29,
-      "style": "Base Sólida",
+      "style": "Base Sólida, destro",
       "titles": "25 títulos ATP: 2 ATP Finals, 6 Masters 1000, múltiplos ATP 500",
       "country": "Alemanha",
       "fact": "Teve grande recuperação após lesão grave.",
@@ -1652,7 +1652,7 @@
     },
     "Daniil Medvedev": {
       "age": 30,
-      "style": "Contragolpeador",
+      "style": "Contragolpeador, destro",
       "titles": "21 títulos ATP: US Open 2021, 4 Masters 1000, ATP Finals 2020",
       "country": "Rússia",
       "fact": "Especialista em quadras rápidas.",
@@ -1661,7 +1661,7 @@
     },
     "Ons Jabeur": {
       "age": 31,
-      "style": "Criativa",
+      "style": "Criativa, destra",
       "titles": "3x Finalista Grand Slam",
       "country": "Tunísia",
       "fact": "Primeira mulher árabe no topo."
@@ -3925,7 +3925,7 @@
     "Steffi Graf": {
       "age": 57,
       "country": "Alemanha",
-      "style": "Forehand devastador, versátil",
+      "style": "Forehand devastador, versátil, destra",
       "titles": "107 títulos WTA, 22 Grand Slams",
       "fact": "Única jogadora a conquistar o Golden Slam (4 Slams + ouro olímpico em 1988). Detém o recorde de 377 semanas como #1.",
       "height": "1,76m",
@@ -3934,7 +3934,7 @@
     "Björn Borg": {
       "age": 70,
       "country": "Suécia",
-      "style": "Baseline, topspin pioneiro",
+      "style": "Baseline, topspin pioneiro, destro",
       "titles": "66 títulos ATP, 11 Grand Slams (6x Roland Garros, 5x Wimbledon)",
       "fact": "Pioneiro do jogo de fundo com topspin. Aposentou-se aos 26 anos no auge da carreira.",
       "height": "1,80m",
@@ -3943,7 +3943,7 @@
     "Martina Navratilova": {
       "age": 69,
       "country": "EUA/Tchéquia",
-      "style": "Saque-e-voleio, agressiva na rede",
+      "style": "Saque-e-voleio, agressiva na rede, canhota",
       "titles": "167 títulos WTA (recorde absoluto), 18 Grand Slams em simples",
       "fact": "Maior vencedora de títulos da história do tênis (167). Dominadora de Wimbledon com 9 títulos.",
       "height": "1,73m",
