@@ -26,8 +26,9 @@ class TennisEngine: # Classe que representa o nosso motor de consulta técnica
 
     def get_player_surface_info(self, player_name):
         """Retorna a informação de piso preferido buscando em todas as fontes."""
-        # 1. Caso especial direto para o João Fonseca
-        if "joao" in player_name.lower() and "fonseca" in player_name.lower():
+        # 1. Caso especial direto para o João Fonseca (aceita "joão"/"joao" — sem o
+        # tratamento de acento, este override curado nunca disparava e caía no dado).
+        if ("joão" in player_name.lower() or "joao" in player_name.lower()) and "fonseca" in player_name.lower():
             return "O <span class='msg-highlight'>João Fonseca</span> brilha muito em **quadras rápidas**! 🎾 Seu estilo agressivo se adapta perfeitamente a esse piso."
 
         # 2. Busca nos detalhes biográficos (onde você adicionou "surface": "Saibro")

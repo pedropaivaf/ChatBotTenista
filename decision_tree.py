@@ -434,6 +434,11 @@ FICHA_REQUEST_KW = [
 _SURFACE_KEYWORDS_DT = ["piso", "superfície", "superficie", "quadra", "grama",
                         "saibro", "terra", "rápida", "rapida", "duro"]
 
+# Equipamento do TORNEIO que a base NÃO cobre (a base tem local/superfície/fundação/
+# premiação/história/campeões). Ex.: "qual a bola/bolinha usada em Roland Garros?" — vai
+# à IA + pesquisa, em vez de cair no default "mostrar campeões". Importado por app.py.
+TOURNAMENT_EQUIP_KW = ("bola", "bolinha", "bolas", "bolinhas")
+
 
 def is_general_list_query(msg_lower):
     """A mensagem pede uma LISTA de jogadores (não a ficha de um)?"""
@@ -651,6 +656,10 @@ class DecisionTree:
                         target_t = t
                         break
             if target_t:
+                # Bola/equipamento do torneio → a base não cobre; defere ao pipeline (IA + pesquisa).
+                if any(kw in msg_lower for kw in TOURNAMENT_EQUIP_KW):
+                    trace.append({"branch": "Torneio além da base", "icon": "🤖", "matched": False, "detail": f"Equipamento de {target_t} → IA (pipeline)"})
+                    return None, trace
                 # Para ATP 1000/500: sempre mostra detalhes (inclui campeões recentes)
                 has_detail = any(kw in msg_lower for kw in SLAM_DETAIL_KEYWORDS_CTX)
                 if has_detail or target_t not in grand_slams:
@@ -688,6 +697,12 @@ class DecisionTree:
             if player:
                 trace.append({"branch": "Jogador (contexto)", "icon": "👤", "matched": True, "detail": f"{player}"})
                 add_log(f"[CONTEXTO] Jogador '{player}' resolvido via contexto!", "SUCCESS")
+                # Pergunta de SUPERFÍCIE → resposta de piso curada (não o card inteiro).
+                if any(w in msg_lower for w in _SURFACE_KEYWORDS_DT):
+                    surf = self.engine.get_player_surface_info(player)
+                    if surf:
+                        trace.append({"branch": "Piso (contexto)", "icon": "🎾", "matched": True, "detail": f"Piso de {player}"})
+                        return (surf, "player", "showed_player_surface", [player], trace)
                 info = self.engine.get_player_info(player)
                 if info:
                     return (info, "player", "showed_player_from_context", [player], trace)
@@ -889,6 +904,10 @@ class DecisionTree:
                         target_tournament = t
                         break
             if target_tournament:
+                # Bola/equipamento do torneio → defere ao pipeline (IA + pesquisa).
+                if any(kw in msg_lower for kw in TOURNAMENT_EQUIP_KW):
+                    trace.append({"branch": "Torneio além da base (aberto)", "icon": "🤖", "matched": False, "detail": f"Equipamento de {target_tournament} → IA (pipeline)"})
+                    return None, trace
                 has_detail = any(kw in msg_lower for kw in SLAM_DETAIL_KEYWORDS_CTX)
                 if has_detail or target_tournament not in grand_slams:
                     detail = self.engine.get_grand_slam_details(target_tournament)
@@ -928,6 +947,12 @@ class DecisionTree:
             if player:
                 trace.append({"branch": "Jogador (aberto)", "icon": "👤", "matched": True, "detail": f"{player}"})
                 add_log(f"[CONTEXTO] Jogador '{player}' resolvido via open_topic!", "SUCCESS")
+                # Pergunta de SUPERFÍCIE → resposta de piso curada (não o card inteiro).
+                if any(w in msg_lower for w in _SURFACE_KEYWORDS_DT):
+                    surf = self.engine.get_player_surface_info(player)
+                    if surf:
+                        trace.append({"branch": "Piso (open_topic)", "icon": "🎾", "matched": True, "detail": f"Piso de {player}"})
+                        return (surf, "player", "showed_player_surface", [player], trace)
                 info = self.engine.get_player_info(player)
                 if info:
                     return (info, "player", "showed_player_from_context", [player], trace)

@@ -991,6 +991,38 @@ expect_parse('30.10',
 # =====================================================================
 print()
 print('='*70)
+print('BATERIA 31: Perguntas específicas não viram rota genérica (quadra preferida / bola do torneio)')
+print('='*70)
+# 31.01-02 — preferência de QUADRA sobre jogador EM CONTEXTO → resposta de piso curada
+# (antes vinha o card genérico showed_player_from_context). Base curada, sem LLM.
+chat('oi', 'surf')  # saudação → pending open_topic (reproduz o cenário #3)
+# Prova do FIX: vem a resposta de SUPERFÍCIE (curada: "quadras rápidas" — caso especial do
+# Fonseca, agora com o acento corrigido), NÃO o card genérico (que tem "Rank Atual").
+expect('31.01', 'qual tipo de quadra o joão fonseca prefere jogar?', 'surf', ['quadras rápidas'], ['Rank Atual'])
+expect('31.02', 'qual quadra fonseca prefere jogar?', 'surf', ['quadras rápidas'], ['Rank Atual'])  # turno seguinte (#4)
+# 31.03 — BOLA do torneio NÃO vira campeões: vai à rota beyond → IA (canned com LLM off)
+expect('31.03', 'qual a bolinha que usa em roland garros?', 'ball', ['indisponível'])
+# 31.04 — NÃO-REGRESSÃO: pedido de campeões continua mostrando campeões (não cai no beyond)
+expect('31.04', 'quem ganhou roland garros?', 'champ', None, ['indisponível'])
+# 31.05 — unidade: 'bolinha' faz parte das perguntas de torneio além da base
+def expect_true(tid, cond, desc):
+    global TOTAL, FAILS
+    TOTAL += 1
+    print(f'  [{"OK" if cond else "FAIL"}] {tid}: {desc}')
+    if not cond:
+        FAILS.append({'t': tid, 'm': desc, 'r': 'condição False', 'g': ''})
+expect_true('31.05', 'bolinha' in app_module.TOURNAMENT_BEYOND_KW, "'bolinha' em TOURNAMENT_BEYOND_KW")
+# 31.06 — defer da árvore: bola DURANTE contexto de torneio também vai ao beyond (não campeões)
+chat('oi', 'ball2')
+expect('31.06', 'qual a bolinha usada no roland garros?', 'ball2', ['indisponível'])
+# 31.07 — LESÃO GERAL do esporte vai à IA + pesquisa (não ao intent curado). Com LLM off,
+# vem o canned de IA; o importante é NÃO cair na resposta curada (sem "Epicondilite").
+expect('31.07', 'quais as lesões mais comuns no tênis?', 'inj', ['indisponível'], ['Epicondilite'])
+
+
+# =====================================================================
+print()
+print('='*70)
 total_pass = TOTAL - len(FAILS)
 print(f'RESULTADO FINAL: {total_pass}/{TOTAL} passaram ({len(FAILS)} falhas)')
 if FAILS:

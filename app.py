@@ -5,7 +5,7 @@ from engine import TennisEngine # Importa o nosso motor de dados técnicos de t�
 from nltk_utils import tokenize, stem, bag_of_words, extract_entities # Utilitários de Processamento de Linguagem Natural
 from session_manager import SessionManager # Gerenciador de sessões com contexto
 from query_parser import parse_query # Parser inteligente de queries (país/temporal/superlativo)
-from decision_tree import DecisionTree, _fuzzy_match_player, PRONOUN_KEYWORDS, TOURNAMENT_KEYWORDS, _is_records_or_fact_question, is_general_list_query, player_question_beyond_base # Árvore de decisão contextual com follow-ups
+from decision_tree import DecisionTree, _fuzzy_match_player, PRONOUN_KEYWORDS, TOURNAMENT_KEYWORDS, _is_records_or_fact_question, is_general_list_query, player_question_beyond_base, TOURNAMENT_EQUIP_KW # Árvore de decisão contextual com follow-ups
 from api_client import TennisAPIClient # Cliente de atualização de rankings (ATP/WTA)
 import llm_client # Fallback híbrido: consulta um LLM (LM Studio) quando a base não resolve
 import web_search # Camada de pesquisa (retrieval Wikipedia) p/ grounding quando a base não cobre
@@ -160,7 +160,15 @@ TOURNAMENT_BEYOND_KW = [
     "ingresso", "ingressos", "custa", "custo", "preço", "preco", "bilhete", "diretor",
     "presidente", "transmiss", "onde assistir", "como assistir", "onde comprar",
     "como chegar", "hotel", "estacionamento", "credenciamento",
-]
+] + list(TOURNAMENT_EQUIP_KW)  # + bola/bolinha do torneio (a base não cobre equipamento)
+
+# Pergunta sobre LESÃO GERAL do esporte ("lesões mais comuns no tênis", "tennis elbow",
+# "como evitar lesão") → IA + pesquisa web (modo pesquisa), em vez do intent curado. A lesão
+# ESPECÍFICA de um jogador já é roteada antes por player_question_beyond_base ("lesão" está
+# em BEYOND_BASE_ATTR_KW), então aqui só sobra a lesão geral do esporte.
+INJURY_KW = ("lesão", "lesao", "lesões", "lesoes", "lesionou", "lesionar", "lesionad",
+             "machucado", "machucou", "contusão", "contusao", "fascite", "tendinite",
+             "epicondilite", "tennis elbow")
 
 # Stop stems portugueses para filtrar do intent matching (evita falsos positivos)
 PORTUGUESE_STOP_STEMS = {
@@ -787,6 +795,13 @@ def predict(): # Função principal de "predição" ou resposta
                 extra_system=_ON_TOPIC_NOTE + "Responda direto e curto; NÃO invente; se não souber, admita.")
             if llm_resp is not None:
                 return llm_resp
+            # IA indisponível → resposta curta. NÃO cair no default de campeões do Grand Slam.
+            add_step("Torneio → IA", "fail", "IA indisponível — resposta curta")
+            canned = (f"Boa pergunta sobre {target_tournament}! 🎾 No momento a IA de pesquisa está "
+                      "indisponível para esse detalhe. Posso te mostrar os campeões, a superfície "
+                      "ou a história do torneio?")
+            return respond(canned, topic="tournament", bot_action="tournament_beyond_unavailable",
+                           mentioned_tournaments=[target_tournament])
         # Verifica se o usuário quer detalhes/info sobre o torneio (não campeões)
         has_detail_intent = any(kw in msg_lower for kw in SLAM_DETAIL_KEYWORDS)
         if has_detail_intent or target_tournament not in grand_slams:
@@ -1028,6 +1043,11 @@ def predict(): # Função principal de "predição" ou resposta
         llm_resp = try_llm_fallback("Pergunta de contagem sobre torneio/slam → LLM")
         if llm_resp is not None:
             return llm_resp
+
+    # Pergunta sobre LESÃO GERAL do esporte → IA + pesquisa web (modo pesquisa), em vez do
+    # intent curado. A lesão específica de jogador já foi roteada acima (player além da base).
+    if any(k in msg_lower for k in INJURY_KW):
+        return _route_to_ai("Lesão → IA", "Pergunta sobre lesão (esporte) → IA + pesquisa web")
 
     # --- Passo 2: Lógica Conversacional (Base de Conhecimento JSON) ---
     add_step("Motor de Dados", "skipped", "Nenhum ranking/jogador/torneio detectado")
